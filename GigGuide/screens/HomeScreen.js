@@ -1,62 +1,61 @@
-import { useNavigation } from'@react-navigation/core';
-import React from'react';
-import { ScrollView, Image,StyleSheet, Text, TouchableOpacity, View } from'react-native';
-//import { auth } from 'firebase/auth';
+import { useNavigation } from '@react-navigation/core';
+import React from 'react';
+import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
+const HomeScreen = () => {
+  const navigation = useNavigation();
 
-const HomeScreen = () => { const navigation = useNavigation();} 
+  // Define an array of image paths
+  const imagePaths = [
+    require('../assets/concert.jpg'),
+    require('../assets/concert2.jpg'),
+    require('../assets/concert3.jpg'),
+    require('../assets/concert4.jpg'),
+    require('../assets/concert5.jpg'),
+    require('../assets/concert6.jpg'),
+    require('../assets/concert7.jpg'),
+    require('../assets/concert8.jpg'),
+    require('../assets/concert9.jpg'),
+    require('../assets/concert10.jpg'),
+    // Add more paths as needed
+  ];
 
-  // const handleSignOut = () => {
-    /**
-     * Sign out the current user.
-     */
-  //   auth
-  //     .signOut()
-  //     .then(() => {
-  //       navigation.replace("Login");
-  //     })
-  //     .catch(error => alert(error.message));
-  // };
-
-//   return (<View style={styles.container}>
-
-      
-// <Text>Email: {// Commented out to remove Firebase code
-//         auth.currentUser?.email
-//       }</Text>
-//       <TouchableOpacity
-//         /* onPress={handleSignOut} */
-//         style={styles.button}
-//       >
-//         <Text style={styles.buttonText}>// Commented out to remove Firebase code
-//           Sign out
-//         </Text>
-// </TouchableOpacity>
-// </View>
-//   );
-// };
-
-
-
-export default HomeScreen;
+  return (
+    <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        {imagePaths.map((path, index) => (
+          <TouchableOpacity key={index} onPress={() => console.log(`Picture ${index + 1} clicked`)}>
+            <View style={styles.imageContainer}>
+              <Image source={path} style={styles.image} />
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </LinearGradient>
+  );
+};
 
 const styles = StyleSheet.create({
-  container: {
+  gradient: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
-  button: {
-    backgroundColor: '#0782F9',
-    width: '60%',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginTop: 40,
+  scrollViewContainer: {
+    alignItems: 'center', // Center the images horizontally
+    paddingVertical: 16, // Add space between images vertically
   },
-  buttonText: {
-    color: 'white',
-    fontWeight: '700',
-    fontSize: 16,
+  imageContainer: {
+    width: '80%', // Set the desired width for each image container
+    aspectRatio: 16 / 10, // Adjust aspect ratio for a slightly longer image
+    borderRadius: 20, // Add slightly curved corners
+    overflow: 'hidden',
+    marginBottom: 20, // Add more space between images vertically
+  },
+  image: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
 });
+
+export default HomeScreen;
