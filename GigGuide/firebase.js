@@ -1,4 +1,4 @@
-/**import { initializeApp } from 'firebase/app';
+import { initializeApp } from 'firebase/app';
 import { auth } from '@firebase/auth';
 
 
@@ -20,4 +20,4 @@ const app = initializeApp(firebaseConfig); // Store the app instance
 
 // Get authentication instance
 const auth = firebase.auth();
-export { auth }; **/
+export { auth }; 

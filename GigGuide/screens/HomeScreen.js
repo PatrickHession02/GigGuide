@@ -21,11 +21,17 @@ const HomeScreen = () => {
     // Add more paths as needed
   ];
 
+  const handleImagePress = (index) => {
+    console.log(`Picture ${index + 1} clicked`);
+    // Navigate to ConcertInfo screen with some data, e.g., index
+    navigation.navigate('concertinfo.js', { index });
+  };
+
   return (
     <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         {imagePaths.map((path, index) => (
-          <TouchableOpacity key={index} onPress={() => console.log(`Picture ${index + 1} clicked`)}>
+          <TouchableOpacity key={index} onPress={() => handleImagePress(index)}>
             <View style={styles.imageContainer}>
               <Image source={path} style={styles.image} />
             </View>
