@@ -1,8 +1,6 @@
 import { initializeApp } from 'firebase/app';
-import { auth } from '@firebase/auth';
-
-
-export { auth };
+import { getAuth } from '@firebase/auth';
+import {getFirestore} from 'firebase/firestore';
 
 // Your web app's Firebase configuration
 
@@ -15,9 +13,6 @@ const firebaseConfig = {
   appId: "1:113728607190:web:8f4e008af6b5683c924a77"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig); // Store the app instance
-
-// Get authentication instance
-const auth = firebase.auth();
-export { auth }; 
+export const FIREBASE_APP = initializeApp(firebaseConfig);
+export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
+export const FIRESTORE_DB = getFirestore(FIREBASE_APP);

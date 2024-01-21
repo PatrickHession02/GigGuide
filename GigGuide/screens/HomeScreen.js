@@ -2,6 +2,8 @@ import { useNavigation } from '@react-navigation/core';
 import React from 'react';
 import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { NavigationProp } from '@react-navigation/native';
+
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -23,8 +25,7 @@ const HomeScreen = () => {
 
   const handleImagePress = (index) => {
     console.log(`Picture ${index + 1} clicked`);
-    // Navigate to ConcertInfo screen with some data, e.g., index
-    navigation.navigate('concertinfo.js', { index });
+    navigation.navigate('Concertinfo', { index });
   };
 
   return (

@@ -1,58 +1,84 @@
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Image, Text, TextInput, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-
-// Importing useNavigation if needed
+import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { useNavigation } from '@react-navigation/core';
-
+import {signInWithEmailAndPassword, createUserWithEmailAndPassword} from 'firebase/auth';
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // Uncomment if needed
+  const [loading, setLoading] = useState(false); // Added state for loading
   const navigation = useNavigation();
+  const auth = FIREBASE_AUTH;
 
-  const handleLogin = () =>
-   {
-    navigation.navigate('Home');
+  const signIn = async () => {
+    setLoading(true);
+    try {
+      const response = await signInWithEmailAndPassword(auth, email, password);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      alert('Sign in failed: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const signUp = async () => {
+    setLoading(true);
+    try {
+      const response = await createUserWithEmailAndPassword(auth, email, password);
+      console.log(response);
+      alert('Check your emails!');
+    } catch (error) {
+      console.log(error);
+      alert('Sign up failed: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <LinearGradient colors={['#8E00FD', '#FF0B54',]} style={styles.gradient}>
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+    <LinearGradient colors={['#8E00FD', '#FF0B54']} style={styles.gradient}>
+      <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <View style={styles.ImageContainer}>
+          <Image source={require('../assets/GigGuide_Title.png')} />
+        </View>
 
-    <View style={styles.ImageContainer}>
-  <Image
-    source={require('../assets/GigGuide_Title.png')}
-  />
-  </View>
-     
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Email"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          style={styles.input}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry
-        />
-      </View>
-  
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder="Email"
+            autoCapitalize="none"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Password"
+            autoCapitalize="none"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            style={styles.input}
+            secureTextEntry
+          />
+        </View>
 
-      <View style={styles.buttonContainer}>
-       <TouchableOpacity onPress={handleLogin} style={styles.button}>
-         <Text style={styles.buttonOutlineText}>Login</Text>
-        </TouchableOpacity>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          <>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity onPress={signIn} style={styles.button}>
+                <Text style={styles.buttonOutlineText}>Login</Text>
+              </TouchableOpacity>
 
-        <TouchableOpacity  onPress={handleLogin} style={[styles.button]}>
-          <Text style={styles.buttonOutlineText}>Register</Text>
-        </TouchableOpacity>
-
-      </View>
-    </KeyboardAvoidingView>
+              <TouchableOpacity onPress={signUp} style={[styles.button, styles.buttonOutline]}>
+                <Text style={styles.buttonOutlineText}>Register</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 };
@@ -66,7 +92,7 @@ const styles = StyleSheet.create({
 
   container: {
     borderRadius: 5,
-    borderWidth: 1, // Use `borderWidth` instead of `border`
+    borderWidth: 1,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -74,19 +100,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '80%',
   },
-   ImageContainer: {
+  ImageContainer: {
     height: 50,
     flex: 0.5,
     justifyContent: 'center',
     alignItems: 'center',
-   },
-
-  TitleText: {
-    color: '#FFBF00',
-    fontWeight: 'normal',
-    lineHeight: 1.5,
-    textShadowColor: 'black',
-    textShadowOffset: { width: 0, height: 10 },
   },
   input: {
     backgroundColor: 'white',
@@ -96,21 +114,21 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   buttonContainer: {
-    width:'60%',
+    width: '60%',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 40,
   },
   button: {
-    backgroundColor: '#grey',
+    backgroundColor: '#grey', // <-- This should be a valid color, like 'grey' or '#808080'
     width: '100%',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
+    marginTop: 10, // Added margin to separate buttons
   },
   buttonOutline: {
-    backgroundColor:'white',
-    marginTop: 5,
+    backgroundColor: 'white',
     borderColor: '#0782F9',
     borderWidth: 2,
   },
