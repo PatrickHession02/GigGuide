@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';  // Import the necessary component
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import Concertinfo from './screens/Concertinfo';
-import Tabs from './screens/MainNavigation';
-import Profile from './screens/Profile'
+import Profile from './screens/Profile';
 import Settings from './screens/Settings';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const InsideStack = createNativeStackNavigator();
+const InsideStackNavigator = createNativeStackNavigator();
+// Renamed InfoLayout navigator to InfoStackNavigator
+const InfoStackNavigator = createNativeStackNavigator();
 
 function InsideLayout() {
   return (
@@ -22,8 +24,16 @@ function InsideLayout() {
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name='Profile' component={Profile} />
       <Tab.Screen name='Settings' component={Settings} />
-      {/* Add more Tab.Screen components for additional screens if needed */}
     </Tab.Navigator>
+  );
+}
+
+function InfoLayout() {
+  return (
+    <InfoStackNavigator.Navigator>
+      <InfoStackNavigator.Screen name="Home" component={HomeScreen} />
+      <InfoStackNavigator.Screen name="Concertinfo" component={Concertinfo} />
+    </InfoStackNavigator.Navigator>
   );
 }
 
@@ -58,3 +68,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
