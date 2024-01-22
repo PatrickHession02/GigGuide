@@ -1,12 +1,16 @@
 import React from 'react';
-import { View, Text } from 'react-native';
-
+import { View, Text, ScrollView } from 'react-native';
+import { StyleSheet } from 'react-native';
 const ConcertInfo = () => {
   return (
-    <View>
-      <Text>concerts!</Text>
-    </View>
+    <ScrollView>
+      <Text>CONCERT INFO</Text>
+    </ScrollView>
   );
 };
-
+const styles = StyleSheet.create({
+  gradient: {
+    flex: 1,
+  },
+});
 export default ConcertInfo;

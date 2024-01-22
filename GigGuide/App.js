@@ -1,23 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LoginScreen from './screens/LoginScreen';
-import HomeScreen from './screens/HomeScreen';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
-import concertinfo from './screens/Concertinfo';
-const Stack = createNativeStackNavigator();
+import HomeScreen from './screens/HomeScreen';
+import LoginScreen from './screens/LoginScreen';
+import Concertinfo from './screens/Concertinfo';
+import Profile from './screens/Profile';
+import Settings from './screens/Settings';
 
-const InsideStack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const InsideStackNavigator = createNativeStackNavigator();
+// Renamed InfoLayout navigator to InfoStackNavigator
+const InfoStackNavigator = createNativeStackNavigator();
 
 function InsideLayout() {
   return (
-    <InsideStack.Navigator>
-      <InsideStack.Screen name="Home" component={HomeScreen} />
-      <InsideStack.Screen name='Concertinfo' component={concertinfo}/>
-    </InsideStack.Navigator>
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name='Profile' component={Profile} />
+      <Tab.Screen name='Settings' component={Settings} />
+    </Tab.Navigator>
+  );
+}
+
+function InfoLayout() {
+  return (
+    <InfoStackNavigator.Navigator>
+      <InfoStackNavigator.Screen name="Home" component={HomeScreen} />
+      <InfoStackNavigator.Screen name="Concertinfo" component={Concertinfo} />
+    </InfoStackNavigator.Navigator>
   );
 }
 
@@ -35,7 +51,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {user ? (
-          <Stack.Screen options={{ headerShown: true }} name="Inside" component={InsideLayout} />
+          <Stack.Screen options={{ headerShown: false }} name="Inside" component={InsideLayout} />
         ) : (
           <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         )}
@@ -52,3 +68,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+

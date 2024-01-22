@@ -25,11 +25,11 @@ const HomeScreen = () => {
 
   const handleImagePress = (index) => {
     console.log(`Picture ${index + 1} clicked`);
-    navigation.navigate('Concertinfo', { index });
+    navigation.navigate('Concertinfo', { index }); // Use the navigation object to navigate
   };
 
   return (
-    <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
+    <LinearGradient colors={['#8E00FD','#FF000F']} style={styles.gradient}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         {imagePaths.map((path, index) => (
           <TouchableOpacity key={index} onPress={() => handleImagePress(index)}>
