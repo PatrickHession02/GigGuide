@@ -7,7 +7,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
-import Concertinfo from './screens/Concertinfo';
+import Concertinfo from './screens/concertinfo';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
 

@@ -29,7 +29,7 @@ const LoginScreen = () => {
     try {
       const response = await createUserWithEmailAndPassword(auth, email, password);
       console.log(response);
-      alert('Check your emails!');
+      alert('Welcome to GigGuide!');
     } catch (error) {
       console.log(error);
       alert('Sign up failed: ' + error.message);

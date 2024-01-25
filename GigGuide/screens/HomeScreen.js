@@ -1,12 +1,12 @@
 import { useNavigation } from '@react-navigation/core';
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { NavigationProp } from '@react-navigation/native';
-
+import { SearchBar } from 'react-native-elements';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [search, setSearch] = useState('');
 
   // Define an array of image paths
   const imagePaths = [
@@ -29,7 +29,16 @@ const HomeScreen = () => {
   };
 
   return (
-    <LinearGradient colors={['#8E00FD','#FF000F']} style={styles.gradient}>
+    <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
+      <View>
+        <SearchBar
+          placeholder="Type Here..."
+          onChangeText={(text) => setSearch(text)}
+          value={search}
+          containerStyle={styles.searchBarContainer}
+          inputContainerStyle={styles.searchBarInputContainer}
+        />
+      </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         {imagePaths.map((path, index) => (
           <TouchableOpacity key={index} onPress={() => handleImagePress(index)}>
@@ -47,16 +56,26 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
   },
+  searchBarContainer: {
+    backgroundColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderTopColor: 'transparent',
+    paddingHorizontal: 16,
+    marginBottom: 10,
+  },
+  searchBarInputContainer: {
+    backgroundColor: '#fff',
+  },
   scrollViewContainer: {
-    alignItems: 'center', // Center the images horizontally
-    paddingVertical: 16, // Add space between images vertically
+    alignItems: 'center',
+    paddingVertical: 16,
   },
   imageContainer: {
-    width: '80%', // Set the desired width for each image container
-    aspectRatio: 16 / 10, // Adjust aspect ratio for a slightly longer image
-    borderRadius: 20, // Add slightly curved corners
+    width: '80%',
+    aspectRatio: 16 / 10,
+    borderRadius: 20,
     overflow: 'hidden',
-    marginBottom: 20, // Add more space between images vertically
+    marginBottom: 20,
   },
   image: {
     flex: 1,
