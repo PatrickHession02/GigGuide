@@ -20,7 +20,7 @@ const spotifyApi = new SpotifyWebApi({
 // Route handler for the login endpoint.
 app.get('/login', (req, res) => {
     // Define the scopes for authorization; these are the permissions we ask from the user.
-    const scopes = ['user-read-private', 'user-read-email', 'user-read-playback-state', 'user-modify-playback-state'];
+    const scopes = ['user-read-private', 'user-read-email', 'user-read-playback-state', 'user-modify-playback-state', 'user-top-read']; // Add 'user-top-read' scope for top artists
     // Redirect the client to Spotify's authorization page with the defined scopes.
     res.redirect(spotifyApi.createAuthorizeURL(scopes));
 });
@@ -48,85 +48,28 @@ app.get('/callback', (req, res) => {
         spotifyApi.setAccessToken(accessToken);
         spotifyApi.setRefreshToken(refreshToken);
 
-        // Logging tokens can be a security risk; this should be avoided in production.
-        console.log('The access token is ' + accessToken);
-        console.log('The refresh token is ' + refreshToken);
-
-        // Send a success message to the user.
-        res.send('Login successful! You can now use the /search and /play endpoints.');
-
-        // Refresh the access token periodically before it expires.
-        setInterval(async () => {
-            const data = await spotifyApi.refreshAccessToken();
-            const accessTokenRefreshed = data.body['access_token'];
-            spotifyApi.setAccessToken(accessTokenRefreshed);
-        }, expiresIn / 2 * 1000); // Refresh halfway before expiration.
-
-    }).catch(error => {
-        console.error('Error getting Tokens:', error);
-        res.send('Error getting tokens');
-    });
-});
-
-// Route handler for the search endpoint.
-app.get('/search', (req, res) => {
-    // Extract the search query parameter.
-    const { q } = req.query;
-
-    // Make a call to Spotify's search API with the provided query.
-    spotifyApi.searchTracks(q).then(searchData => {
-        // Extract the URI of the first track from the search results.
-        const trackUri = searchData.body.tracks.items[0].uri;
-        // Send the track URI back to the client.
-        res.send({ uri: trackUri });
+        // Now you can use the access token to get the user's top artists.
+        spotifyApi.getMyTopArtists().then(response => {
+            const topArtistsData = response.body;
+            const topArtists = topArtistsData.items.map(item => ({
+              name: item.name,
+              // Add other properties as needed
+            }));
+          
+            // Send the top artists data to the client after mapping
+            res.send(topArtists);
+          }).catch(err => {
+            // Handle errors here
+            console.error('Error fetching top artists:', err);
+            res.send('Error fetching top artists. Please try again later.');
+          });
     }).catch(err => {
-        console.error('Search Error:', err);
-        res.send('Error occurred during search');
+        console.error('Error exchanging code for access token:', err);
+        res.send('Error exchanging code for access token. Please try again later.');
     });
 });
 
-// Route handler for the play endpoint.
-app.get('/play', (req, res) => {
-    // Extract the track URI from the query parameters.
-    const { uri } = req.query;
-
-    // Send a request to Spotify to start playback of the track with the given URI.
-    spotifyApi.play({ uris: [uri] }).then(() => {
-        res.send('Playback started');
-    }).catch(err => {
-        console.error('Play Error:', err);
-        res.send('Error occurred during playback');
-    });
-});
-
-app.get('/top-artists', async (req, res) => {
-  try {
-    const timeRange = 'medium_term'; // Choose the desired time range
-    const limit = req.query.limit || 20; // Default to 10 if not specified
-
-    const response = await fetch(`https://api.spotify.com/v1/me/top/artists?limit=${limit}`, {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error fetching top artists: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    const topArtists = data.items; // Extract the top artists
-
-    // Send only one response with the data and status code
-    res.status(200).json({ topArtists });
-  } catch (error) {
-    console.error('Error fetching top artists:', error);
-    res.status(500).json({ error: 'Unable to fetch top artists' });
-  }
-});
-
-// Start the Express server.
+// Start the server.
 app.listen(port, () => {
-  console.log(`Listening at http://localhost:${port}`);
+    console.log(`Server running on port ${port}`);
 });

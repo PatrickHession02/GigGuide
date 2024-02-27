@@ -1,19 +1,35 @@
-import React from 'react';
-import { ScrollView, Text, StyleSheet, View, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, Text, StyleSheet, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
 
 class Profile extends React.Component {
   state = {
     search: '',
+    isLoading: true, // Initially set to true to show the loading indicator
   };
 
   updateSearch = (search) => {
     this.setState({ search });
   };
 
+  // Simulate a loading delay with useEffect
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ isLoading: false });
+    }, 2000); // Set the duration as needed (in milliseconds)
+  }
+
   render() {
-    const { search } = this.state;
+    const { search, isLoading } = this.state;
+
+    if (isLoading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#fff" />
+        </View>
+      );
+    }
 
     return (
       <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
@@ -25,7 +41,7 @@ class Profile extends React.Component {
             containerStyle={styles.searchBarContainer}
             inputContainerStyle={styles.searchBarInputContainer}
           />
-          <Text>Profile</Text>
+          <Text style={styles.profileHeaderText}>Profile</Text>
           <View style={styles.horizontalLine} />
           <View style={styles.profileContainer}>
             <View style={styles.profilePictureContainer}>
@@ -34,8 +50,21 @@ class Profile extends React.Component {
                 style={styles.profilePicture}
               />
             </View>
-            <Text style={styles.usernameText}>Username</Text>
+            <View style={styles.profileTextContainer}>
+              <Text style={styles.usernameText}>Username</Text>
+              <Text style={styles.friendsText}>Friends</Text>
+              <Text style={styles.followedText}>Artists Followed</Text>
+            </View>
           </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Concert Wishlist</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Reviews</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.separatorLine} />
         </ScrollView>
       </LinearGradient>
     );
@@ -43,6 +72,12 @@ class Profile extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#8E00FD', // You can set the background color to match your app's theme
+  },
   gradient: {
     flex: 1,
   },
@@ -73,17 +108,59 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   profilePictureContainer: {
-    marginRight: 20,
+    marginRight: 125,
     alignItems: 'center',
   },
+  profileTextContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   profilePicture: {
-    width: 80, // Adjust the size of the profile picture
+    width: 80,
     height: 80,
-    borderRadius: 40, // Make it circular
+    borderRadius: 40,
   },
   usernameText: {
     color: '#fff',
     fontSize: 18,
+  },
+  friendsText: {
+    color: '#fff',
+    fontSize: 14,
+    marginTop: 5,
+  },
+  followedText: {
+    color: '#fff',
+    fontSize: 14,
+    marginTop: 5,
+  },
+  profileHeaderText: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginTop: 20,
+    width: '100%',
+    justifyContent: 'space-evenly',
+  },
+  button: {
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  buttonText: {
+    color: '#8E00FD',
+    fontSize: 16,
+  },
+  separatorLine: {
+    borderBottomColor: '#fff',
+    borderBottomWidth: 1,
+    width: '100%',
+    marginVertical: 10,
   },
 });
 

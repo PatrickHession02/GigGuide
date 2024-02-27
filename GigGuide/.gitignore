@@ -36,3 +36,6 @@ yarn-error.*
 
 # Ignore Firebase configuration file
 firebase.js
+
+#secrets
+secrets.js

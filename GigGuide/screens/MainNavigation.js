@@ -1,7 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons'; // You may need to install the '@expo/vector-icons' package
-
 import HomeScreen from './HomeScreen';
 import Settings from './Settings';
 import Profile from './Profile';
