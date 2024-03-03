@@ -4,9 +4,11 @@ require('dotenv').config();
 // Import the necessary modules.
 const express = require('express');
 const SpotifyWebApi = require('spotify-web-api-node');
+const axios = require('axios');
 
 // Initialize an Express application.
 const app = express();
+
 // Define the port number on which the server will listen.
 const port = 3050;
 
@@ -14,8 +16,23 @@ const port = 3050;
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    redirectUri: process.env.REDIRECT_URL
+    redirectUri: process.env.REDIRECT_URL,
+    ticketmasterApiKey: process.env.TICKETMASTER_API_KEY
 });
+
+// Rate limiting parameters
+const RATE_LIMIT_DELAY = 1000; // 1 second delay between requests
+let lastRequestTime = 0;
+
+// Function to delay requests based on rate limit
+async function delayRequest() {
+    const now = Date.now();
+    const timeSinceLastRequest = now - lastRequestTime;
+    if (timeSinceLastRequest < RATE_LIMIT_DELAY) {
+        await new Promise(resolve => setTimeout(resolve, RATE_LIMIT_DELAY - timeSinceLastRequest));
+    }
+    lastRequestTime = Date.now();
+}
 
 // Route handler for the login endpoint.
 app.get('/login', (req, res) => {
@@ -51,22 +68,79 @@ app.get('/callback', (req, res) => {
         // Now you can use the access token to get the user's top artists.
         spotifyApi.getMyTopArtists().then(response => {
             const topArtistsData = response.body;
-            const topArtists = topArtistsData.items.map(item => ({
-              name: item.name,
-              // Add other properties as needed
-            }));
+            const topArtists = topArtistsData.items.map(item => item.name);
           
-            // Send the top artists data to the client after mapping
-            res.send(topArtists);
-          }).catch(err => {
+            // Redirect to /concerts route with top artists as query parameters
+            res.redirect(`/concerts?artists=${encodeURIComponent(topArtists.join(','))}`);
+        }).catch(err => {
             // Handle errors here
             console.error('Error fetching top artists:', err);
             res.send('Error fetching top artists. Please try again later.');
-          });
+        });
     }).catch(err => {
         console.error('Error exchanging code for access token:', err);
         res.send('Error exchanging code for access token. Please try again later.');
     });
+});
+
+// Route handler for fetching concerts from Ticketmaster API
+app.get('/concerts', async (req, res) => {
+    try {
+        // Extract artists from query parameters
+        const artistsParam = req.query.artists;
+        if (!artistsParam) {
+            throw new Error('No artists provided');
+        }
+        const artists = artistsParam.split(',');
+        
+        // Log the artists being searched for
+        console.log('Searching for concerts of artists:', artists);
+        
+        // Array to store concert data for all artists
+        const allConcerts = [];
+
+        // Loop through each artist and make separate API calls to Ticketmaster
+        for (const artist of artists) {
+            await delayRequest(); // Apply rate limiting
+            
+            // Make API call to Ticketmaster API with artist as search keyword
+            const response = await axios.get('https://app.ticketmaster.com/discovery/v2/events.json', {
+                params: {
+                    apikey: process.env.TICKETMASTER_API_KEY,
+                    keyword: artist,
+                    countryCode: 'IE' // Filter for Ireland
+                }
+            });
+
+            // Check if events are found
+            if (response.data._embedded && response.data._embedded.events && response.data._embedded.events.length > 0) {
+                // Extract relevant data from response
+                const concerts = response.data._embedded.events.map(event => {
+                    const venue = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].name : 'Unknown Venue';
+                    const city = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].city.name : 'Unknown City';
+                    const country = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].country.name : 'Unknown Country';
+                    return {
+                        name: event.name,
+                        date: event.dates.start.localDate,
+                        venue: venue,
+                        city: city,
+                        country: country
+                    };
+                });
+                
+                // Add concerts to the array
+                allConcerts.push(...concerts);
+            }
+        }
+
+        // Send the combined concerts data as JSON
+        res.json(allConcerts);
+    } catch (error) {
+        // Log the error
+        console.error('Error fetching concerts:', error);
+        // Send error response
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // Start the server.

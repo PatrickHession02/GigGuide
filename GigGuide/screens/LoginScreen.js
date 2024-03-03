@@ -25,6 +25,8 @@ const LoginScreen = () => {
     }
   };
 
+  
+
   const signUp = async () => {
     setLoading(true);
     try {

@@ -4,28 +4,37 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { onAuthStateChanged } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
 import Concertinfo from './screens/Concertinfo';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const InsideStackNavigator = createNativeStackNavigator();
+// Initialize your Firebase app
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_AUTH_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_STORAGE_BUCKET",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID",
+};
+const app = initializeApp(firebaseConfig);
+
+// Initialize Firebase Auth with AsyncStorage persistence
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage)
+});
+
 // Renamed InfoLayout navigator to InfoStackNavigator
 const InfoStackNavigator = createNativeStackNavigator();
-
-function InsideLayout() {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name='Profile' component={Profile} />
-      <Tab.Screen name='Settings' component={Settings} />
-    </Tab.Navigator>
-  );
-}
 
 function InfoLayout() {
   return (
@@ -40,10 +49,12 @@ export default function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
       console.log('user', user);
       setUser(user);
     });
+
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -59,6 +70,16 @@ export default function App() {
   );
 }
 
+function InsideLayout() {
+  return (
+    <Tab.Navigator>
+      <Tab.Screen name="Home" component={InfoLayout} /> {/* Changed to InfoLayout */}
+      <Tab.Screen name='Profile' component={Profile} />
+      <Tab.Screen name='Settings' component={Settings} />
+    </Tab.Navigator>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -67,4 +88,3 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
