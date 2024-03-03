@@ -4,7 +4,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { useNavigation } from '@react-navigation/core';
 import {signInWithEmailAndPassword, createUserWithEmailAndPassword} from 'firebase/auth';
-
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,8 +23,6 @@ const LoginScreen = () => {
       setLoading(false);
     }
   };
-
-  
 
   const signUp = async () => {
     setLoading(true);
