@@ -6,14 +6,13 @@ import { SearchBar } from 'react-native-elements';
 class Profile extends React.Component {
   state = {
     search: '',
-    isLoading: true, // Initially set to true to show the loading indicator
+    isLoading: true, 
   };
 
   updateSearch = (search) => {
     this.setState({ search });
   };
 
- 
   componentDidMount() {
     setTimeout(() => {
       this.setState({ isLoading: false });
@@ -46,7 +45,7 @@ class Profile extends React.Component {
           <View style={styles.profileContainer}>
             <View style={styles.profilePictureContainer}>
               <Image
-                source={require('../assets/ProfilePicExample.png')} // Replace with the actual path to your profile picture
+                source={require('../assets/ProfilePicExample.png')} 
                 style={styles.profilePicture}
               />
             </View>
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#8E00FD', // You can set the background color to match your app's theme
+    backgroundColor: '#8E00FD', 
   },
   gradient: {
     flex: 1,
