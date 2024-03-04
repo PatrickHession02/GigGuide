@@ -6,7 +6,6 @@ import { SearchBar } from 'react-native-elements';
 const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState('');
 
-  // Define an array of image paths
   const imagePaths = [
     require('../assets/concert.jpg'),
     require('../assets/concert2.jpg'),
@@ -18,7 +17,6 @@ const HomeScreen = ({ navigation }) => {
     require('../assets/concert8.jpg'),
     require('../assets/concert9.jpg'),
     require('../assets/concert10.jpg'),
-    // Add more paths as needed
   ];
 
   const handleImagePress = (index) => {
