@@ -23,7 +23,6 @@ const HomeScreen = ({ navigation }) => {
 
   const handleImagePress = (index) => {
     console.log(`Picture ${index + 1} clicked`);
-    // Navigate to Concertinfo or any other screen as needed
     navigation.navigate('Concertinfo');
   };
 
