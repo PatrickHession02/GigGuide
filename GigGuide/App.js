@@ -14,17 +14,8 @@ import Settings from './screens/Settings';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// Renamed InfoLayout navigator to InfoStackNavigator
 const InfoStackNavigator = createNativeStackNavigator();
 
-function InfoLayout() {
-  return (
-    <InfoStackNavigator.Navigator>
-      <InfoStackNavigator.Screen name="Home" component={HomeScreen} />
-      <InfoStackNavigator.Screen name="Concertinfo" component={Concertinfo} />
-    </InfoStackNavigator.Navigator>
-  );
-}
 
 export default function App() {
   const [user, setUser] = useState(null);
