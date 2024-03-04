@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
-const ConcertInfo = () => {
+
+const Concertinfo = () => {
   return (
     <ScrollView>
       <Text>CONCERT INFO</Text>
@@ -13,4 +14,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-export default ConcertInfo;
+export default Concertinfo;

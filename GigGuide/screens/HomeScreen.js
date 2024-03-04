@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
-
+import { HomeStack } from './MainNavigation';
 const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState('');
 
