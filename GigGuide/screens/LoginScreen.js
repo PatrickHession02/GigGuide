@@ -120,12 +120,12 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: 'grey', // <-- This should be a valid color, like 'grey' or '#808080'
+    backgroundColor: 'grey', 
     width: '100%',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 10, // Added margin to separate buttons
+    marginTop: 10, 
   },
   buttonOutline: {
     backgroundColor: 'white',
