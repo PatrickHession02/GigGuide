@@ -1,10 +1,11 @@
+// MainNavigation.js
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 
 import HomeScreen from './HomeScreen';
-import Concertinfo from './Concertinfo';
+import Concertinfo from './Concertinfo'; // Import the Concertinfo screen here
 import Settings from './Settings';
 import Profile from './Profile';
 
@@ -15,7 +16,7 @@ export function HomeStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Concertinfo" component={Concertinfo} />
+      <Stack.Screen name="Concertinfo" component={Concertinfo} /> {/* Add the Concertinfo screen here */}
     </Stack.Navigator>
   );
 }

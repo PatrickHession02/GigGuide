@@ -13,11 +13,11 @@ class Profile extends React.Component {
     this.setState({ search });
   };
 
-  // Simulate a loading delay with useEffect
+ 
   componentDidMount() {
     setTimeout(() => {
       this.setState({ isLoading: false });
-    }, 2000); // Set the duration as needed (in milliseconds)
+    }, 2000); 
   }
 
   render() {

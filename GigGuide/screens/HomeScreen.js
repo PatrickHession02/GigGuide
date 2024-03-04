@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
-import { HomeStack } from './MainNavigation';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [search, setSearch] = useState('');
 
   // Define an array of image paths
@@ -24,32 +23,31 @@ const HomeScreen = () => {
 
   const handleImagePress = (index) => {
     console.log(`Picture ${index + 1} clicked`);
-    // Navigation will be handled by HomeStack navigator
+    // Navigate to Concertinfo or any other screen as needed
+    navigation.navigate('Concertinfo');
   };
 
   return (
-    <HomeStack>
-      <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
-        <View>
-          <SearchBar
-            placeholder="Type Here..."
-            onChangeText={(text) => setSearch(text)}
-            value={search}
-            containerStyle={styles.searchBarContainer}
-            inputContainerStyle={styles.searchBarInputContainer}
-          />
-        </View>
-        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-          {imagePaths.map((path, index) => (
-            <TouchableOpacity key={index} onPress={() => handleImagePress(index)}>
-              <View style={styles.imageContainer}>
-                <Image source={path} style={styles.image} />
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </LinearGradient>
-    </HomeStack>
+    <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
+      <View>
+        <SearchBar
+          placeholder="Type Here..."
+          onChangeText={(text) => setSearch(text)}
+          value={search}
+          containerStyle={styles.searchBarContainer}
+          inputContainerStyle={styles.searchBarInputContainer}
+        />
+      </View>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        {imagePaths.map((path, index) => (
+          <TouchableOpacity key={index} onPress={() => handleImagePress(index)}>
+            <View style={styles.imageContainer}>
+              <Image source={path} style={styles.image} />
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    </LinearGradient>
   );
 };
 
