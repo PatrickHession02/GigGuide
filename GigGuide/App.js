@@ -10,6 +10,8 @@ import LoginScreen from './screens/LoginScreen';
 import Concertinfo from './screens/Concertinfo';
 import Profile from './screens/Profile';
 import Settings from './screens/Settings';
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();

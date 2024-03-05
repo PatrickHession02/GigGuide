@@ -7,7 +7,7 @@ import {signInWithEmailAndPassword, createUserWithEmailAndPassword} from 'fireba
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false); // Added state for loading
+  const [loading, setLoading] = useState(false); 
   const navigation = useNavigation();
   const auth = FIREBASE_AUTH;
 
