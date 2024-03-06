@@ -3,7 +3,10 @@ import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-nat
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
 import { HomeStack } from './MainNavigation';
-const HomeScreen = ({ navigation }) => {
+import { useNavigation } from '@react-navigation/native';
+
+const HomeScreen = () => {
+  const navigation = useNavigation();
   const [search, setSearch] = useState('');
 
   const imagePaths = [
