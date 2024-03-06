@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
-import { HomeStack } from './MainNavigation';
 import { useNavigation } from '@react-navigation/native';
-
+import  HomeStack  from './MainNavigation'; // Import the HomeStack navigator
+import Concertinfo from './Concertinfo';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
@@ -22,9 +22,8 @@ const HomeScreen = () => {
     require('../assets/concert10.jpg'),
   ];
 
-  const handleImagePress = (index) => {
-    console.log(`Picture ${index + 1} clicked`);
-    navigation.navigate('Concertinfo');
+  const handleImagePress = () => {
+    navigation.navigate('Concertinfo'); // Navigate directly to Concertinfo
   };
 
   return (
@@ -40,7 +39,7 @@ const HomeScreen = () => {
       </View>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         {imagePaths.map((path, index) => (
-          <TouchableOpacity key={index} onPress={() => handleImagePress(index)}>
+          <TouchableOpacity key={index} onPress={handleImagePress}>
             <View style={styles.imageContainer}>
               <Image source={path} style={styles.image} />
             </View>
