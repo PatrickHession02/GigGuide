@@ -1,34 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Text, StyleSheet, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { ScrollView, Text, StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
 
 class Profile extends React.Component {
   state = {
     search: '',
-    isLoading: true, 
   };
 
   updateSearch = (search) => {
     this.setState({ search });
   };
 
-  componentDidMount() {
-    setTimeout(() => {
-      this.setState({ isLoading: false });
-    }, 2000); 
-  }
-
   render() {
-    const { search, isLoading } = this.state;
-
-    if (isLoading) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#fff" />
-        </View>
-      );
-    }
+    const { search } = this.state;
 
     return (
       <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
@@ -71,12 +56,6 @@ class Profile extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#8E00FD', 
-  },
   gradient: {
     flex: 1,
   },
