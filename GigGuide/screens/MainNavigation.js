@@ -23,38 +23,51 @@ export const HomeStack = () => (
   </Stack.Navigator>
 );
 
-export const MainNavigator = () => (
-  <Tab.Navigator>
-    <Tab.Screen
-      name="HomeStack"
-      component={HomeStack} 
-      options={{
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="home" color={color} size={size} />
-        ),
-      }}
-    />
-   
-    <Tab.Screen
-      name="Profile"
-      component={Profile}
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="person" color={color} size={size} />
-        ),
-      }}
-    />
-     <Tab.Screen
-      name="Settings"
-      component={Settings}
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="settings" color={color} size={size} />
-        ),
-      }}
-    />
-  </Tab.Navigator>
-);
+export const MainNavigator = () => {
+  const tabBarOptions = {
+    style: {
+      backgroundColor: '', // Set the background color of the tab bar
+    },
+    activeTintColor: '#000000', // Set the text color for active tabs
+    inactiveTintColor: '#A9A9A9', // Set the text color for inactive tabs
+  };
+
+  return (
+    <Tab.Navigator
+      tabBarOptions={tabBarOptions}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeStack} 
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+     
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" color={color} size={size} />
+          ),
+        }}
+      />
+       <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="settings" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
 
 export default MainNavigator;

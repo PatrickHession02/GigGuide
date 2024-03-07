@@ -1,12 +1,18 @@
 import React from 'react';
-import { ScrollView, Text, StyleSheet } from 'react-native';
+import { ScrollView, View, Button, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const Settings = () => {
   return (
     <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text>Settings</Text>
+        <View style={styles.buttonContainer}>
+          {/* Green rounded rectangle background */}
+          <View style={styles.greenBackground}>
+            {/* White button */}
+            <Button title="Spotify Connect" color="#FFFFFF" onPress={() => {}} />
+          </View>
+        </View>
       </ScrollView>
     </LinearGradient>
   );
@@ -20,6 +26,16 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  buttonContainer: {
+    alignItems: 'center',
+  },
+  greenBackground: {
+    backgroundColor: '#00FF00',
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    overflow: 'hidden', // This is important to ensure the white button stays within the rounded rectangle
   },
 });
 
