@@ -8,7 +8,6 @@ const axios = require('axios');
 
 // Initialize an Express application.
 const app = express();
-
 // Define the port number on which the server will listen.
 const port = 3050;
 

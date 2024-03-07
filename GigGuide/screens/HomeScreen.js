@@ -1,29 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
-import Concertinfo from './Concertinfo';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
+  const [imagePaths, setImagePaths] = useState([]);
 
-  const imagePaths = [
-    require('../assets/concert.jpg'),
-    require('../assets/concert2.jpg'),
-    require('../assets/concert3.jpg'),
-    require('../assets/concert4.jpg'),
-    require('../assets/concert5.jpg'),
-    require('../assets/concert6.jpg'),
-    require('../assets/concert7.jpg'),
-    require('../assets/concert8.jpg'),
-    require('../assets/concert9.jpg'),
-    require('../assets/concert10.jpg'),
-  ];
+  useEffect(() => {
+    fetchImagePaths();
+  }, []);
+
+  const fetchImagePaths = async () => {
+    try {
+      const response = await fetch('YOUR_EXPRESS_SERVER_URL');
+      const data = await response.json();
+      setImagePaths(data.imagePaths);
+    } catch (error) {
+      console.error('Error fetching image paths:', error);
+    }
+  };
 
   const handleImagePress = () => {
-    navigation.navigate( 'Concertinfo' );
+    navigation.navigate('Concertinfo');
   };
 
   return (
@@ -41,7 +42,7 @@ const HomeScreen = () => {
         {imagePaths.map((path, index) => (
           <TouchableOpacity key={index} onPress={handleImagePress}>
             <View style={styles.imageContainer}>
-              <Image source={path} style={styles.image} />
+              <Image source={{ uri: path }} style={styles.image} />
             </View>
           </TouchableOpacity>
         ))}
