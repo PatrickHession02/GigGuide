@@ -12,6 +12,11 @@ const Settings = () => {
             {/* White button */}
             <Button title="Spotify Connect" color="#FFFFFF" onPress={() => {}} />
           </View>
+          {/* Red rectangle background */}
+          <View style={styles.redBackground}>
+            {/* Logout button */}
+            <Button title="Logout" color="#FFFFFF" onPress={() => {}} />
+          </View>
         </View>
       </ScrollView>
     </LinearGradient>
@@ -35,7 +40,15 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 20,
     paddingVertical: 10,
+    marginBottom: 10,
     overflow: 'hidden', // This is important to ensure the white button stays within the rounded rectangle
+  },
+  redBackground: {
+    backgroundColor: '#FF0000',
+    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    overflow: 'hidden', // This is important to ensure the button stays within the rounded rectangle
   },
 });
 

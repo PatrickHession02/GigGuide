@@ -21,6 +21,15 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      await signOut(FIREBASE_AUTH); // Sign out the user
+    } catch (error) {
+      console.error('Error signing out:', error.message);
+    }
+  };
+
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
