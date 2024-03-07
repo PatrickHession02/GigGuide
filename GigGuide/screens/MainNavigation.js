@@ -29,26 +29,28 @@ export const MainNavigator = () => (
       name="HomeStack"
       component={HomeStack} 
       options={{
+        headerShown: false,
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="home" color={color} size={size} />
         ),
       }}
     />
-    <Tab.Screen
-      name="Settings"
-      component={Settings}
-      options={{
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="settings" color={color} size={size} />
-        ),
-      }}
-    />
+   
     <Tab.Screen
       name="Profile"
       component={Profile}
       options={{
         tabBarIcon: ({ color, size }) => (
           <Ionicons name="person" color={color} size={size} />
+        ),
+      }}
+    />
+     <Tab.Screen
+      name="Settings"
+      component={Settings}
+      options={{
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="settings" color={color} size={size} />
         ),
       }}
     />
