@@ -3,7 +3,7 @@ import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-nat
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
-import  HomeStack  from './MainNavigation'; // Import the HomeStack navigator
+
 import Concertinfo from './Concertinfo';
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -23,7 +23,7 @@ const HomeScreen = () => {
   ];
 
   const handleImagePress = () => {
-    navigation.navigate('Concertinfo'); // Navigate directly to Concertinfo
+    navigation.navigate( 'Concertinfo' );
   };
 
   return (

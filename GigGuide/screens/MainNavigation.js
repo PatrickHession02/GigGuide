@@ -4,31 +4,31 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './HomeScreen';
 import Settings from './Settings';
 import Profile from './Profile';
-import Concertinfo from './Concertinfo'; // Import Concertinfo screen
+import Concertinfo from './Concertinfo'; 
 import { Ionicons } from '@expo/vector-icons';
 
-const Tab = createBottomTabNavigator();
-const HomeStack = createStackNavigator(); // Create stack navigator for Home tab
+const Tab = createBottomTabNavigator(); 
+const Stack = createStackNavigator();
 
-const HomeStackScreen = () => (
-  <HomeStack.Navigator>
-    <HomeStack.Screen
+export const HomeStack = () => (
+  <Stack.Navigator>
+    <Stack.Screen
       name="Home"
       component={HomeScreen}
     />
-    <HomeStack.Screen
+    <Stack.Screen
       name="Concertinfo"
       component={Concertinfo}
     />
-  </HomeStack.Navigator>
+  </Stack.Navigator>
 );
 
 export default function MainNavigator() {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="Home"
-        component={HomeStackScreen} // Use HomeStackScreen as component for Home tab
+        name="HomeStack"
+        component={HomeStack} 
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />

@@ -12,7 +12,8 @@ import Profile from './screens/Profile';
 import Settings from './screens/Settings';
 import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
-
+import HomeStack from './screens/MainNavigation';
+import { Ionicons } from '@expo/vector-icons';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -47,7 +48,15 @@ export default function App() {
 function InsideLayout() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen
+        name="HomeStack"
+        component={HomeStack} 
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" color={color} size={size} />
+          ) // Closing parenthesis was missing here
+        }} // Closing curly brace was missing here
+      />
       <Tab.Screen name='Profile' component={Profile} />
       <Tab.Screen name='Settings' component={Settings} />
     </Tab.Navigator>
