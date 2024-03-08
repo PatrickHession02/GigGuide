@@ -3,6 +3,23 @@ import { ScrollView, View, Button, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const Settings = () => {
+  const handleSpotifyConnect = () => {
+    fetch('YOUR_SERVER_URL/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Add any additional headers if needed
+      },
+      // Add any body data if needed
+    })
+    .then(response => {
+      // Handle response as needed
+    })
+    .catch(error => {
+      console.error('Error connecting to Spotify:', error);
+    });
+  };
+
   return (
     <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -10,7 +27,7 @@ const Settings = () => {
           {/* Green rounded rectangle background */}
           <View style={styles.greenBackground}>
             {/* White button */}
-            <Button title="Spotify Connect" color="#FFFFFF" onPress={() => {}} />
+            <Button title="Spotify Connect" color="#FFFFFF" onPress={handleSpotifyConnect} />
           </View>
           {/* Red rectangle background */}
           <View style={styles.redBackground}>

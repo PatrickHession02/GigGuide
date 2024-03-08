@@ -8,19 +8,38 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
   const [imagePaths, setImagePaths] = useState([]);
+  const [concertsData, setConcertsData] = useState([]);
+
+  const fetchConcertsData = async () => {
+    try {
+      const response = await fetch('https://7372-193-1-57-3.ngrok-free.app/concerts');
+      const data = await response.json();
+      setConcertsData(data);
+    } catch (error) {
+      console.error('Error fetching concert data:', error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchConcertsData(); // Fetch concert data from backend
+  }, []); // Empty dependency array ensures that the effect runs only once after the component mounts
 
   useEffect(() => {
-    fetchImagePaths();
-  }, []);
+    // Extract image URLs from concert data when concertsData changes
+    const imageUrls = extractImageUrls(concertsData);
+    setImagePaths(imageUrls);
+  }, [concertsData]); // Re-run effect when concertsData changes
 
-  const fetchImagePaths = async () => {
-    try {
-      const response = await fetch('YOUR_EXPRESS_SERVER_URL');
-      const data = await response.json();
-      setImagePaths(data.imagePaths);
-    } catch (error) {
-      console.error('Error fetching image paths:', error);
+  const extractImageUrls = (concertsData) => {
+    const imageUrls = [];
+    if (Array.isArray(concertsData)) {
+      concertsData.forEach(concert => {
+        concert.images.forEach(image => {
+          imageUrls.push(image.url);
+        });
+      });
     }
+    return imageUrls;
   };
 
   const handleImagePress = () => {
@@ -50,7 +69,7 @@ const HomeScreen = () => {
     </LinearGradient>
   );
 };
- 
+
 const styles = StyleSheet.create({
   gradient: {
     flex: 1,
