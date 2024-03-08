@@ -1,14 +1,8 @@
-// Load environment variables from the .env file.
 require('dotenv').config();
-
-// Import the necessary modules.
 const express = require('express');
 const SpotifyWebApi = require('spotify-web-api-node');
 const axios = require('axios');
-
-// Initialize an Express application.
 const app = express();
-// Define the port number on which the server will listen.
 const port = 3050;
 
 // Initialize the Spotify API with credentials from environment variables.
@@ -118,12 +112,20 @@ app.get('/concerts', async (req, res) => {
                     const venue = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].name : 'Unknown Venue';
                     const city = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].city.name : 'Unknown City';
                     const country = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].country.name : 'Unknown Country';
+                    const images = event.images.map(image => ({
+                        ratio: image.ratio,
+                        url: image.url,
+                        width: image.width,
+                        height: image.height,
+                        fallback: image.fallback
+                    }));
                     return {
                         name: event.name,
                         date: event.dates.start.localDate,
                         venue: venue,
                         city: city,
-                        country: country
+                        country: country,
+                        images: images
                     };
                 });
                 
@@ -141,8 +143,13 @@ app.get('/concerts', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+/*
+app.get('/reccomendations', (req, res) => {
+   
+    });
+*/
 
-// Start the server.
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
