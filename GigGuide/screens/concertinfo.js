@@ -14,8 +14,6 @@ const Concertinfo = () => {
       console.error('Error fetching message:', error);
     }
   };
-
-
   return (
     <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
       <ScrollView contentContainerStyle={styles.container}>
