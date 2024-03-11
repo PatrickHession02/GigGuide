@@ -4,11 +4,10 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const Settings = () => {
   const handleSpotifyConnect = () => {
-    fetch('YOUR_SERVER_URL/login', {
-      method: 'POST',
+    fetch('https://6cb6-193-1-57-1.ngrok-free.app/login', {
       headers: {
         'Content-Type': 'application/json',
-        // Add any additional headers if needed
+        
       },
       // Add any body data if needed
     })

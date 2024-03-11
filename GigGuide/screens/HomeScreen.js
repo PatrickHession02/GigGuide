@@ -12,7 +12,7 @@ const HomeScreen = () => {
 
   const fetchConcertsData = async () => {
     try {
-      const response = await fetch('https://7372-193-1-57-3.ngrok-free.app/concerts');
+      const response = await fetch('https://6cb6-193-1-57-1.ngrok-free.app/concerts');
       const data = await response.json();
       setConcertsData(data);
     } catch (error) {
