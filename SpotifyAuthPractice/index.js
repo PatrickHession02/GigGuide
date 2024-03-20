@@ -10,7 +10,8 @@ const spotifyApi = new SpotifyWebApi({
     clientId: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     redirectUri: process.env.REDIRECT_URL,
-    ticketmasterApiKey: process.env.TICKETMASTER_API_KEY
+    ticketmasterApiKey: process.env.TICKETMASTER_API_KEY,
+    aiKey: process.env.OPEN_AI_KEY
 });
 
 // Rate limiting parameters
@@ -143,11 +144,48 @@ app.get('/concerts', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-/*
+
 app.get('/reccomendations', (req, res) => {
-   
+   const express = require('express')
+const router = express.Router()
+const OpenAI = require("openai")
+const openai = new OpenAI({ apiKey:process.env.OPEN_AI_KEY })
+
+router.get('/', (req, res, next) => {
+    aiTest()
+})
+
+async function aiTest() {
+    let currentArtists = topArtists
+    let searchPhrases = await createListOfExtraArtists(12, currentArtists)
+    console.log('generatedSearchPhrases: ' + searchPhrases.googleSearchPhrases)
+}
+
+async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
+    let generatedArray = []
+    const currentArtistsJson = JSON.stringify(currentArtistArray)
+    try {
+        let aiArray = await openai.chat.completions.create({
+            messages: [
+                { "role": "system", "content": "You are a music connoisseur that appreciates good music." },
+                { "role": "assistant", "content": "The following JSON array contains a list of existing musicians: " + currentArtistsJson },
+                { "role": "assistant", "content": "We are going to create an array of additional musicians who are sinilar to the existing musicians." },
+                { "role": "user", "content": "Create a JSON array called additionalMusicians containing " + noOfExtraArtists + "musicians that are similar to the existing musicians." },
+            ],
+            response_format: { type: "json_object" },
+            model: "gpt-3.5-turbo-1106"
+        })
+        generatedArray = JSON.parse(aiArray.choices[0].message.content)
+    } catch (err) {
+        console.log('GPT err createSearchPhrases: ' + err)
+    }
+    console.log(JSON.stringify(generatedArray))
+    return generatedArray
+}
+
+exports.routes = router
     });
-*/
+
 
 
 app.listen(port, () => {
