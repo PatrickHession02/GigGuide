@@ -145,11 +145,11 @@ app.get('/concerts', async (req, res) => {
     }
 });
 
-app.get('/reccomendations', (req, res) => {
+app.get('/reccomend', (req, res) => {
    const express = require('express')
 const router = express.Router()
 const OpenAI = require("openai")
-const openai = new OpenAI({ apiKey:process.env.OPEN_AI_KEY })
+const openai = new OpenAI({ apiKey:'aiKey' }) 
 
 router.get('/', (req, res, next) => {
     aiTest()
@@ -157,10 +157,10 @@ router.get('/', (req, res, next) => {
 
 async function aiTest() {
     let currentArtists = topArtists
-    let searchPhrases = await createListOfExtraArtists(12, currentArtists)
+    let searchPhrases = await createListOfArtists(12, currentArtists)
     console.log('generatedSearchPhrases: ' + searchPhrases.googleSearchPhrases)
+    res.send('searchPhrases');
 }
-
 async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
     let generatedArray = []
     const currentArtistsJson = JSON.stringify(currentArtistArray)
@@ -183,11 +183,9 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
     return generatedArray
 }
 
+
 exports.routes = router
     });
-
-
-
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
