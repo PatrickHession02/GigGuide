@@ -1,75 +1,100 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import { Button } from 'react-native';
 import { Linking } from 'react-native';
+
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
-  const [imagePaths, setImagePaths] = useState([]);
   const [concertsData, setConcertsData] = useState([]);
 
-  //make a pressable button that calls the login endpoint in my backend
-  // ...
-
-  const handleLogin = () => {
-    Linking.openURL('https://2a2d-79-140-211-73.ngrok-free.app/login')
-      .catch((err) => console.error('Failed to open URL:', err));
+  const fetchTopArtistData = async (accessToken) => {
+    const response = await fetch('https://api.spotify.com/v1/me/top/artists', {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+  
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+  
+    const data = await response.json();
+    console.log('Top artist data:', data);
+    return data.items.map(artist => artist.name);
   };
 
-
-  async function login() {
+  const fetchConcertsData = async (topArtistData, accessToken) => {
     try {
-      const response = await fetch('https://2a2d-79-140-211-73.ngrok-free.app/login');
-      console.log('Response status:', response.status);
+      const response = await fetch('https://783b-79-140-211-73.ngrok-free.app/concerts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`, // use the access token
+        },
+        body: JSON.stringify({ artists: topArtistData }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
       const data = await response.json();
-      console.log('Data received:', data);
+      console.log('Concert data:', data);
+      return data;
     } catch (error) {
       console.error('Error fetching concert data:', error);
     }
   }
 
-  const fetchConcertsData = async () => {
+  const handleLogin = async () => {
     try {
-      const response = await fetch('https://e70d-193-1-57-3.ngrok-free.app/concerts');
-      console.log('Response status:', response.status);
-      const data = await response.json();
-      console.log('Data received:', data);
-      setConcertsData(data);
+      console.log('handleLogin called'); 
+      // Step 1: Log the user into Spotify
+      Linking.openURL('https://783b-79-140-211-73.ngrok-free.app/login');
+  
+      // Listen for the url event
+      Linking.addEventListener('url', handleOpenURL);
     } catch (error) {
-      console.error('Error fetching concert data:', error);
+      console.error('Failed to log in:', error);
     }
   };
-  useEffect(() => {
-    fetchConcertsData(); // Fetch concert data from backend
-  }, []); // Empty dependency array ensures that the effect runs only once after the component mounts
-
-  useEffect(() => {
-    // Extract image URLs from concert data when concertsData changes
-    const imageUrls = extractImageUrls(concertsData);
-    setImagePaths(imageUrls);
-  }, [concertsData]); // Re-run effect when concertsData changes
-
-  const extractImageUrls = (concertsData) => {
-    const imageUrls = [];
-    if (Array.isArray(concertsData)) {
-      concertsData.forEach(concert => {
-        concert.images.forEach(image => {
-          imageUrls.push(image.url);
-        });
+  
+  const handleOpenURL = (event) => {
+    // Extract the access token from the URL
+    console.log('handleOpenURL called');
+    const accessToken = event.url.split('=')[1];
+  
+    // Fetch the top artist data from the Spotify API
+    fetchTopArtistData(accessToken).then(topArtistData => {
+      // Use the top artist data as the search parameter to fetch concert data from the Ticketmaster API
+      fetchConcertsData(topArtistData, accessToken).then(concertsData => {
+        // Update state with the fetched concert data
+        console.log('Fetched concert data:', concertsData);
+        setConcertsData(concertsData);
+  
+        // Remove the event listener
+        Linking.removeEventListener('url', handleOpenURL);
       });
-    }
-    return imageUrls;
+    });
   };
 
-  const handleImagePress = () => {
+
+/*
+  useEffect(() => {
+    fetchTopArtistData().then(topArtistData => {
+      fetchConcertsData(topArtistData);
+    });
+  }, []); ; // Empty dependency array ensures that the effect runs only once after the component mounts
+*/
+  const handleConcertPress = () => {
     navigation.navigate('Concertinfo');
   };
 
   return (
-    
     <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
       <View>
         <SearchBar
@@ -82,10 +107,10 @@ const HomeScreen = () => {
       </View>
       <Button title="Login" onPress={handleLogin} />
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        {imagePaths.map((path, index) => (
-          <TouchableOpacity key={index} onPress={handleImagePress}>
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: path }} style={styles.image} />
+        {concertsData.map((concert, index) => (
+          <TouchableOpacity key={index} onPress={handleConcertPress}>
+            <View style={styles.concertContainer}>
+              <Text style={styles.concertName}>{concert.name}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -112,17 +137,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
   },
-  imageContainer: {
+  concertContainer: {
     width: '80%',
-    aspectRatio: 16 / 10,
+    padding: 10,
     borderRadius: 20,
-    overflow: 'hidden',
+    backgroundColor: '#fff',
     marginBottom: 20,
   },
-  image: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
+  concertName: {
+    fontSize: 16,
   },
 });
 
