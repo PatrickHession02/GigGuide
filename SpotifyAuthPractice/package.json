@@ -10,9 +10,12 @@
   "author": "Patric Hession",
   "license": "ISC",
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-firebase/app": "^19.1.0",
     "axios": "^1.6.7",
     "dotenv": "^16.4.2",
     "express": "^4.18.2",
+    "express-session": "^1.18.0",
     "openai": "^4.29.2",
     "spotify-web-api-node": "^5.0.2"
   },

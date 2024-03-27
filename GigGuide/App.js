@@ -6,18 +6,18 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import LoginScreen from './screens/LoginScreen';
 import MainNavigator from './screens/MainNavigation';
-
+import { firebase, auth } from './FirebaseConfig';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+    const unsubscribe = FIREBASE_AUTH.onAuthStateChanged((user) => {
       console.log('user', user);
       setUser(user);
     });
-
+  
     return () => unsubscribe();
   }, []);
 

@@ -16,6 +16,7 @@ const LoginScreen = () => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       console.log(response);
+      navigation.navigate('HomeScreen'); // Add this line
     } catch (error) {
       console.log(error);
       alert('Sign in failed: ' + error.message);
@@ -27,9 +28,9 @@ const LoginScreen = () => {
   const signUp = async () => {
     setLoading(true);
     try {
-      const response = await createUserWithEmailAndPassword(auth, email, password);
-      console.log(response);
+      await createUserWithEmailAndPassword(auth, email, password);
       alert('Welcome to GigGuide!');
+      navigation.navigate('HomeScreen');
     } catch (error) {
       console.log(error);
       alert('Sign up failed: ' + error.message);

@@ -3,23 +3,45 @@ import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-nat
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
-
+import { Button } from 'react-native';
+import { Linking } from 'react-native';
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
   const [imagePaths, setImagePaths] = useState([]);
   const [concertsData, setConcertsData] = useState([]);
 
+  //make a pressable button that calls the login endpoint in my backend
+  // ...
+
+  const handleLogin = () => {
+    Linking.openURL('https://2a2d-79-140-211-73.ngrok-free.app/login')
+      .catch((err) => console.error('Failed to open URL:', err));
+  };
+
+
+  async function login() {
+    try {
+      const response = await fetch('https://2a2d-79-140-211-73.ngrok-free.app/login');
+      console.log('Response status:', response.status);
+      const data = await response.json();
+      console.log('Data received:', data);
+    } catch (error) {
+      console.error('Error fetching concert data:', error);
+    }
+  }
+
   const fetchConcertsData = async () => {
     try {
-      const response = await fetch('https://6cb6-193-1-57-1.ngrok-free.app/concerts');
+      const response = await fetch('https://e70d-193-1-57-3.ngrok-free.app/concerts');
+      console.log('Response status:', response.status);
       const data = await response.json();
+      console.log('Data received:', data);
       setConcertsData(data);
     } catch (error) {
       console.error('Error fetching concert data:', error);
     }
   };
-  
   useEffect(() => {
     fetchConcertsData(); // Fetch concert data from backend
   }, []); // Empty dependency array ensures that the effect runs only once after the component mounts
@@ -47,6 +69,7 @@ const HomeScreen = () => {
   };
 
   return (
+    
     <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
       <View>
         <SearchBar
@@ -57,6 +80,7 @@ const HomeScreen = () => {
           inputContainerStyle={styles.searchBarInputContainer}
         />
       </View>
+      <Button title="Login" onPress={handleLogin} />
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         {imagePaths.map((path, index) => (
           <TouchableOpacity key={index} onPress={handleImagePress}>
