@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
@@ -10,6 +10,26 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [search, setSearch] = useState('');
   const [concertsData, setConcertsData] = useState([]);
+
+  useEffect(() => {
+    Linking.getInitialURL()
+      .then((url) => {
+        if (url) {
+          console.log('Initial url is: ' + url);
+          // Here you can handle the initial URL
+          // For example, you can parse it and extract the code parameter
+          const initialUrl = new URL(url);
+          const code = initialUrl.searchParams.get('code');
+          if (code) {
+            // Handle the code parameter
+            // For example, you can call your handleOpenURL function
+            handleOpenURL({ url });
+          }
+        }
+      })
+      .catch((err) => console.error('An error occurred', err));
+  }, []);
+
 
   const fetchTopArtistData = async (accessToken) => {
     const response = await fetch('https://api.spotify.com/v1/me/top/artists', {
@@ -29,7 +49,7 @@ const HomeScreen = () => {
 
   const fetchConcertsData = async (topArtistData, accessToken) => {
     try {
-      const response = await fetch('https://783b-79-140-211-73.ngrok-free.app/concerts', {
+      const response = await fetch('https://dda5-80-233-56-154.ngrok-free.app/concerts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,33 +74,55 @@ const HomeScreen = () => {
     try {
       console.log('handleLogin called'); 
       // Step 1: Log the user into Spotify
-      Linking.openURL('https://783b-79-140-211-73.ngrok-free.app/login');
+      Linking.openURL('https://dda5-80-233-56-154.ngrok-free.app/login');
   
       // Listen for the url event
-      Linking.addEventListener('url', handleOpenURL);
     } catch (error) {
       console.error('Failed to log in:', error);
     }
   };
   
-  const handleOpenURL = (event) => {
-    // Extract the access token from the URL
+  const handleOpenURL = useCallback((event) => {
     console.log('handleOpenURL called');
-    const accessToken = event.url.split('=')[1];
+    console.log('App opened with URL:', event.url);
+    const parsedUrl = url.parse(event.url, true); // Parse the URL and its query parameters
+    const code = parsedUrl.query.code;
   
-    // Fetch the top artist data from the Spotify API
-    fetchTopArtistData(accessToken).then(topArtistData => {
-      // Use the top artist data as the search parameter to fetch concert data from the Ticketmaster API
-      fetchConcertsData(topArtistData, accessToken).then(concertsData => {
-        // Update state with the fetched concert data
-        console.log('Fetched concert data:', concertsData);
-        setConcertsData(concertsData);
+    // Exchange the code for an access token
+    fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `grant_type=authorization_code&code=${code}&redirect_uri=http://localhost:3050/callback&client_id=736a5838698041a6bcfb852f8ee1a6ab&client_secret=7a3d54e2e5534693a116dc4847ed92b0`,
+    })
+      .then(response => response.json())
+      .then(data => {
+        const accessToken = data.access_token;
   
-        // Remove the event listener
-        Linking.removeEventListener('url', handleOpenURL);
-      });
-    });
-  };
+        // Now you can use the access token to fetch the top artist data
+        fetchTopArtistData(accessToken)
+          .then(topArtistData => {
+            fetchConcertsData(topArtistData, accessToken)
+              .then(concertsData => {
+                console.log('Fetched concert data:', concertsData);
+                setConcertsData(concertsData);
+              })
+              .catch(error => console.error('Error fetching concert data:', error));
+          })
+          .catch(error => console.error('Error fetching top artist data:', error));
+      })
+      .catch(error => console.error('Error getting access token:', error));
+  }, []);
+
+  useEffect(() => {
+    const subscription = Linking.addEventListener('url', handleOpenURL);
+
+  
+    return () => {
+      return () => subscription.remove();
+    };
+  }, [handleOpenURL]);
 
 
 /*
