@@ -36,7 +36,7 @@ const HomeScreen = () => {
       console.log("Authorization Code: ", code);
   
       // Send the code to your backend
-      const response = await fetch('https://3302-93-89-250-119.ngrok-free.app/data', {
+      const response = await fetch('https://3302-93-89-250-119.ngrok-free.app/callback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

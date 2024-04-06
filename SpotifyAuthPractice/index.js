@@ -27,14 +27,37 @@ async function delayRequest() {
     }
     lastRequestTime = Date.now();
 }
-app.post('/data', express.json(), (req, res) => {
+app.post('/callback', express.json(), (req, res) => {
     const code = req.body.code;
     console.log('Received code:', code);
   
     // Pass the code to the /callback endpoint
     req.code = code;
-    app.handle(req, res, '/callback');
-  });
+
+    spotifyApi.authorizationCodeGrant(code).then(data => {
+        const accessToken = data.body['access_token'];
+        const refreshToken = data.body['refresh_token'];
+        const expiresIn = data.body['expires_in'];
+        console.log('Access token:', accessToken);
+        // Set the access token and refresh token on the Spotify API object.
+        spotifyApi.setAccessToken(accessToken);
+        spotifyApi.setRefreshToken(refreshToken);
+
+        // Now you can use the access token to get the user's top artists.
+        spotifyApi.getMyTopArtists().then(response => {
+            const topArtistsData = response.body;
+            const topArtists = topArtistsData.items.map(item => item.name);
+          
+        }).catch(err => {
+            // Handle errors here
+            console.error('Error fetching top artists:', err);
+            res.send('Error fetching top artists. Please try again later.');
+        });
+    }).catch(err => {
+        console.error('Error exchanging code for access token:', err);
+        res.send('Error exchanging code for access token. Please try again later.');
+    });
+});
 // Route handler for the login endpoint.
 /*
 app.get('/login', (req, res) => {

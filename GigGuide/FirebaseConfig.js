@@ -1,10 +1,8 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth,  browserLocalPersistence, setPersistence, } from '@firebase/auth';
+import { getAuth, initializeAuth, browserLocalPersistence, Persistence } from '@firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage'; 
-
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Auth } from 'firebase/auth';
 const firebaseConfig = {
   apiKey: "AIzaSyBnKgSGr_60IabY0XK-07vtBPGCJoZsC-c",
   authDomain: "gigguide-b3d86.firebaseapp.com",
@@ -14,7 +12,10 @@ const firebaseConfig = {
   appId: "1:113728607190:web:8f4e008af6b5683c924a77"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-setPersistence(auth, browserLocalPersistence);
-export { auth as FIREBASE_AUTH };
+export const FIREBASE_APP = initializeApp(firebaseConfig);
+
+
+export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
+  persistence: (AsyncStorage),
+});
+
