@@ -51,6 +51,7 @@ export const MainNavigator = () => {
         name="Profile"
         component={Profile}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person" color={color} size={size} />
           ),
@@ -60,6 +61,7 @@ export const MainNavigator = () => {
         name="Settings"
         component={Settings}
         options={{
+          headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="settings" color={color} size={size} />
           ),

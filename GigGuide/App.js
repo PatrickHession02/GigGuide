@@ -7,7 +7,6 @@ import { FIREBASE_AUTH } from './FirebaseConfig';
 import LoginScreen from './screens/LoginScreen';
 import MainNavigator from './screens/MainNavigation';
 import { firebase, auth } from './FirebaseConfig';
-import * as Linking from 'expo-linking';
 import { signOut } from 'firebase/auth';
 import HomeScreen from './screens/HomeScreen';
 const Stack = createNativeStackNavigator();
@@ -32,34 +31,14 @@ export default function App() {
     }
   };
 
-  const linking = {
-    prefixes: ['gigguide://', 'http://localhost:3050/callback', Linking.createURL()],
-    config: {
-      screens: {
-        Home: 'home',
-        // other screens...
-      },
-    },
-  };
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });
-
   return (
-    <NavigationContainer linking={linking}>
+    <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {user ? (
           <Stack.Screen options={{ headerShown: false }} name="Main" component={MainNavigator} />
         ) : (
           <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         )}
-        <Stack.Screen name="Home" component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

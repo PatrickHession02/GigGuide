@@ -40,7 +40,7 @@ const LoginScreen = () => {
   };
 
   return (
-    <LinearGradient colors={['#8E00FD', '#FF0B54']} style={styles.gradient}>
+    <LinearGradient colors={['#fc0366', '#fc030b']} style={styles.gradient}>
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View style={styles.ImageContainer}>
           <Image source={require('../assets/GigGuide_Title.png')} />
@@ -121,16 +121,18 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: 'purple', 
+    backgroundColor: '#fc03ad', 
     width: '100%',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
     marginTop: 10, 
+    borderColor: '#000000', // Add this line to set the border color to black
+    borderWidth: 2,
   },
   buttonOutline: {
-    backgroundColor: 'white',
-    borderColor: '#0782F9',
+    backgroundColor: '#b503fc',
+    borderColor: '##ffffff',
     borderWidth: 2,
   },
   buttonText: {
@@ -139,7 +141,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: '#0782F9',
+    color: '#ffffff',
     fontWeight: '700',
     fontSize: 16,
   },

@@ -33,6 +33,23 @@ const HomeScreen = () => {
       // The user authenticated successfully, you can get the authorization code like this:
       const code = result.params.code;
       // Now you can send the code to your backend to get an access token and refresh token
+      console.log("Authorization Code: ", code);
+  
+      // Send the code to your backend
+      const response = await fetch('https://3302-93-89-250-119.ngrok-free.app/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ code }),
+      });
+  
+      if (!response.ok) {
+        console.error('Failed to send code to backend');
+        return;
+      }
+      const data = await response.json();
+      console.log('Received data from backend', data);
     }
   };
 
@@ -42,7 +59,7 @@ const HomeScreen = () => {
 
 
   return (
-    <LinearGradient colors={['#9FA8DA', '#B2DFDB']} style={styles.gradient}>
+    <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <View>
         <SearchBar
           placeholder="Type Here..."

@@ -27,21 +27,31 @@ async function delayRequest() {
     }
     lastRequestTime = Date.now();
 }
-
+app.post('/data', express.json(), (req, res) => {
+    const code = req.body.code;
+    console.log('Received code:', code);
+  
+    // Pass the code to the /callback endpoint
+    req.code = code;
+    app.handle(req, res, '/callback');
+  });
 // Route handler for the login endpoint.
+/*
 app.get('/login', (req, res) => {
     // Define the scopes for authorization; these are the permissions we ask from the user.
     const scopes = ['user-read-private', 'user-read-email', 'user-read-playback-state', 'user-modify-playback-state', 'user-top-read']; // Add 'user-top-read' scope for top artists
     // Redirect the client to Spotify's authorization page with the defined scopes.
     res.redirect(spotifyApi.createAuthorizeURL(scopes));
 });
-
+*/
 // Route handler for the callback endpoint after the user has logged in.
 // Route handler for the callback endpoint after the user has logged in.
 app.get('/callback', (req, res) => {
-    // Extract the error, code, and state from the query parameters.
+    // Extract the error from the query parameters.
     const error = req.query.error;
-    const code = req.query.code;
+
+    // Use the code passed from the /data endpoint.
+    const code = req.code;
 
     // If there is an error, log it and send a response to the user.
     if (error) {
@@ -65,8 +75,6 @@ app.get('/callback', (req, res) => {
             const topArtistsData = response.body;
             const topArtists = topArtistsData.items.map(item => item.name);
           
-            // Redirect to your app with the top artists as query parameters
-            res.redirect(`gigguide://callback?artists=${encodeURIComponent(topArtists.join(','))}`);
         }).catch(err => {
             // Handle errors here
             console.error('Error fetching top artists:', err);
