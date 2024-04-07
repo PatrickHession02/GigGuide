@@ -13,13 +13,7 @@ const spotifyApi = new SpotifyWebApi({
     ticketmasterApiKey: process.env.TICKETMASTER_API_KEY,
     aiKey: process.env.OPEN_AI_KEY
 });
-/*
-// Rate limiting parameters
-const RATE_LIMIT_DELAY = 1000; // 1 second delay between requests
-let lastRequestTime = 0;
 
-// Function to delay requests based on rate limit
-*/
 app.post('/callback', express.json(), (req, res) => {
     const code = req.body.code;
     console.log('Received code:', code);
@@ -51,72 +45,11 @@ app.post('/callback', express.json(), (req, res) => {
         res.send('Error exchanging code for access token. Please try again later.');
     });
 });
-// Route handler for the login endpoint.
-/*
-app.get('/login', (req, res) => {
-    // Define the scopes for authorization; these are the permissions we ask from the user.
-    const scopes = ['user-read-private', 'user-read-email', 'user-read-playback-state', 'user-modify-playback-state', 'user-top-read']; // Add 'user-top-read' scope for top artists
-    // Redirect the client to Spotify's authorization page with the defined scopes.
-    res.redirect(spotifyApi.createAuthorizeURL(scopes));
-});
-*/
-// Route handler for the callback endpoint after the user has logged in.
-// Route handler for the callback endpoint after the user has logged in.
-/*
-app.get('/callback', (req, res) => {
-    // Extract the error from the query parameters.
-    const error = req.query.error;
 
-    // Use the code passed from the /data endpoint.
-    const code = req.query.code;
-
-    // If there is an error, log it and send a response to the user.
-    if (error) {
-        console.error('Callback Error:', error);
-        res.send(`Callback Error: ${error}`);
-        return;
-    }
-
-    // Exchange the code for an access token and a refresh token.
-    spotifyApi.authorizationCodeGrant(code).then(data => {
-        const accessToken = data.body['access_token'];
-        const refreshToken = data.body['refresh_token'];
-        const expiresIn = data.body['expires_in'];
-        console.log('Access token:', accessToken);
-        // Set the access token and refresh token on the Spotify API object.
-        spotifyApi.setAccessToken(accessToken);
-        spotifyApi.setRefreshToken(refreshToken);
-
-        // Now you can use the access token to get the user's top artists.
-        spotifyApi.getMyTopArtists().then(response => {
-            const topArtistsData = response.body;
-            const topArtists = topArtistsData.items.map(item => item.name);
-          
-        }).catch(err => {
-            // Handle errors here
-            console.error('Error fetching top artists:', err);
-            res.send('Error fetching top artists. Please try again later.');
-        });
-    }).catch(err => {
-        console.error('Error exchanging code for access token:', err);
-        res.send('Error exchanging code for access token. Please try again later.');
-    });
-});
-*/
-// Route handler for fetching concerts from Ticketmaster API
 app.get('/concerts', async (req, res) => {
+    console.log('Accessed /concerts endpoint');
     try {
-        // Extract artists from query parameters
-        const artistsParam = req.query.artists;
-        if (!artistsParam) {
-            throw new Error('No artists provided');
-        }
-        const artists = artistsParam.split(',');
-        
-        // Log the artists being searched for
-        console.log('Searching for concerts of artists:', artists);
-        
-        // Array to store concert data for all artists
+      
         const allConcerts = [];
 
         // Loop through each artist and make separate API calls to Ticketmaster
@@ -139,13 +72,15 @@ app.get('/concerts', async (req, res) => {
                     const venue = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].name : 'Unknown Venue';
                     const city = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].city.name : 'Unknown City';
                     const country = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].country.name : 'Unknown Country';
-                    /*const images = event.images.map(image => ({
+                    /*
+                    const images = event.images.map(image => ({
                         ratio: image.ratio,
                         url: image.url,
                         width: image.width,
                         height: image.height,
                         fallback: image.fallback 
-                    }));*/
+                    }));
+*/
                     return {
                         name: event.name,
                         date: event.dates.start.localDate,
@@ -159,7 +94,7 @@ app.get('/concerts', async (req, res) => {
                 allConcerts.push(...concerts);
             }
         }
-
+        console.log('Concert data:', allConcerts);
         // Send the combined concerts data as JSON
         res.json(allConcerts);
     } catch (error) {

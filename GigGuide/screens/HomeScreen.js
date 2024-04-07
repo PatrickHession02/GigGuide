@@ -53,10 +53,21 @@ const HomeScreen = () => {
     }
   };
 
+
+  fetch('https://3302-93-89-250-119.ngrok-free.app/concerts')
+    .then((response) => response.json())
+    .then((data) => {
+      console.log('Concerts data:', data);
+      setConcertsData(data);
+    })
+    .catch((error) => {
+      console.error('Error fetching concerts:', error);
+    });
+/*
   const handleConcertPress = () => {
     navigation.navigate('Concertinfo');
   };
-
+*/
 
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
