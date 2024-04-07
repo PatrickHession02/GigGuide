@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Button } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import { useAutoDiscovery, useAuthRequest,  makeRedirectUri} from 'expo-auth-session';
+import { SafeAreaView } from 'react-native-safe-area-context';
 WebBrowser.maybeCompleteAuthSession();
 
 const HomeScreen = ({uid}) => {
@@ -67,24 +68,17 @@ const HomeScreen = ({uid}) => {
   }, []);
 
 
-/*
+
   const handleConcertPress = () => {
     navigation.navigate('Concertinfo');
   };
-*/
+
 
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
-      <View>
-        <SearchBar
-          placeholder="Type Here..."
-          onChangeText={(text) => setSearch(text)}
-          value={search}
-          containerStyle={styles.searchBarContainer}
-          inputContainerStyle={styles.searchBarInputContainer}
-        />
-      </View>
-      <Button title="Login" onPress={handleLogin} />
+      <SafeAreaView>
+      {concertsData.length === 0 && <Button title="Login" onPress={handleLogin} />}
+      </SafeAreaView>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         {concertsData.map((concert, index) => (
           <TouchableOpacity key={index} onPress={handleConcertPress}>

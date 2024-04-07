@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Button, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 const Settings = () => {
   const handleSpotifyConnect = () => {
     fetch('localhost:3050/login', {
@@ -20,7 +20,7 @@ const Settings = () => {
 
   return (
     <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <SafeAreaView contentContainerStyle={styles.container}>
         <View style={styles.buttonContainer}>
           {/* Green rounded rectangle background */}
           <View style={styles.greenBackground}>
@@ -33,7 +33,7 @@ const Settings = () => {
             <Button title="Logout" color="#FFFFFF" onPress={() => {}} />
           </View>
         </View>
-      </ScrollView>
+      </SafeAreaView>
     </LinearGradient>
   );
 };

@@ -13,7 +13,9 @@ admin.initializeApp({
 });
 
 const db = admin.firestore();
-
+function delayRequest() {
+    return new Promise(resolve => setTimeout(resolve, 1000)); // Delay of 1 second
+}
 // Initialize the Spotify API with credentials from environment variables.
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.CLIENT_ID,
@@ -31,18 +33,21 @@ app.use(session({
   cookie: { secure: false } // Note: In production, set this to true and ensure your app uses HTTPS
 }));
 
-
 app.post('/callback', express.json(), (req, res) => {
     const code = req.body.code;
     const uid = req.body.uid;
     console.log('Received code:', code);
     console.log('Received UID:', uid);
     req.session.userId = req.body.uid;
+
     req.session.save(err => {
-        if(err) {
+        if (err) {
             console.error('Error saving session:', err);
-            return res.status(500).send('Error saving session. Please try again later.');
+            return res.status(500).send('Error saving session.');
         }
+        res.redirect('/concerts');
+    });
+
     // Pass the code to the /callback endpoint
     req.code = code;
 
@@ -59,8 +64,8 @@ app.post('/callback', express.json(), (req, res) => {
         spotifyApi.getMyTopArtists().then(response => {
             const topArtistsData = response.body;
             const topArtists = topArtistsData.items.map(item => item.name);
-            console.log('Top artists:', topArtists); 
-        
+            console.log('Top artists:', topArtists);
+
             // Save the top artists to the Firebase database
             const docRef = db.collection('users').doc(uid);  // Replace 'uid' with the user's ID
             docRef.set({
@@ -80,16 +85,17 @@ app.post('/callback', express.json(), (req, res) => {
         console.error('Error exchanging code for access token:', err);
         res.send('Error exchanging code for access token. Please try again later.');
     });
-  });  // This is the missing closing bracket
-});
+});  // This is the correct closing bracket
 
 app.get('/concerts', async (req, res) => {
     console.log('Session:', req.session);
     console.log('Accessed /concerts endpoint');
     try {
-      
         const allConcerts = [];
         const userId = req.session.userId; 
+        if (!userId) {
+            return res.status(401).send('You must authenticate first.');
+        }
         console.log('User ID CONCERTS:', userId);
         const userDoc = await db.collection('users').doc(userId).get();
         const userData = userDoc.data();
@@ -115,22 +121,12 @@ app.get('/concerts', async (req, res) => {
                     const venue = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].name : 'Unknown Venue';
                     const city = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].city.name : 'Unknown City';
                     const country = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].country.name : 'Unknown Country';
-                    /*
-                    const images = event.images.map(image => ({
-                        ratio: image.ratio,
-                        url: image.url,
-                        width: image.width,
-                        height: image.height,
-                        fallback: image.fallback 
-                    }));
-*/
                     return {
                         name: event.name,
                         date: event.dates.start.localDate,
                         venue: venue,
                         city: city,
                         country: country,
-                       /* images: images*/
                     };
                 });
                 
