@@ -10,11 +10,11 @@ import { Ionicons } from '@expo/vector-icons';
 const Tab = createBottomTabNavigator(); 
 const Stack = createStackNavigator();
 
-export const HomeStack = () => (
+export const HomeStack = ({uid}) => (
   <Stack.Navigator>
     <Stack.Screen
       name="Home"
-      component={HomeScreen}
+      children={props => <HomeScreen {...props} uid={uid} />}
     />
     <Stack.Screen
       name="Concertinfo"
@@ -23,7 +23,7 @@ export const HomeStack = () => (
   </Stack.Navigator>
 );
 
-export const MainNavigator = () => {
+export const MainNavigator = ({uid}) => {
   const tabBarOptions = {
     style: {
       backgroundColor: '', // Set the background color of the tab bar
@@ -38,7 +38,8 @@ export const MainNavigator = () => {
     >
       <Tab.Screen
         name="Home"
-        component={HomeStack} 
+        children={props => <HomeStack {...props} uid={uid} />}
+        
         options={{
           headerShown: false,
           tabBarIcon: ({ color, size }) => (

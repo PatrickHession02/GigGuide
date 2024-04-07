@@ -8,7 +8,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { useAutoDiscovery, useAuthRequest,  makeRedirectUri} from 'expo-auth-session';
 WebBrowser.maybeCompleteAuthSession();
 
-const HomeScreen = () => {
+const HomeScreen = ({uid}) => {
   const [search, setSearch] = useState('');
   const navigation = useNavigation();
   const discovery = useAutoDiscovery('https://accounts.spotify.com');
@@ -26,32 +26,32 @@ const HomeScreen = () => {
     },
     discovery
   );
+  const [handleLogin, setHandleLogin] = useState(() => async () => {});
 
-  const handleLogin = async () => {
-    const result = await promptAsync();
-    if (result.type === 'success') {
-      // The user authenticated successfully, you can get the authorization code like this:
-      const code = result.params.code;
-      // Now you can send the code to your backend to get an access token and refresh token
-      console.log("Authorization Code: ", code);
+  useEffect(() => {
+    setHandleLogin(() => async () => {
+      const result = await promptAsync();
+      if (result.type === 'success') {
+        const code = result.params.code;
+        console.log("Authorization Code: ", code);
+        console.log("UID2: ", uid);
+        const response = await fetch('https://3302-93-89-250-119.ngrok-free.app/callback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ code, uid}),
+        });
   
-      // Send the code to your backend
-      const response = await fetch('https://3302-93-89-250-119.ngrok-free.app/callback', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code }),
-      });
-  
-      if (!response.ok) {
-        console.error('Failed to send code to backend');
-        return;
+        if (!response.ok) {
+          console.error('Failed to send code to backend');
+          return;
+        }
+        const data = await response.json();
+        console.log('Received data from backend', data);
       }
-      const data = await response.json();
-      console.log('Received data from backend', data);
-    }
-  };
+    });
+  }, [uid, promptAsync]);
 
 
   fetch('https://3302-93-89-250-119.ngrok-free.app/concerts')

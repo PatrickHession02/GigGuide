@@ -6,9 +6,9 @@ const app = express();
 const port = 3050;
 const projectId = process.env.GOOGLE_CLOUD_PROJECT;
 const admin = require('firebase-admin');
-
+const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
 admin.initializeApp({
-  credential: admin.credential.applicationDefault(),
+    credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://</gigguide-b3d86>.firebaseio.com'
 });
 
@@ -25,8 +25,9 @@ const spotifyApi = new SpotifyWebApi({
 
 app.post('/callback', express.json(), (req, res) => {
     const code = req.body.code;
+    const uid = req.body.uid;
     console.log('Received code:', code);
-  
+    console.log('Received UID:', uid);
     // Pass the code to the /callback endpoint
     req.code = code;
 
@@ -44,6 +45,16 @@ app.post('/callback', express.json(), (req, res) => {
             const topArtistsData = response.body;
             const topArtists = topArtistsData.items.map(item => item.name);
             console.log('Top artists:', topArtists); 
+        
+            // Save the top artists to the Firebase database
+            const docRef = db.collection('users').doc(uid);  // Replace 'uid' with the user's ID
+            docRef.set({
+                topArtists: topArtists
+            }).then(() => {
+                console.log('Top artists saved to Firebase');
+            }).catch(err => {
+                console.error('Error saving top artists to Firebase:', err);
+            });
         }).catch(err => {
             // Handle errors here
             console.error('Error fetching top artists:', err);
@@ -53,8 +64,7 @@ app.post('/callback', express.json(), (req, res) => {
         console.error('Error exchanging code for access token:', err);
         res.send('Error exchanging code for access token. Please try again later.');
     });
-});
-
+});  
 app.get('/concerts', async (req, res) => {
     console.log('Accessed /concerts endpoint');
     try {
@@ -110,7 +120,7 @@ app.get('/concerts', async (req, res) => {
         // Log the error
         console.error('Error fetching concerts:', error);
         // Send error response
-        res.status(500).json({ error: error.message });
+        //res.status(500).json({ error: error.message });
     }
 });
 /*

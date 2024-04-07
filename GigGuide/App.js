@@ -13,11 +13,16 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = FIREBASE_AUTH.onAuthStateChanged((user) => {
       console.log('user', user);
+      if (user) {
+        console.log('UID1', user.uid);  // Log the UID to the console
+      }
       setUser(user);
+      setLoading(false);
     });
   
     return () => unsubscribe();
@@ -31,15 +36,23 @@ export default function App() {
     }
   };
 
+
+  if (loading) {
+    return null; // Or return a loading spinner
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {user ? (
-          <Stack.Screen options={{ headerShown: false }} name="Main" component={MainNavigator} />
+          <Stack.Screen 
+            options={{ headerShown: false }} 
+            name="Main"
+            children={props => <MainNavigator {...props} uid={user.uid} />}
+          />
         ) : (
           <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         )}
       </Stack.Navigator>
     </NavigationContainer>
-  );
-}
+  );}
