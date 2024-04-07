@@ -4,9 +4,9 @@ const SpotifyWebApi = require('spotify-web-api-node');
 const axios = require('axios');
 const app = express();
 const port = 3050;
-const projectId = process.env.GOOGLE_CLOUD_PROJECT;
 const admin = require('firebase-admin');
-const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+const sessionSecret = process.env.SESSION_KEY;
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://</gigguide-b3d86>.firebaseio.com'
@@ -22,12 +22,25 @@ const spotifyApi = new SpotifyWebApi({
     ticketmasterApiKey: process.env.TICKETMASTER_API_KEY,
     aiKey: process.env.OPEN_AI_KEY
 });
+const session = require('express-session');
 
+app.use(session({
+  secret: sessionSecret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Note: In production, set this to true and ensure your app uses HTTPS
+}));
 app.post('/callback', express.json(), (req, res) => {
     const code = req.body.code;
     const uid = req.body.uid;
     console.log('Received code:', code);
     console.log('Received UID:', uid);
+    req.session.userId = uid;
+    req.session.save(err => {
+        if(err) {
+            console.error('Error saving session:', err);
+            return res.status(500).send('Error saving session. Please try again later.');
+        }
     // Pass the code to the /callback endpoint
     req.code = code;
 
@@ -64,14 +77,21 @@ app.post('/callback', express.json(), (req, res) => {
         console.error('Error exchanging code for access token:', err);
         res.send('Error exchanging code for access token. Please try again later.');
     });
-});  
+  });  // This is the missing closing bracket
+});
+
 app.get('/concerts', async (req, res) => {
     console.log('Accessed /concerts endpoint');
     try {
       
         const allConcerts = [];
-
+        const userId = req.session.userId; 
+        console.log('User ID CONCERTS:', userId);
+        const userDoc = await db.collection('users').doc(userId).get();
+        const userData = userDoc.data();
+        const artists = userData.topArtists;
         // Loop through each artist and make separate API calls to Ticketmaster
+        console.log('TOP ARTISTS CONCERTS/!!!!:', artists);
         for (const artist of artists) {
             await delayRequest(); // Apply rate limiting
             

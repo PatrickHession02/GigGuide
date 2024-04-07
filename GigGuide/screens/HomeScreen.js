@@ -63,6 +63,11 @@ const HomeScreen = ({uid}) => {
     .catch((error) => {
       console.error('Error fetching concerts:', error);
     });
+
+    fetch('/concerts')
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
 /*
   const handleConcertPress = () => {
     navigation.navigate('Concertinfo');
