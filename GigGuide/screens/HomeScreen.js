@@ -35,7 +35,7 @@ const HomeScreen = ({uid}) => {
         const code = result.params.code;
         console.log("Authorization Code: ", code);
         console.log("UID2: ", uid);
-        const response = await fetch('https://3302-93-89-250-119.ngrok-free.app/callback', {
+        const response = await fetch('https://bfab-79-140-211-73.ngrok-free.app/callback', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
