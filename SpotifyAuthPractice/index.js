@@ -26,7 +26,7 @@ const session = require('express-session');
 
 app.use(session({
   secret: sessionSecret,
-  resave: false,
+  resave: true,
   saveUninitialized: true,
   cookie: { secure: false } // Note: In production, set this to true and ensure your app uses HTTPS
 }));
