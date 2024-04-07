@@ -4,6 +4,15 @@ const SpotifyWebApi = require('spotify-web-api-node');
 const axios = require('axios');
 const app = express();
 const port = 3050;
+const projectId = process.env.GOOGLE_CLOUD_PROJECT;
+const admin = require('firebase-admin');
+
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(),
+  databaseURL: 'https://</gigguide-b3d86>.firebaseio.com'
+});
+
+const db = admin.firestore();
 
 // Initialize the Spotify API with credentials from environment variables.
 const spotifyApi = new SpotifyWebApi({
@@ -118,6 +127,25 @@ app.get('/reccomend', (req, res) => {
    exports.routes = router
 });
 */
+
+app.get('/test', async (req, res) => {
+    // Write some data to Firestore
+    const docRef = db.collection('testCollection').doc('testDoc');
+    await docRef.set({
+      testField: 'testValue'
+    });
+  
+    // Read the data back
+    const doc = await docRef.get();
+    if (!doc.exists) {
+      console.log('No such document!');
+    } else {
+      console.log('Document data:', doc.data());
+    }
+  
+    res.send('Check the console for the test results.');
+  });
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
