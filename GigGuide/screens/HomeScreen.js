@@ -20,7 +20,7 @@ const HomeScreen = () => {
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: '736a5838698041a6bcfb852f8ee1a6ab',
-      scopes: ['user-read-email', 'playlist-modify-public'],
+      scopes: ['user-read-email', 'playlist-modify-public','user-top-read'],
       usePKCE: false,
       redirectUri: redirectUri,
     },

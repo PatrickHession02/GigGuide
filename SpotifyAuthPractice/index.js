@@ -13,20 +13,13 @@ const spotifyApi = new SpotifyWebApi({
     ticketmasterApiKey: process.env.TICKETMASTER_API_KEY,
     aiKey: process.env.OPEN_AI_KEY
 });
-
+/*
 // Rate limiting parameters
 const RATE_LIMIT_DELAY = 1000; // 1 second delay between requests
 let lastRequestTime = 0;
 
 // Function to delay requests based on rate limit
-async function delayRequest() {
-    const now = Date.now();
-    const timeSinceLastRequest = now - lastRequestTime;
-    if (timeSinceLastRequest < RATE_LIMIT_DELAY) {
-        await new Promise(resolve => setTimeout(resolve, RATE_LIMIT_DELAY - timeSinceLastRequest));
-    }
-    lastRequestTime = Date.now();
-}
+*/
 app.post('/callback', express.json(), (req, res) => {
     const code = req.body.code;
     console.log('Received code:', code);
@@ -47,7 +40,7 @@ app.post('/callback', express.json(), (req, res) => {
         spotifyApi.getMyTopArtists().then(response => {
             const topArtistsData = response.body;
             const topArtists = topArtistsData.items.map(item => item.name);
-          
+            console.log('Top artists:', topArtists); 
         }).catch(err => {
             // Handle errors here
             console.error('Error fetching top artists:', err);
@@ -69,12 +62,13 @@ app.get('/login', (req, res) => {
 */
 // Route handler for the callback endpoint after the user has logged in.
 // Route handler for the callback endpoint after the user has logged in.
+/*
 app.get('/callback', (req, res) => {
     // Extract the error from the query parameters.
     const error = req.query.error;
 
     // Use the code passed from the /data endpoint.
-    const code = req.code;
+    const code = req.query.code;
 
     // If there is an error, log it and send a response to the user.
     if (error) {
@@ -108,7 +102,7 @@ app.get('/callback', (req, res) => {
         res.send('Error exchanging code for access token. Please try again later.');
     });
 });
-
+*/
 // Route handler for fetching concerts from Ticketmaster API
 app.get('/concerts', async (req, res) => {
     try {
