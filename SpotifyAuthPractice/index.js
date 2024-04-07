@@ -30,6 +30,8 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: false } // Note: In production, set this to true and ensure your app uses HTTPS
 }));
+
+
 app.post('/callback', express.json(), (req, res) => {
     const code = req.body.code;
     const uid = req.body.uid;
@@ -65,6 +67,7 @@ app.post('/callback', express.json(), (req, res) => {
                 topArtists: topArtists
             }).then(() => {
                 console.log('Top artists saved to Firebase');
+                req.session.userId = uid;
             }).catch(err => {
                 console.error('Error saving top artists to Firebase:', err);
             });
@@ -81,6 +84,7 @@ app.post('/callback', express.json(), (req, res) => {
 });
 
 app.get('/concerts', async (req, res) => {
+    console.log('Session:', req.session);
     console.log('Accessed /concerts endpoint');
     try {
       
@@ -157,24 +161,6 @@ app.get('/reccomend', (req, res) => {
    exports.routes = router
 });
 */
-
-app.get('/test', async (req, res) => {
-    // Write some data to Firestore
-    const docRef = db.collection('testCollection').doc('testDoc');
-    await docRef.set({
-      testField: 'testValue'
-    });
-  
-    // Read the data back
-    const doc = await docRef.get();
-    if (!doc.exists) {
-      console.log('No such document!');
-    } else {
-      console.log('Document data:', doc.data());
-    }
-  
-    res.send('Check the console for the test results.');
-  });
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

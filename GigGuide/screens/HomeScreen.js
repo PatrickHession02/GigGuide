@@ -54,20 +54,19 @@ const HomeScreen = ({uid}) => {
   }, [uid, promptAsync]);
 
 
-  fetch('https://3302-93-89-250-119.ngrok-free.app/concerts')
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('Concerts data:', data);
-      setConcertsData(data);
-    })
-    .catch((error) => {
-      console.error('Error fetching concerts:', error);
-    });
+  useEffect(() => {
+    fetch('https://bfab-79-140-211-73.ngrok-free.app/concerts')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Concerts data:', data);
+        setConcertsData(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching concerts:', error);
+      });
+  }, []);
 
-    fetch('/concerts')
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error('Error:', error));
+
 /*
   const handleConcertPress = () => {
     navigation.navigate('Concertinfo');
