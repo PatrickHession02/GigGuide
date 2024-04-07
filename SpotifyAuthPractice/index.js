@@ -37,7 +37,7 @@ app.post('/callback', express.json(), (req, res) => {
     const uid = req.body.uid;
     console.log('Received code:', code);
     console.log('Received UID:', uid);
-    req.session.userId = uid;
+    req.session.userId = req.body.uid;
     req.session.save(err => {
         if(err) {
             console.error('Error saving session:', err);
@@ -147,20 +147,7 @@ app.get('/concerts', async (req, res) => {
         //res.status(500).json({ error: error.message });
     }
 });
-/*
-app.get('/reccomend', (req, res) => {
-   const express = require('express')
-   const router = express.Router()
-   const OpenAI = require("openai")
-   const openai = new OpenAI({ apiKey:'aiKey' }) 
 
-   router.get('/', (req, res, next) => {
-       aiTest()
-   })
-
-   exports.routes = router
-});
-*/
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
