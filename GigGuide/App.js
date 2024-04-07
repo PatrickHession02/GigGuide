@@ -6,18 +6,25 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { FIREBASE_AUTH } from './FirebaseConfig';
 import LoginScreen from './screens/LoginScreen';
 import MainNavigator from './screens/MainNavigation';
-
+import { firebase, auth } from './FirebaseConfig';
+import { signOut } from 'firebase/auth';
+import HomeScreen from './screens/HomeScreen';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+    const unsubscribe = FIREBASE_AUTH.onAuthStateChanged((user) => {
       console.log('user', user);
+      if (user) {
+        console.log('UID1', user.uid);  // Log the UID to the console
+      }
       setUser(user);
+      setLoading(false);
     });
-
+  
     return () => unsubscribe();
   }, []);
 
@@ -30,24 +37,22 @@ export default function App() {
   };
 
 
+  if (loading) {
+    return null; // Or return a loading spinner
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         {user ? (
-          <Stack.Screen options={{ headerShown: false }} name="Main" component={MainNavigator} />
+          <Stack.Screen 
+            options={{ headerShown: false }} 
+            name="Main"
+            children={props => <MainNavigator {...props} uid={user.uid} />}
+          />
         ) : (
           <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         )}
       </Stack.Navigator>
     </NavigationContainer>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  );}

@@ -1,53 +1,76 @@
-import React, { useState, useEffect } from 'react';
-import { ScrollView, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import { Button } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
+import { useAutoDiscovery, useAuthRequest,  makeRedirectUri} from 'expo-auth-session';
+WebBrowser.maybeCompleteAuthSession();
 
-const HomeScreen = () => {
-  const navigation = useNavigation();
+const HomeScreen = ({uid}) => {
   const [search, setSearch] = useState('');
-  const [imagePaths, setImagePaths] = useState([]);
+  const navigation = useNavigation();
+  const discovery = useAutoDiscovery('https://accounts.spotify.com');
   const [concertsData, setConcertsData] = useState([]);
-
-  const fetchConcertsData = async () => {
-    try {
-      const response = await fetch('https://6cb6-193-1-57-1.ngrok-free.app/concerts');
-      const data = await response.json();
-      setConcertsData(data);
-    } catch (error) {
-      console.error('Error fetching concert data:', error);
-    }
-  };
   
-  useEffect(() => {
-    fetchConcertsData(); // Fetch concert data from backend
-  }, []); // Empty dependency array ensures that the effect runs only once after the component mounts
+  const redirectUri = makeRedirectUri({ scheme: 'gigguide' });
+  console.log("Redirect URI: ", redirectUri);
+  
+  const [request, response, promptAsync] = useAuthRequest(
+    {
+      clientId: '736a5838698041a6bcfb852f8ee1a6ab',
+      scopes: ['user-read-email', 'playlist-modify-public','user-top-read'],
+      usePKCE: false,
+      redirectUri: redirectUri,
+    },
+    discovery
+  );
+  const [handleLogin, setHandleLogin] = useState(() => async () => {});
 
   useEffect(() => {
-    // Extract image URLs from concert data when concertsData changes
-    const imageUrls = extractImageUrls(concertsData);
-    setImagePaths(imageUrls);
-  }, [concertsData]); // Re-run effect when concertsData changes
-
-  const extractImageUrls = (concertsData) => {
-    const imageUrls = [];
-    if (Array.isArray(concertsData)) {
-      concertsData.forEach(concert => {
-        concert.images.forEach(image => {
-          imageUrls.push(image.url);
+    setHandleLogin(() => async () => {
+      const result = await promptAsync();
+      if (result.type === 'success') {
+        const code = result.params.code;
+        console.log("Authorization Code: ", code);
+        console.log("UID2: ", uid);
+        const response = await fetch('https://3302-93-89-250-119.ngrok-free.app/callback', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ code, uid}),
         });
-      });
-    }
-    return imageUrls;
-  };
+  
+        if (!response.ok) {
+          console.error('Failed to send code to backend');
+          return;
+        }
+        const data = await response.json();
+        console.log('Received data from backend', data);
+      }
+    });
+  }, [uid, promptAsync]);
 
-  const handleImagePress = () => {
+
+  fetch('https://3302-93-89-250-119.ngrok-free.app/concerts')
+    .then((response) => response.json())
+    .then((data) => {
+      console.log('Concerts data:', data);
+      setConcertsData(data);
+    })
+    .catch((error) => {
+      console.error('Error fetching concerts:', error);
+    });
+/*
+  const handleConcertPress = () => {
     navigation.navigate('Concertinfo');
   };
+*/
 
   return (
-    <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
+    <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <View>
         <SearchBar
           placeholder="Type Here..."
@@ -57,11 +80,12 @@ const HomeScreen = () => {
           inputContainerStyle={styles.searchBarInputContainer}
         />
       </View>
+      <Button title="Login" onPress={handleLogin} />
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        {imagePaths.map((path, index) => (
-          <TouchableOpacity key={index} onPress={handleImagePress}>
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: path }} style={styles.image} />
+        {concertsData.map((concert, index) => (
+          <TouchableOpacity key={index} onPress={handleConcertPress}>
+            <View style={styles.concertContainer}>
+              <Text style={styles.concertName}>{concert.name}</Text>
             </View>
           </TouchableOpacity>
         ))}
@@ -88,17 +112,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
   },
-  imageContainer: {
+  concertContainer: {
     width: '80%',
-    aspectRatio: 16 / 10,
+    padding: 10,
     borderRadius: 20,
-    overflow: 'hidden',
+    backgroundColor: '#fff',
     marginBottom: 20,
   },
-  image: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
+  concertName: {
+    fontSize: 16,
   },
 });
 
