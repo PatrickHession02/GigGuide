@@ -16,7 +16,17 @@ const HomeScreen = ({ uid }) => {
 
   const redirectUri = makeRedirectUri({ scheme: 'gigguide' });
   console.log("Redirect URI: ", redirectUri);
-
+  
+  const getGreeting = () => {
+    const currentHour = new Date().getHours();
+    if (currentHour < 12) {
+      return 'Good Morning';
+    } else if (currentHour < 18) {
+      return 'Good Afternoon';
+    } else {
+      return 'Good Evening';
+    }
+  };
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: '736a5838698041a6bcfb852f8ee1a6ab',
@@ -105,6 +115,7 @@ const HomeScreen = ({ uid }) => {
     <SafeAreaView>
       {concertsData.length === 0 && <Button title="Login" onPress={handleLogin} />}
     </SafeAreaView>
+    <Text style={styles.greetingText}>{getGreeting()}</Text>
     <FlatList
       contentContainerStyle={styles.scrollViewContainer}
       data={concertsData}
@@ -139,6 +150,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#fff',
     marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   concertName: {
     position: 'absolute',
@@ -150,12 +169,17 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 80,
+    fontWeight: 'bold', // Make the text bold
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Add a semi-transparent black background to the text
+    padding: 10, // Add some padding so the background doesn't hug the text too tightly
+    borderRadius: 5, // Add some border radius to make the background rounded
 
   },
   concertImage: {
     width: '100%', // make the image fill the width of the container
     height: 200, // adjust the height as needed
     resizeMode: 'cover', // make the image cover the whole width while maintaining its aspect ratio
+    borderRadius: 10, // add this line to make the image corners rounded
   },
   greetingText: {
     fontSize: 32,
