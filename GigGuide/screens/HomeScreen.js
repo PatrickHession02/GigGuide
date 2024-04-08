@@ -158,6 +158,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+    borderWidth: 2, // This sets the width of the border
+    borderColor: '#f205e2', // This sets the color of the border
   },
   concertName: {
     position: 'absolute',
@@ -188,6 +190,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginLeft: 16,
     marginTop: 1,
+    textShadowColor: '#000',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+    marginBottom: 20, 
   },
 });
 
