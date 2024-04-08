@@ -21,7 +21,7 @@ const Settings = () => {
 
   
   return (
-    <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
+    <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <SafeAreaView contentContainerStyle={styles.container}>
         <View style={styles.buttonContainer}>
           {/* Green rounded rectangle background */}
