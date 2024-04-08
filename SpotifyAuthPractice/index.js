@@ -110,6 +110,9 @@ app.get('/concerts', async (req, res) => {
                     keyword: artist,
                     countryCode: 'IE' // Filter for Ireland
                 }
+            }).catch(error => {
+                console.error(`Error fetching events for artist ${artist}:`, error);
+                return { data: { _embedded: { events: [] } } }; // Return empty events if request fails
             });
         });
 

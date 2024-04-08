@@ -11,14 +11,15 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export const HomeStack = ({uid}) => (
-  <Stack.Navigator>
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen
-      name="Home"
+      name="HomeStackScreen"
       children={props => <HomeScreen {...props} uid={uid} />}
     />
     <Stack.Screen
       name="Concertinfo"
       component={Concertinfo}
+      options={{ headerShown: false }}
     />
   </Stack.Navigator>
 );
@@ -36,18 +37,16 @@ export const MainNavigator = ({uid}) => {
     <Tab.Navigator
       tabBarOptions={tabBarOptions}
     >
-      <Tab.Screen
-        name="Home"
-        children={props => <HomeStack {...props} uid={uid} />}
-        
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color={color} size={size} />
-          ),
-        }}
-      />
-     
+<Tab.Screen
+  name="Home"
+  children={props => <HomeStack {...props} uid={uid} />}
+  options={{
+    headerShown: false,
+    tabBarIcon: ({ color, size }) => (
+      <Ionicons name="home" color={color} size={size} />
+    ),
+  }}
+/>
       <Tab.Screen
         name="Profile"
         component={Profile}

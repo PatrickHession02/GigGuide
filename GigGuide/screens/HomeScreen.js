@@ -1,32 +1,32 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View, Text, Image, FlatList, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
-import { Button } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
-import { useAutoDiscovery, useAuthRequest,  makeRedirectUri} from 'expo-auth-session';
+import { useAutoDiscovery, useAuthRequest, makeRedirectUri } from 'expo-auth-session';
 import { SafeAreaView } from 'react-native-safe-area-context';
 WebBrowser.maybeCompleteAuthSession();
 
-const HomeScreen = ({uid}) => {
+const HomeScreen = ({ uid }) => {
   const [search, setSearch] = useState('');
   const navigation = useNavigation();
   const discovery = useAutoDiscovery('https://accounts.spotify.com');
   const [concertsData, setConcertsData] = useState([]);
-  
+
   const redirectUri = makeRedirectUri({ scheme: 'gigguide' });
   console.log("Redirect URI: ", redirectUri);
-  
+
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: '736a5838698041a6bcfb852f8ee1a6ab',
-      scopes: ['user-read-email', 'playlist-modify-public','user-top-read'],
+      scopes: ['user-read-email', 'playlist-modify-public', 'user-top-read'],
       usePKCE: false,
       redirectUri: redirectUri,
     },
     discovery
   );
+
   const [handleLogin, setHandleLogin] = useState(() => async () => {});
 
   useEffect(() => {
@@ -41,9 +41,9 @@ const HomeScreen = ({uid}) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ code, uid}),
+          body: JSON.stringify({ code, uid }),
         });
-  
+
         if (!response.ok) {
           console.error('Failed to send code to backend');
           return;
@@ -67,27 +67,28 @@ const HomeScreen = ({uid}) => {
       });
   }, []);
 
-
-
   const handleConcertPress = () => {
     navigation.navigate('Concertinfo');
   };
 
-
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <SafeAreaView>
-      {concertsData.length === 0 && <Button title="Login" onPress={handleLogin} />}
+        {concertsData.length === 0 && <Button title="Login" onPress={handleLogin} />}
       </SafeAreaView>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-      {concertsData.map((concert, index) => (
-    <TouchableOpacity key={index} onPress={handleConcertPress}>
-        <View style={styles.concertContainer}>
-            <Text style={styles.concertName}>{concert.name}</Text>
-            {concert.images.length > 0 && <Image source={{ uri: concert.images[0].url }} />}
-        </View>
-    </TouchableOpacity>
-))}
+      <Text style={styles.greetingText}>Good Morning</Text>
+        {concertsData.map((concert, index) => (
+          <TouchableOpacity key={index} onPress={handleConcertPress}>
+            <View style={styles.concertContainer}>
+              <Text style={styles.concertName}>{concert.name}</Text>
+              <Text style={styles.concertDate}>{concert.date}</Text>
+              <Text style={styles.concertVenue}>{concert.venue}</Text>
+              <Text style={styles.concertCity}>{concert.city}, {concert.country}</Text>
+              {concert.images.length > 0 && <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />}
+            </View>
+          </TouchableOpacity>
+        ))}
       </ScrollView>
     </LinearGradient>
   );
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   concertContainer: {
-    width: '80%',
+    width: 300, // This sets the width to 300 pixels
     padding: 10,
     borderRadius: 20,
     backgroundColor: '#fff',
@@ -120,6 +121,18 @@ const styles = StyleSheet.create({
   },
   concertName: {
     fontSize: 16,
+  },
+  concertImage: {
+    width: 100, // replace with the desired width
+    height: 100, // replace with the desired height
+  },
+  greetingText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#fff',
+    alignSelf: 'flex-start',
+    marginLeft: 16,
+    marginTop: 1,
   },
 });
 
