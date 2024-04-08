@@ -1,26 +1,15 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, ScrollView, Image, Dimensions } from 'react-native';
-import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import React from 'react';
+import { Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import Carousel from 'react-native-snap-carousel';
+import FullWidthImage from 'react-native-fullwidth-image';
 
 const Concertinfo = ({ route }) => {
-  const { concert } = route.params;
-  const carouselRef = useRef(null);
-  const { width: screenWidth } = Dimensions.get('window');
+ const { concert } = route.params;
+ const insets = useSafeAreaInsets(); // Get the safe area insets
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      carouselRef.current.snapToNext();
-    }, 2000); // Change images every 2 seconds
-    return () => clearInterval(timer);
-  }, []);
+ const styles = StyleSheet.create({
 
-  const styles = StyleSheet.create({
-    container: {
-      padding: 10, // Add your desired padding or other styles
-    },
     gradient: {
       position: 'absolute',
       left: 0,
@@ -28,37 +17,30 @@ const Concertinfo = ({ route }) => {
       top: 0,
       height: '100%',
     },
-    image: {
-      width: screenWidth - 60,
-      height: 200,
+    scrollView: {
+      width: "100%" // Make the ScrollView take up the full width of the screen
+
     },
-  });
+ });
 
-  const renderItem = ({ item }) => {
-    return (
-      <Image style={styles.image} source={{ uri: item }} />
-    );
-  };
+ const nonFallbackImages = concert.concerts[0].images.filter(image => !image.fallback);
+ const highestQualityImage = nonFallbackImages[nonFallbackImages.length - 1]; // Get the highest quality image
 
-  return (
+ return (
     <>
       <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient} />
-      <SafeAreaView style={{flex: 1}}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <Text> {concert.name}</Text>
-          <Carousel
-            ref={carouselRef}
-            data={concert.concerts[0].images}
-            renderItem={renderItem}
-            sliderWidth={screenWidth}
-            itemWidth={screenWidth - 60}
-            loop={true}
-          />
-          <Text>Concert Info</Text>
-        </ScrollView>
-      </SafeAreaView>
+      <ScrollView contentContainerStyle={styles.container} style={styles.scrollView}>
+        {highestQualityImage && (
+     <FullWidthImage
+     source={{ uri: highestQualityImage.url }}
+     resizeMode="cover"
+   />
+        )}
+        <Text> {concert.name}</Text>
+        <Text>Concert Info</Text>
+      </ScrollView>
     </>
-  );
+ );
 };
 
 export default Concertinfo;
