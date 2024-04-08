@@ -54,13 +54,26 @@ const HomeScreen = ({ uid }) => {
     });
   }, [uid, promptAsync]);
 
-
   useEffect(() => {
     fetch('https://bfab-79-140-211-73.ngrok-free.app/concerts')
       .then((response) => response.json())
       .then((data) => {
-        console.log('Concerts data:', data);
-        setConcertsData(data);
+        console.log('Fetched data:', data);
+        if (!data) {
+          console.error('Fetched data is undefined');
+          return;
+        }
+        const groupedData = data.reduce((acc, concert) => {
+          console.log('Current concert:', concert);
+          const artistIndex = acc.findIndex(artist => artist.name === concert.name); // Changed concert.artist to concert.name
+          if (artistIndex !== -1) {
+            acc[artistIndex].concerts.push(concert);
+          } else {
+            acc.push({ name: concert.name, concerts: [concert] }); // Changed concert.artist to concert.name
+          }
+          return acc;
+        }, []);
+        setConcertsData(groupedData);
       })
       .catch((error) => {
         console.error('Error fetching concerts:', error);
@@ -71,18 +84,25 @@ const HomeScreen = ({ uid }) => {
     navigation.navigate('Concertinfo');
   };
 
-  const renderItem = ({ item: concert }) => (
-    <TouchableOpacity onPress={handleConcertPress}>
-      <View style={styles.concertContainer}>
-        <Text style={styles.concertName}>{concert.name}</Text>
-        <Text style={styles.concertDate}>{concert.date}</Text>
-        <Text style={styles.concertVenue}>{concert.venue}</Text>
-        <Text style={styles.concertCity}>{concert.city}, {concert.country}</Text>
-        {concert.images.length > 0 && <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />}
-      </View>
-    </TouchableOpacity>
-  );
-
+  const renderItem = ({ item: concert }) => {
+    const firstConcert = concert.concerts[0];
+    return (
+      <TouchableOpacity onPress={handleConcertPress}>
+        <View style={styles.concertContainer}>
+          <Text style={styles.concertDate}>{firstConcert.date}</Text>
+          <Text style={styles.concertVenue}>{firstConcert.venue}</Text>
+          <Text style={styles.concertCity}>{firstConcert.city}, {firstConcert.country}</Text>
+          {firstConcert.images && firstConcert.images.length > 0 && (
+            <View style={styles.imageContainer}>
+              <Image style={styles.concertImage} source={{ uri: firstConcert.images[0].url }} />
+              <Text style={styles.concertName}>{firstConcert.name}</Text>
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  };
+  console.log('Concerts Data:', concertsData);
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
     <SafeAreaView>
@@ -124,7 +144,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   concertName: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    color: 'white',
     fontSize: 16,
+    fontWeight: 'bold',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
   },
   concertImage: {
     width: '100%', // make the image fill the width of the container
