@@ -145,7 +145,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   concertContainer: {
-    width: 300, // This sets the width to 300 pixels
+    width: 400, 
+    height: 300,// This sets the width to 300 pixels
     padding: 10,
     borderRadius: 20,
     backgroundColor: '#fff',
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
   },
   concertImage: {
     width: '100%', // make the image fill the width of the container
-    height: 200, // adjust the height as needed
+    height: '100%', // adjust the height as needed
     resizeMode: 'cover', // make the image cover the whole width while maintaining its aspect ratio
     borderRadius: 10, // add this line to make the image corners rounded
   },
