@@ -63,7 +63,7 @@ app.post('/callback', express.json(), (req, res) => {
         spotifyApi.setRefreshToken(refreshToken);
 
         // Now you can use the access token to get the user's top artists.
-        spotifyApi.getMyTopArtists().then(response => {
+        spotifyApi.getMyTopArtists({ limit: 30 }).then(response => {
             const topArtistsData = response.body;
             const topArtists = topArtistsData.items.map(item => item.name);
             console.log('Top artists:', topArtists);
