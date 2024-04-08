@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 const Concertinfo = ({ route }) => {
  const { concert } = route.params;
  const insets = useSafeAreaInsets(); // Get the safe area insets
-
+ console.log("routes",route.params);
  const styles = StyleSheet.create({
     gradient: {
       position: 'absolute',
@@ -38,7 +38,7 @@ const Concertinfo = ({ route }) => {
 
  const nonFallbackImages = concert.concerts[0].images.filter(image => !image.fallback);
  const highestQualityImage = nonFallbackImages[nonFallbackImages.length - 1]; // Get the highest quality image
-
+ console.log(concert);
  return (
     <>
       <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient} />
@@ -54,6 +54,7 @@ const Concertinfo = ({ route }) => {
           <Text style={styles.overlay}> {concert.name}</Text>
         </View>
         <Text>Concert Info</Text>
+        <Text>{concert.date ? concert.date.toLocaleDateString() : 'Date not available'}</Text>
       </ScrollView>
     </>
  );

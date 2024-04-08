@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as WebBrowser from 'expo-web-browser';
 import { useAutoDiscovery, useAuthRequest, makeRedirectUri } from 'expo-auth-session';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { SimpleLineIcons } from '@expo/vector-icons';
 WebBrowser.maybeCompleteAuthSession();
 
 const HomeScreen = ({ uid }) => {
@@ -113,7 +114,15 @@ const HomeScreen = ({ uid }) => {
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <SafeAreaView>
-        {concertsData.length === 0 && <Button title="Login" onPress={handleLogin} />}
+      {concertsData.length === 0 && (
+  <View style={styles.loginContainer}>
+   <SimpleLineIcons style={styles.spotifyLogo} name="social-spotify" size={24} color="white" />
+    <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+      <Text style={styles.loginButtonText}>Login</Text>
+    </TouchableOpacity>
+  </View>
+)}
+
       </SafeAreaView>
       {concertsData.length > 0 && <Text style={styles.greetingText}>{getGreeting()}</Text>}
       <FlatList
@@ -195,6 +204,28 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
     marginBottom: 20, 
+  },
+  loginContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  loginButton: {
+    flexDirection: 'row',
+    backgroundColor: '#1DB954',
+    borderRadius: 20,
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loginButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  spotifyLogo: {
+    position: 'absolute',
+    left: 10, // adjust as needed
   },
 });
 
