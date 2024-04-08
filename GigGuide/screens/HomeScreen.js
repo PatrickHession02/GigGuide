@@ -80,14 +80,14 @@ const HomeScreen = ({ uid }) => {
       });
   }, []);
 
-  const handleConcertPress = () => {
-    navigation.navigate('Concertinfo');
+  const handleConcertPress = (concert) => {
+    navigation.navigate('Concertinfo', { concert });
   };
 
   const renderItem = ({ item: concert }) => {
     const firstConcert = concert.concerts[0];
     return (
-      <TouchableOpacity onPress={handleConcertPress}>
+      <TouchableOpacity onPress={() => handleConcertPress(concert)}>
         <View style={styles.concertContainer}>
           <Text style={styles.concertDate}>{firstConcert.date}</Text>
           <Text style={styles.concertVenue}>{firstConcert.venue}</Text>
@@ -151,8 +151,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
-    textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
+    textShadowOffset: { width: 2, height: 1 },
+    textShadowRadius: 80,
+
   },
   concertImage: {
     width: '100%', // make the image fill the width of the container
