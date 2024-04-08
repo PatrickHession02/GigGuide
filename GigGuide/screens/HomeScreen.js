@@ -89,9 +89,6 @@ const HomeScreen = ({ uid }) => {
     return (
       <TouchableOpacity onPress={() => handleConcertPress(concert)}>
         <View style={styles.concertContainer}>
-          <Text style={styles.concertDate}>{firstConcert.date}</Text>
-          <Text style={styles.concertVenue}>{firstConcert.venue}</Text>
-          <Text style={styles.concertCity}>{firstConcert.city}, {firstConcert.country}</Text>
           {firstConcert.images && firstConcert.images.length > 0 && (
             <View style={styles.imageContainer}>
               <Image style={styles.concertImage} source={{ uri: firstConcert.images[0].url }} />
