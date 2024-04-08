@@ -80,13 +80,14 @@ const HomeScreen = ({uid}) => {
       {concertsData.length === 0 && <Button title="Login" onPress={handleLogin} />}
       </SafeAreaView>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        {concertsData.map((concert, index) => (
-          <TouchableOpacity key={index} onPress={handleConcertPress}>
-            <View style={styles.concertContainer}>
-              <Text style={styles.concertName}>{concert.name}</Text>
-            </View>
-          </TouchableOpacity>
-        ))}
+      {concertsData.map((concert, index) => (
+    <TouchableOpacity key={index} onPress={handleConcertPress}>
+        <View style={styles.concertContainer}>
+            <Text style={styles.concertName}>{concert.name}</Text>
+            {concert.images.length > 0 && <Image source={{ uri: concert.images[0].url }} />}
+        </View>
+    </TouchableOpacity>
+))}
       </ScrollView>
     </LinearGradient>
   );

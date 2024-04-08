@@ -7,6 +7,9 @@ const port = 3050;
 const admin = require('firebase-admin');
 const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 const sessionSecret = process.env.SESSION_KEY;
+const httpAdapter = require('axios/lib/adapters/http');
+const rateLimit = require('axios-rate-limit');
+const http = rateLimit(axios.create({ adapter: httpAdapter }), { maxRequests: 5, perMilliseconds: 1000 });
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://</gigguide-b3d86>.firebaseio.com'
@@ -85,13 +88,12 @@ app.post('/callback', express.json(), (req, res) => {
         console.error('Error exchanging code for access token:', err);
         res.send('Error exchanging code for access token. Please try again later.');
     });
-});  // This is the correct closing bracket
-
+}); 
+ // This is the correct closing bracket
 app.get('/concerts', async (req, res) => {
     console.log('Session:', req.session);
     console.log('Accessed /concerts endpoint');
     try {
-        const allConcerts = [];
         const userId = req.session.userId; 
         if (!userId) {
             return res.status(401).send('You must authenticate first.');
@@ -100,47 +102,45 @@ app.get('/concerts', async (req, res) => {
         const userDoc = await db.collection('users').doc(userId).get();
         const userData = userDoc.data();
         const artists = userData.topArtists;
-        // Loop through each artist and make separate API calls to Ticketmaster
         console.log('TOP ARTISTS CONCERTS/!!!!:', artists);
-        for (const artist of artists) {
-            await delayRequest(); // Apply rate limiting
-            
-            // Make API call to Ticketmaster API with artist as search keyword
-            const response = await axios.get('https://app.ticketmaster.com/discovery/v2/events.json', {
+
+        const artistPromises = artists.map(artist => {
+            return http.get('https://app.ticketmaster.com/discovery/v2/events.json', {
                 params: {
                     apikey: process.env.TICKETMASTER_API_KEY,
                     keyword: artist,
                     countryCode: 'IE' // Filter for Ireland
                 }
             });
+        });
 
-            // Check if events are found
+        const responses = await Promise.all(artistPromises);
+
+        const allConcerts = responses.flatMap(response => {
             if (response.data._embedded && response.data._embedded.events && response.data._embedded.events.length > 0) {
-                // Extract relevant data from response
-                const concerts = response.data._embedded.events.map(event => {
+                return response.data._embedded.events.map(event => {
                     const venue = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].name : 'Unknown Venue';
                     const city = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].city.name : 'Unknown City';
                     const country = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].country.name : 'Unknown Country';
+                    const images = event.images ? event.images : [];
                     return {
                         name: event.name,
                         date: event.dates.start.localDate,
                         venue: venue,
                         city: city,
                         country: country,
+                        images: images,
                     };
                 });
-                
-                allConcerts.push(...concerts);
+            } else {
+                return [];
             }
-        }
+        });
+
         console.log('Concert data:', allConcerts);
-        // Send the combined concerts data as JSON
         res.json(allConcerts);
     } catch (error) {
-        // Log the error
         console.error('Error fetching concerts:', error);
-        // Send error response
-        //res.status(500).json({ error: error.message });
     }
 });
 
