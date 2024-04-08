@@ -20,11 +20,11 @@ const HomeScreen = ({ uid }) => {
   const getGreeting = () => {
     const currentHour = new Date().getHours();
     if (currentHour < 12) {
-      return 'Good Morning';
+      return 'Good Morning!';
     } else if (currentHour < 18) {
-      return 'Good Afternoon';
+      return 'Good Afternoon!';
     } else {
-      return 'Good Evening';
+      return 'Good Evening!';
     }
   };
   const [request, response, promptAsync] = useAuthRequest(
