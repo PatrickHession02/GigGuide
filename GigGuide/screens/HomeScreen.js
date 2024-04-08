@@ -112,18 +112,18 @@ const HomeScreen = ({ uid }) => {
   console.log('Concerts Data:', concertsData);
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
-    <SafeAreaView>
-      {concertsData.length === 0 && <Button title="Login" onPress={handleLogin} />}
-    </SafeAreaView>
-    <Text style={styles.greetingText}>{getGreeting()}</Text>
-    <FlatList
-      contentContainerStyle={styles.scrollViewContainer}
-      data={concertsData}
-      renderItem={renderItem}
-      keyExtractor={(item, index) => index.toString()}
-    />
-  </LinearGradient>
-);
+      <SafeAreaView>
+        {concertsData.length === 0 && <Button title="Login" onPress={handleLogin} />}
+      </SafeAreaView>
+      {concertsData.length > 0 && <Text style={styles.greetingText}>{getGreeting()}</Text>}
+      <FlatList
+        contentContainerStyle={styles.scrollViewContainer}
+        data={concertsData}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    </LinearGradient>
+  );
 };
 
 const styles = StyleSheet.create({
