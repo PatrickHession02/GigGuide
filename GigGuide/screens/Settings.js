@@ -18,6 +18,8 @@ const Settings = () => {
     });
   };
 
+
+  
   return (
     <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
       <SafeAreaView contentContainerStyle={styles.container}>

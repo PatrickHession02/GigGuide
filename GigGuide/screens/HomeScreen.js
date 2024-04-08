@@ -71,27 +71,31 @@ const HomeScreen = ({ uid }) => {
     navigation.navigate('Concertinfo');
   };
 
+  const renderItem = ({ item: concert }) => (
+    <TouchableOpacity onPress={handleConcertPress}>
+      <View style={styles.concertContainer}>
+        <Text style={styles.concertName}>{concert.name}</Text>
+        <Text style={styles.concertDate}>{concert.date}</Text>
+        <Text style={styles.concertVenue}>{concert.venue}</Text>
+        <Text style={styles.concertCity}>{concert.city}, {concert.country}</Text>
+        {concert.images.length > 0 && <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />}
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
-      <SafeAreaView>
-        {concertsData.length === 0 && <Button title="Login" onPress={handleLogin} />}
-      </SafeAreaView>
-      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-      <Text style={styles.greetingText}>Good Morning</Text>
-        {concertsData.map((concert, index) => (
-          <TouchableOpacity key={index} onPress={handleConcertPress}>
-            <View style={styles.concertContainer}>
-              <Text style={styles.concertName}>{concert.name}</Text>
-              <Text style={styles.concertDate}>{concert.date}</Text>
-              <Text style={styles.concertVenue}>{concert.venue}</Text>
-              <Text style={styles.concertCity}>{concert.city}, {concert.country}</Text>
-              {concert.images.length > 0 && <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />}
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-    </LinearGradient>
-  );
+    <SafeAreaView>
+      {concertsData.length === 0 && <Button title="Login" onPress={handleLogin} />}
+    </SafeAreaView>
+    <FlatList
+      contentContainerStyle={styles.scrollViewContainer}
+      data={concertsData}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => index.toString()}
+    />
+  </LinearGradient>
+);
 };
 
 const styles = StyleSheet.create({
@@ -123,8 +127,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   concertImage: {
-    width: 100, // replace with the desired width
-    height: 100, // replace with the desired height
+    width: '100%', // make the image fill the width of the container
+    height: 200, // adjust the height as needed
+    resizeMode: 'cover', // make the image cover the whole width while maintaining its aspect ratio
   },
   greetingText: {
     fontSize: 32,
