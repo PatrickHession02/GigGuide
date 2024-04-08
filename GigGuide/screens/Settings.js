@@ -2,6 +2,8 @@ import React from 'react';
 import { ScrollView, View, Button, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { signOut } from 'firebase/auth';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 const Settings = () => {
   const handleSpotifyConnect = () => {
     fetch('localhost:3050/login', {
@@ -18,7 +20,13 @@ const Settings = () => {
     });
   };
 
-
+  const handleLogout = async () => {
+    try {
+      await signOut(FIREBASE_AUTH); // Sign out the user
+    } catch (error) {
+      console.error('Error signing out:', error.message);
+    }
+  };
   
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
@@ -27,12 +35,12 @@ const Settings = () => {
           {/* Green rounded rectangle background */}
           <View style={styles.greenBackground}>
             {/* White button */}
-            <Button title="Spotify Connect" color="#FFFFFF" onPress={handleSpotifyConnect} />
+            <Button title="Spotify ReScan" color="#FFFFFF" onPress={handleSpotifyConnect} />
           </View>
           {/* Red rectangle background */}
           <View style={styles.redBackground}>
             {/* Logout button */}
-            <Button title="Logout" color="#FFFFFF" onPress={() => {}} />
+            <Button title="Logout" color="#FFFFFF" onPress={handleLogout} />
           </View>
         </View>
       </SafeAreaView>
