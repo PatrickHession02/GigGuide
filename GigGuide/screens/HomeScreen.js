@@ -65,34 +65,40 @@ const HomeScreen = ({ uid }) => {
     });
   }, [uid, promptAsync]);
 
-  useEffect(() => {
-    fetch('https://bfab-79-140-211-73.ngrok-free.app/concerts')
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Fetched data:', data);
-        if (!data) {
-          console.error('Fetched data is undefined');
-          return;
+
+  console.log('About to fetch data...');
+useEffect(() => {
+  fetch('https://bfab-79-140-211-73.ngrok-free.app/concerts')
+    .then((response) => {
+      console.log('Fetch call completed');
+      return response.json();
+    })
+    .then((data) => {
+      console.log('Fetched data:', data);
+      if (!data) {
+        console.error('Fetched data is undefined');
+        return;
+      }
+      const groupedData = data.reduce((acc, concert) => {
+        console.log('Current concert:', concert);
+        const artistIndex = acc.findIndex(artist => artist.name === concert.name); // Changed concert.artist to concert.name
+        if (artistIndex !== -1) {
+          acc[artistIndex].concerts.push(concert);
+        } else {
+          acc.push({ name: concert.name, concerts: [concert] }); // Changed concert.artist to concert.name
         }
-        const groupedData = data.reduce((acc, concert) => {
-          console.log('Current concert:', concert);
-          const artistIndex = acc.findIndex(artist => artist.name === concert.name); // Changed concert.artist to concert.name
-          if (artistIndex !== -1) {
-            acc[artistIndex].concerts.push(concert);
-          } else {
-            acc.push({ name: concert.name, concerts: [concert] }); // Changed concert.artist to concert.name
-          }
-          return acc;
-        }, []);
-        setConcertsData(groupedData);
-      })
-      .catch((error) => {
-        console.error('Error fetching concerts:', error);
-      });
-  }, []);
+        return acc;
+      }, []);
+      setConcertsData(groupedData);
+    })
+    .catch((error) => {
+      console.error('Error fetching concerts:', error);
+    });
+}, []);
 
   const handleConcertPress = (concert) => {
     navigation.navigate('Concertinfo', { concert });
+    console.log("THIS IS WHAT CONCERT IS PASSING: ", concert);
   };
 
   const renderItem = ({ item: concert }) => {
