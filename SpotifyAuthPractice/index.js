@@ -9,6 +9,9 @@ const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 const sessionSecret = process.env.SESSION_KEY;
 const rateLimit = require('axios-rate-limit');
 const http = rateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 });
+const aiTest = require('./OpenAiTEST');
+
+app.use('/ai', aiTest.routes);
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://</gigguide-b3d86>.firebaseio.com'
