@@ -52,8 +52,8 @@ export const MainNavigator = ({uid}) => {
       },
     })}
     tabBarOptions={{
-      activeTintColor: 'tomato',
-      inactiveTintColor: 'gray',
+      activeTintColor: '#fc0366',
+      inactiveTintColor: '#f27e44',
     }}
   >
 
