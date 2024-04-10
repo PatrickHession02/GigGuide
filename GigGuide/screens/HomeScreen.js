@@ -67,7 +67,7 @@ const HomeScreen = ({ uid }) => {
 
 
   useEffect(() => {
-    fetch('https://4d5b-79-140-211-73.ngrok-free.app/concerts')
+    fetch('https://bfab-79-140-211-73.ngrok-free.app/concerts')
       .then((response) => response.json())
       .then((data) => {
         console.log('Fetched data:', data);
@@ -92,10 +92,8 @@ const HomeScreen = ({ uid }) => {
       });
   }, []);
 
-
   const handleConcertPress = (concert) => {
     navigation.navigate('Concertinfo', { concert });
-    console.log("THIS IS WHAT CONCERT IS PASSING: ", concert);
   };
 
   const renderItem = ({ item: concert }) => {
