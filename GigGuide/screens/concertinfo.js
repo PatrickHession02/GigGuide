@@ -36,8 +36,13 @@ const Concertinfo = ({ route }) => {
     },
  });
 
- const nonFallbackImages = concert.concerts[0].images.filter(image => !image.fallback);
- const highestQualityImage = nonFallbackImages[nonFallbackImages.length - 1]; // Get the highest quality image
+ const allImages = concert.concerts.flatMap(concert => concert.images);
+ // Filter out fallback images
+ const nonFallbackImages = allImages.filter(image => !image.fallback);
+ // Sort in descending order of quality
+ nonFallbackImages.sort((a, b) => b.quality - a.quality);
+ // Get the highest quality image
+ const highestQualityImage = nonFallbackImages[0];
  console.log(concert);
  return (
     <>
