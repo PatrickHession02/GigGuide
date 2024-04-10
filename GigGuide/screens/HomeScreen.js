@@ -47,7 +47,7 @@ const HomeScreen = ({ uid }) => {
         const code = result.params.code;
         console.log("Authorization Code: ", code);
         console.log("UID2: ", uid);
-        const response = await fetch('https://bfab-79-140-211-73.ngrok-free.app/callback', {
+        const response = await fetch('https://4d5b-79-140-211-73.ngrok-free.app/callback', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -66,35 +66,32 @@ const HomeScreen = ({ uid }) => {
   }, [uid, promptAsync]);
 
 
-  console.log('About to fetch data...');
-useEffect(() => {
-  fetch('https://bfab-79-140-211-73.ngrok-free.app/concerts')
-    .then((response) => {
-      console.log('Fetch call completed');
-      return response.json();
-    })
-    .then((data) => {
-      console.log('Fetched data:', data);
-      if (!data) {
-        console.error('Fetched data is undefined');
-        return;
-      }
-      const groupedData = data.reduce((acc, concert) => {
-        console.log('Current concert:', concert);
-        const artistIndex = acc.findIndex(artist => artist.name === concert.name); // Changed concert.artist to concert.name
-        if (artistIndex !== -1) {
-          acc[artistIndex].concerts.push(concert);
-        } else {
-          acc.push({ name: concert.name, concerts: [concert] }); // Changed concert.artist to concert.name
+  useEffect(() => {
+    fetch('https://4d5b-79-140-211-73.ngrok-free.app/concerts')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Fetched data:', data);
+        if (!data) {
+          console.error('Fetched data is undefined');
+          return;
         }
-        return acc;
-      }, []);
-      setConcertsData(groupedData);
-    })
-    .catch((error) => {
-      console.error('Error fetching concerts:', error);
-    });
-}, []);
+        const groupedData = data.reduce((acc, concert) => {
+          console.log('Current concert:', concert);
+          const artistIndex = acc.findIndex(artist => artist.name === concert.name); // Changed concert.artist to concert.name
+          if (artistIndex !== -1) {
+            acc[artistIndex].concerts.push(concert);
+          } else {
+            acc.push({ name: concert.name, concerts: [concert] }); // Changed concert.artist to concert.name
+          }
+          return acc;
+        }, []);
+        setConcertsData(groupedData);
+      })
+      .catch((error) => {
+        console.error('Error fetching concerts:', error);
+      });
+  }, []);
+
 
   const handleConcertPress = (concert) => {
     navigation.navigate('Concertinfo', { concert });
@@ -119,17 +116,18 @@ useEffect(() => {
   console.log('Concerts Data:', concertsData);
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
-      <SafeAreaView>
+      <SafeAreaView style={{flex:1, justifyContent:'center'}}>
       {concertsData.length === 0 && (
-  <View style={styles.loginContainer}>
-   <SimpleLineIcons style={styles.spotifyLogo} name="social-spotify" size={24} color="white" />
-    <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-      <Text style={styles.loginButtonText}>Login</Text>
-    </TouchableOpacity>
-  </View>
+        <View style={styles.loginContainer}>
+  <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+    <SimpleLineIcons style={styles.spotifyLogo} name="social-spotify" size={24} color="white" />
+    <Text style={styles.loginButtonText}>Login</Text>
+  </TouchableOpacity>
+</View>
 )}
-
       </SafeAreaView>
+
+
       {concertsData.length > 0 && <Text style={styles.greetingText}>{getGreeting()}</Text>}
       <FlatList
         contentContainerStyle={styles.scrollViewContainer}
@@ -212,18 +210,24 @@ const styles = StyleSheet.create({
     marginBottom: 20, 
   },
   loginContainer: {
+    
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
+    
+
   },
   loginButton: {
     flexDirection: 'row',
     backgroundColor: '#1DB954',
     borderRadius: 20,
     padding: 20,
+    paddingVertical: 25, 
+    paddingHorizontal: 100,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative'
   },
   loginButtonText: {
     color: 'white',
@@ -231,8 +235,13 @@ const styles = StyleSheet.create({
   },
   spotifyLogo: {
     position: 'absolute',
-    left: 10, // adjust as needed
+   // Adjust as needed
+      size: [30, 30],
+    left: '50%', // Adjust as needed
+    
+ // Half of the icon size (24 / 2 = 12)
   },
-});
+  },
+);
 
 export default HomeScreen;
