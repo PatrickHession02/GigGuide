@@ -9,15 +9,15 @@ const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 const sessionSecret = process.env.SESSION_KEY;
 const rateLimit = require('axios-rate-limit');
 const http = rateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 });
-const aiTest = require('./OpenAiTEST');
+const OpenAI = require("openai")
+const openai = new OpenAI(process.env.OPENAI_API_KEY)
 
-app.use('/ai', aiTest.routes);
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://</gigguide-b3d86>.firebaseio.com'
 });
 
-const db = admin.firestore();
+const db = admin.firestore(session);
 function delayRequest() {
     return new Promise(resolve => setTimeout(resolve, 1000)); // Delay of 1 second
 }
@@ -111,7 +111,7 @@ app.get('/concerts', async (req, res) => {
                 params: {
                     apikey: process.env.TICKETMASTER_API_KEY,
                     keyword: artist,
-                    countryCode: 'IE' // Filter for Ireland
+                    countryCode: 'IE' 
                 }
             }).catch(error => {
                 console.error(`Error fetching events for artist ${artist}:`, error);
@@ -149,7 +149,45 @@ app.get('/concerts', async (req, res) => {
     }
 });
 
+app.get('/ai', async (req, res, next) => {
+    const result = await aiTest(req);
+    res.json(result);
+});
 
+async function aiTest(req) {
+    const userId = req.session.userId; 
+    console.log('userId:', userId); 
+    const userDoc = await db.collection('users').doc(userId).get();
+    const userData = userDoc.data();
+
+    // Get the top artists from the user data
+    let currentArtists = userData.topArtists;
+    let searchPhrases = await createListOfArtists(12, currentArtists) // Corrected function name
+    console.log('generatedSearchPhrases: ' + searchPhrases.googleSearchPhrases)
+}
+
+async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
+    let generatedArray = []
+    const currentArtistsJson = JSON.stringify(currentArtistArray)
+    try {
+        let aiArray = await openai.chat.completions.create({
+            messages: [
+                { "role": "system", "content": "You are a helpful assistant. Please respond in JSON format." },
+                { "role": "assistant", "content": "The following JSON array contains a list of existing musicians: " + currentArtistsJson },
+                { "role": "assistant", "content": "We are going to create an array of additional musicians who are sinilar to the existing musicians." },
+                { "role": "user", "content": "Create a JSON array called additionalMusicians containing " + noOfExtraArtists + "musicians that are similar to the existing musicians." },
+            ],
+            response_format: { type: "json_object" },
+            model: "gpt-3.5-turbo-1106"
+        })
+        console.log(aiArray); 
+        generatedArray = JSON.parse(aiArray.choices[0].message.content)
+    } catch (err) {
+        console.log('GPT err createSearchPhrases: ' + err)
+    }
+    console.log(JSON.stringify(generatedArray))
+    return generatedArray
+}
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

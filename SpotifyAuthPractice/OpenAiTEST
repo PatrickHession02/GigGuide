@@ -3,38 +3,6 @@ const router = express.Router()
 const OpenAI = require("openai")
 const openai = new OpenAI(process.env.OPENAI_API_KEY)
 
-router.get('/ai', async (req, res, next) => {
-    const result = await aiTest();
-    res.json(result);
-});
 
-async function aiTest() {
-    let currentArtists = ['Taylor Swift', 'Stereophonics']
-    let searchPhrases = await createListOfArtists(12, currentArtists) // Corrected function name
-    console.log('generatedSearchPhrases: ' + searchPhrases.googleSearchPhrases)
-}
-
-async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
-    let generatedArray = []
-    const currentArtistsJson = JSON.stringify(currentArtistArray)
-    try {
-        let aiArray = await openai.chat.completions.create({
-            messages: [
-                { "role": "system", "content": "You are a helpful assistant. Please respond in JSON format." },
-                { "role": "assistant", "content": "The following JSON array contains a list of existing musicians: " + currentArtistsJson },
-                { "role": "assistant", "content": "We are going to create an array of additional musicians who are sinilar to the existing musicians." },
-                { "role": "user", "content": "Create a JSON array called additionalMusicians containing " + noOfExtraArtists + "musicians that are similar to the existing musicians." },
-            ],
-            response_format: { type: "json_object" },
-            model: "gpt-3.5-turbo-1106"
-        })
-        console.log(aiArray); 
-        generatedArray = JSON.parse(aiArray.choices[0].message.content)
-    } catch (err) {
-        console.log('GPT err createSearchPhrases: ' + err)
-    }
-    console.log(JSON.stringify(generatedArray))
-    return generatedArray
-}
 
 exports.routes = router
