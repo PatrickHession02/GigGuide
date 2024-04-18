@@ -47,7 +47,7 @@ const HomeScreen = ({ uid }) => {
         const code = result.params.code;
         console.log("Authorization Code: ", code);
         console.log("UID2: ", uid);
-        const response = await fetch('https://5612-79-140-211-73.ngrok-free.app/callback', {
+        const response = await fetch('https://69a1-79-140-211-73.ngrok-free.app/callback', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ const HomeScreen = ({ uid }) => {
 
 
   useEffect(() => {
-    fetch('https://5612-79-140-211-73.ngrok-free.app/concerts')
+    fetch('https://69a1-79-140-211-73.ngrok-free.app/concerts')
       .then((response) => response.json())
       .then((data) => {
         console.log('Fetched data:', data);
