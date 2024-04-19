@@ -5,6 +5,7 @@ import HomeScreen from './HomeScreen';
 import Settings from './Settings';
 import Profile from './Profile';
 import Concertinfo from './Concertinfo'; 
+import AI from './AI';
 import { Ionicons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator(); 
@@ -76,6 +77,17 @@ export const MainNavigator = ({uid}) => {
             <Ionicons name="person" color={color} size={size} />
           ),
         }}
+      />
+
+      <Tab.Screen
+      name='AI'
+      component={AI}
+      options={{
+        headerShown: false,
+        tabBarIcon: ({ color, size }) => (
+          <Ionicons name="person" color={color} size={size} />
+        ),
+      }}
       />
        <Tab.Screen
         name="Settings"

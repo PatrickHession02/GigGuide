@@ -34,7 +34,7 @@ router.post('/',  express.json(),(req, res) => {
         spotifyApi.setAccessToken(accessToken);
         spotifyApi.setRefreshToken(refreshToken);
         // Now you can use the access token to get the user's top artists.
-        spotifyApi.getMyTopArtists({ limit: 30 }).then(response => {
+        spotifyApi.getMyTopArtists({ limit: 10 }).then(response => {
             const topArtistsData = response.body;
             const topArtists = topArtistsData.items.map(item => item.name);
             console.log('Top artists:', topArtists);
@@ -45,8 +45,10 @@ router.post('/',  express.json(),(req, res) => {
                 topArtists: topArtists
             }).then(() => {
                 console.log('Top artists saved to Firebase');
+                res.json({ message: 'Top artists saved to Firebase', topArtists: topArtists });
             }).catch(err => {
                 console.error('Error saving top artists to Firebase:', err);
+                res.status(500).send('Error saving top artists to Firebase');
             });
         }).catch(err => {
             // Handle errors here
@@ -57,6 +59,5 @@ router.post('/',  express.json(),(req, res) => {
         console.error('Error exchanging code for access token:', err);
         res.send('Error exchanging code for access token. Please try again later.');
     });
-}); 
-
+});
 module.exports = router;
