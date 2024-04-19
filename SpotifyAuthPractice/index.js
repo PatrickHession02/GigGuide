@@ -35,8 +35,9 @@ const spotifyApi = new SpotifyWebApi({
     aiKey: process.env.OPEN_AI_KEY
 });
 
-const concertRouter = require('./routes/concerts');
+
 const callbackRouter = require('./routes/callback');
+const concertRouter = require('./routes/concerts');
 const aiRouter = require('./routes/AI');
 
 app.use('/callback' ,callbackRouter);

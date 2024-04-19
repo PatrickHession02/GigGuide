@@ -37,37 +37,59 @@ const HomeScreen = ({ uid }) => {
     },
     discovery
   );
-
   const [handleLogin, setHandleLogin] = useState(() => async () => {});
 
   useEffect(() => {
-    setHandleLogin(() => async () => {
-      const result = await promptAsync();
-      if (result.type === 'success') {
-        const code = result.params.code;
-        console.log("Authorization Code: ", code);
-        console.log("UID2: ", uid);
-        const response = await fetch('https://ca98-79-140-211-73.ngrok-free.app/callback', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ code, uid }),
-        });
-
-        if (!response.ok) {
-          console.error('Failed to send code to backend');
-          return;
+   setHandleLogin(() => async () => {
+      try {
+        const result = await promptAsync();
+        if (result.type === 'success') {
+          const code = result.params.code;
+          console.log("Authorization Code: ", code);
+          console.log("UID2: ", uid);
+          const responseCallback = await fetch('https://7bc9-80-233-72-63.ngrok-free.app/callback', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ code, uid }),
+          });
+          if (!responseCallback.ok) {
+            console.error('Failed to send code to backend');
+            return;
+          }
+  
+          const dataCallback = await responseCallback.json();
+          console.log('Received data from backend', dataCallback);
+  
+          // Then fetch to /concerts
+          const responseConcerts = await fetch('https://7bc9-80-233-72-63.ngrok-free.app/concerts');
+          const dataConcerts = await responseConcerts.json();
+          console.log('Fetched data:', dataConcerts);
+          if (!dataConcerts) {
+            console.error('Fetched data is undefined');
+            return;
+          }
+          const groupedData = dataConcerts.reduce((acc, concert) => {
+            console.log('Current concert:', concert);
+            const artistIndex = acc.findIndex(artist => artist.name === concert.name); // Changed concert.artist to concert.name
+            if (artistIndex !== -1) {
+              acc[artistIndex].concerts.push(concert);
+            } else {
+              acc.push({ name: concert.name, concerts: [concert] }); // Changed concert.artist to concert.name
+            }
+            return acc;
+          }, []);
+          setConcertsData(groupedData);
         }
-        const data = await response.json();
-        console.log('Received data from backend', data);
+      } catch (error) {
+        console.error('Error fetching concerts:', error);
       }
-    });
+   });
   }, [uid, promptAsync]);
-
-
+/*
   useEffect(() => {
-    fetch('https://ca98-79-140-211-73.ngrok-free.app/concerts')
+    fetch('https://7bc9-80-233-72-63.ngrok-free.app/concerts')
       .then((response) => response.json())
       .then((data) => {
         console.log('Fetched data:', data);
@@ -91,7 +113,7 @@ const HomeScreen = ({ uid }) => {
         console.error('Error fetching concerts:', error);
       });
   }, []);
-
+*/
   const handleConcertPress = (concert) => {
     navigation.navigate('Concertinfo', { concert });
   };
