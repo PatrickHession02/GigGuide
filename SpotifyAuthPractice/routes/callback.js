@@ -5,16 +5,23 @@ const axios = require('axios');
 const admin = require('firebase-admin');
 const rateLimit = require('axios-rate-limit');
 const http = rateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 });
+const db = require('./fireStore');
 
+const spotifyApi = new SpotifyWebApi({
+    clientId: process.env.CLIENT_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    redirectUri: process.env.REDIRECT_URL,
+    ticketmasterApiKey: process.env.TICKETMASTER_API_KEY,
+    aiKey: process.env.OPEN_AI_KEY
+});
 
-
-
-router.post('/', express.json(), (req, res) => {
+router.post('/',  express.json(),(req, res) => {
     const code = req.body.code;
     const uid = req.body.uid;
     console.log('Received code:', code);
     console.log('Received UID:', uid);
 
+    req.session.userId = uid;
     // Pass the code to the /callback endpoint
     req.code = code;
 

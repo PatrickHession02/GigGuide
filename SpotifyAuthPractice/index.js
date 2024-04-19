@@ -20,12 +20,8 @@ app.use(session({
     cookie: { secure: false } // Note: In production, set this to true and ensure your app uses HTTPS
   }));
   
-  admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-      databaseURL: 'https://</gigguide-b3d86>.firebaseio.com'
-  });
-  
-  const db = admin.firestore();
+
+
   
   function delayRequest() {
       return new Promise(resolve => setTimeout(resolve, 1000)); // Delay of 1 second
@@ -43,8 +39,8 @@ const concertRouter = require('./routes/concerts');
 const callbackRouter = require('./routes/callback');
 const aiRouter = require('./routes/AI');
 
-app.use('/concerts' ,concertRouter);
 app.use('/callback' ,callbackRouter);
+app.use('/concerts' ,concertRouter);
 app.use('/AI' ,aiRouter);
 
 app.listen(port, () => {

@@ -4,10 +4,9 @@ const axios = require('axios');
 const rateLimit = require('axios-rate-limit');
 const http = rateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 });
 const OpenAI = require("openai")
-
+const db = require('./fireStore');
 
 router.get('/', async (req, res) => {
-
     console.log('Accessed /concerts endpoint');
     try {
         const userId = req.session.userId; 

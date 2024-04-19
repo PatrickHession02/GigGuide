@@ -1,11 +1,24 @@
 const express = require('express');
 const router = express.Router();
-
-
+require('dotenv').config();
+const SpotifyWebApi = require('spotify-web-api-node');
+const axios = require('axios');
+const app = express();
+const port = 3050;
+const admin = require('firebase-admin');
+const serviceAccount = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+const sessionSecret = process.env.SESSION_KEY;
+const rateLimit = require('axios-rate-limit');
+const http = rateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 });
+const OpenAI = require("openai")
+const openai = new OpenAI(process.env.OPENAI_API_KEY)
+const session = require('express-session');
+const db = require('./fireStore');
 
 router.get('/', async (req, res, next) => {
+    const userId = req.session.userId;
     console.log('GET /ai was hit');
-    const userId = req.query.userId; // Get the user ID from the request query parameters
+    console.log('Received user ID: ', userId);
     if (!userId) {
         return res.status(401).send('UID not available in session');
     }
