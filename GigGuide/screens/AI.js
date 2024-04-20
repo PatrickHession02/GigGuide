@@ -40,15 +40,18 @@ const AI = () => {
   const handleConcertPress = (concert) => {
     navigation.navigate('Concertinfo', { concert });
   };
+
   console.log('Concerts Data:', data);
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
-      <FlatList
-        contentContainerStyle={styles.scrollViewContainer}
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      <SafeAreaView style={{ flex: 1 }}>
+        <FlatList
+          contentContainerStyle={styles.scrollViewContainer}
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </SafeAreaView>
     </LinearGradient>
   );
 };
