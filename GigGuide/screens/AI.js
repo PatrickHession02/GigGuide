@@ -7,52 +7,40 @@ import { LinearGradient } from 'expo-linear-gradient';
 const AI = () => {
   const [data, setData] = useState([]);
   const navigation = useNavigation();
-
   useEffect(() => {
     fetch('https://7bc9-80-233-72-63.ngrok-free.app/AI')
       .then(response => response.json())
       .then(data => {
         console.log('Fetched data:', data);
-        setData(data.allConcerts);
+        if (data && data.allConcerts) {
+          setData(data.allConcerts);
+        }
       })
       .catch(error => console.error(error));
   }, []);
-
-  const handleConcertPress = (concert) => {
-    navigation.navigate('Concertinfo', { concert });
-  };
-
+  
   const renderItem = ({ item: concert }) => {
-    const firstConcert = concert.concerts[0];
-    return (
-      <TouchableOpacity onPress={() => handleConcertPress(concert)}>
-        <View style={styles.concertContainer}>
-          {firstConcert.images && firstConcert.images.length > 0 && (
-            <View style={styles.imageContainer}>
-              <Image style={styles.concertImage} source={{ uri: firstConcert.images[0].url }} />
-              <Text style={styles.concertName}>{firstConcert.name}</Text>
-            </View>
-          )}
-        </View>
-      </TouchableOpacity>
-    );
+    if (concert && concert.concerts && concert.concerts.length > 0) {
+      const firstConcert = concert.concerts[0];
+      return (
+        <TouchableOpacity onPress={() => handleConcertPress(concert)}>
+          <View style={styles.concertContainer}>
+            {firstConcert.images && firstConcert.images.length > 0 && (
+              <View style={styles.imageContainer}>
+                <Image style={styles.concertImage} source={{ uri: firstConcert.images[0].url }} />
+                <Text style={styles.concertName}>{firstConcert.name}</Text>
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+      );
+    }
+    return null;
   };
 
   console.log('Concerts Data:', data);
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
-      <SafeAreaView style={{flex:1, justifyContent:'center'}}>
-      {data.length === 0 && (
-        <View style={styles.loginContainer}>
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-            <SimpleLineIcons style={styles.spotifyLogo} name="social-spotify" size={24} color="white" />
-            <Text style={styles.loginButtonText}>Login</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-      </SafeAreaView>
-
-      {data.length > 0 && <Text style={styles.greetingText}>{getGreeting()}</Text>}
       <FlatList
         contentContainerStyle={styles.scrollViewContainer}
         data={data}
