@@ -44,10 +44,10 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
     try {
         let aiArray = await openai.chat.completions.create({
             messages: [
-                { "role": "system", "content": "You are a helpful assistant. Please respond in JSON format." },
+                { "role": "system", "content": "You are a helpful  aficionado . Please respond in JSON format." },
                 { "role": "assistant", "content": "The following JSON array contains a list of existing musicians: " + currentArtistsJson },
                 { "role": "assistant", "content": "We are going to create an array of additional musicians who are sinilar to the existing musicians." },
-                { "role": "user", "content": "Create a JSON array called additionalMusicians containing " + noOfExtraArtists + "musicians that are similar to the existing musicians but not included in the existing list." },
+                { "role": "user", "content": "Create a JSON array called additional Musicians containing " + noOfExtraArtists + "musicians that are similar to the existing musicians but not included in the existing list." },
             ],
             response_format: { type: "json_object" },
             model: "gpt-4-turbo"
