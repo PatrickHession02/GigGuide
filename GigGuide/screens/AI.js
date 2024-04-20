@@ -7,33 +7,50 @@ import { LinearGradient } from 'expo-linear-gradient';
 const AI = () => {
   const [data, setData] = useState([]);
   const navigation = useNavigation();
+
   useEffect(() => {
     fetch('https://4ee5-79-140-211-73.ngrok-free.app/AI')
       .then(response => response.json())
       .then(data => {
         console.log('Fetched AI data:', data);
         if (data) {
-          setData(data);
+          const groupedData = data.reduce((acc, concert) => {
+            const artistName = concert.name;
+            if (!acc[artistName]) {
+              acc[artistName] = [];
+            }
+            acc[artistName].push(concert);
+            return acc;
+          }, {});
+          setData(groupedData);
         }
-      })
-      .catch(error => console.error(error));
+      });
   }, []);
-  const renderItem = ({ item: concert }) => {
+
+  const dataArray = Object.keys(data).map(key => ({
+    name: key,
+    concerts: data[key],
+  }));
+
+  const renderItem = ({ item: artist }) => {
+    const concert = artist.concerts[0];
     if (concert && concert.images && concert.images.length > 0) {
       return (
-        <View style={styles.concertContainer}>
-          <View style={styles.imageContainer}>
-            <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />
-            <Text style={styles.concertName}>{concert.name}</Text>
+        <TouchableOpacity onPress={() => handleConcertPress(artist)}>
+          <View style={styles.concertContainer}>
+            <View style={styles.imageContainer}>
+              <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />
+              <Text style={styles.concertName}>{concert.name}</Text>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
       );
     }
     return null;
   };
-  
-  const handleConcertPress = (concert) => {
-    navigation.navigate('Concertinfo', { concert });
+
+  const handleConcertPress = (artist) => {
+    navigation.navigate('Concertinfo', { concerts: artist.concerts });
   };
 
   console.log('Concerts Data:', data);
@@ -43,7 +60,7 @@ const AI = () => {
         <Text style={styles.greetingText}>AI recommendations for you...</Text>
         <FlatList
           contentContainerStyle={styles.scrollViewContainer}
-          data={data}
+          data={dataArray}
           renderItem={renderItem}
           keyExtractor={(item, index) => index.toString()}
         />
