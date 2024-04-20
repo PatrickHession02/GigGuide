@@ -44,10 +44,10 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
     try {
         let aiArray = await openai.chat.completions.create({
             messages: [
-                { "role": "system", "content": "You are a helpful  aficionado . Please respond in JSON format." },
+                { "role": "system", "content": "You are a helpful music enjoyer. Please respond in JSON format." },
                 { "role": "assistant", "content": "The following JSON array contains a list of existing musicians: " + currentArtistsJson },
-                { "role": "assistant", "content": "We are going to create an array of additional musicians who are sinilar to the existing musicians." },
-                { "role": "user", "content": "Create a JSON array called additional Musicians containing " + noOfExtraArtists + "musicians that are similar to the existing musicians but not included in the existing list." },
+                { "role": "assistant", "content": "We are going to generate an array of additional musicians who have a similar style, genre, or era to the existing musicians." },
+                { "role": "user", "content": "Create a JSON array called 'additionalMusicians' containing " + noOfExtraArtists + " musicians. These musicians should be similar to the existing musicians in style, genre, or era, but they should not be already included in the 'topArtists' array." },
             ],
             response_format: { type: "json_object" },
             model: "gpt-4-turbo"
@@ -56,7 +56,7 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
         let parsedContent = JSON.parse(aiArray.choices[0].message.content);
         generatedArray = parsedContent.additionalMusicians || [];
 
-        generatedArray = generatedArray.filter(artist => !currentArtistArray.includes(artist));
+        generatedArray = generatedArray.filter(artist => !currentArtistArray.map(a => a.toLowerCase()).includes(artist.toLowerCase()));
     } catch (err) {
         console.log('GPT err createSearchPhrases: ' + err)
     }
