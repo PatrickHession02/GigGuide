@@ -41,7 +41,6 @@ router.get('/', async (req, res, next) => {
     // Send the generated list of artists as a response
     res.json(result);
 });
-
 async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
     let generatedArray = []
     const currentArtistsJson = JSON.stringify(currentArtistArray)
@@ -57,14 +56,52 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
             model: "gpt-3.5-turbo-1106"
         })
         console.log(aiArray); 
-        generatedArray = JSON.parse(aiArray.choices[0].message.content)
+        let parsedContent = JSON.parse(aiArray.choices[0].message.content);
+        generatedArray = parsedContent.additionalMusicians || [];
 
         generatedArray = generatedArray.filter(artist => !currentArtistArray.includes(artist));
     } catch (err) {
         console.log('GPT err createSearchPhrases: ' + err)
     }
     console.log(JSON.stringify(generatedArray))
-    return generatedArray
+
+    const artistPromises = generatedArray.map(artist => {
+        return http.get('https://app.ticketmaster.com/discovery/v2/events.json', {
+            params: {
+                apikey: process.env.TICKETMASTER_API_KEY,
+                keyword: artist,
+                countryCode: 'IE' 
+            }
+        }).catch(error => {
+            console.error(`Error fetching events for artist ${artist}:`, error);
+            return { data: { _embedded: { events: [] } } }; // Return empty events if request fails
+        });
+    });
+    
+    const responses = await Promise.all(artistPromises);
+    
+    const allConcerts = responses.flatMap(response => {
+        if (response.data._embedded && response.data._embedded.events && response.data._embedded.events.length > 0) {
+            return response.data._embedded.events.map(event => {
+                const venue = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].name : 'Unknown Venue';
+                const city = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].city.name : 'Unknown City';
+                const country = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].country.name : 'Unknown Country';
+                const images = event.images ? event.images : [];
+                return {
+                    name: event.name,
+                    date: event.dates.start.localDate,
+                    venue: venue,
+                    city: city,
+                    country: country,
+                    images: images,
+                };
+            });
+        } else {
+            return [];
+        }
+    });
+
+    return { generatedArray, allConcerts };
 }
 
 module.exports = router;
