@@ -21,22 +21,17 @@ const AI = () => {
   const renderItem = ({ item: concert }) => {
     if (concert && concert.images && concert.images.length > 0) {
       return (
-        <TouchableOpacity onPress={() => handleConcertPress(concert)}>
-          <View style={styles.concertContainer}>
-            <View style={styles.imageContainer}>
-              <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />
-              <Text style={styles.concertName}>{concert.name}</Text>
-              <Text style={styles.concertVenue}>{concert.venue}</Text>
-              <Text style={styles.concertDate}>{concert.date}</Text>
-              <Text style={styles.concertCity}>{concert.city}</Text>
-              <Text style={styles.concertCountry}>{concert.country}</Text>
-            </View>
+        <View style={styles.concertContainer}>
+          <View style={styles.imageContainer}>
+            <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />
+            <Text style={styles.concertName}>{concert.name}</Text>
           </View>
-        </TouchableOpacity>
+        </View>
       );
     }
     return null;
   };
+  
   const handleConcertPress = (concert) => {
     navigation.navigate('Concertinfo', { concert });
   };
