@@ -36,7 +36,7 @@ const Concertinfo = ({ route }) => {
     },
  });
 
- const allImages = concert.concerts.flatMap(concert => concert.images);
+ const allImages = Array.isArray(concert.concerts) ? concert.concerts.flatMap(concert => concert.images) : [];
  // Filter out fallback images
  const nonFallbackImages = allImages.filter(image => !image.fallback);
  // Sort in descending order of quality
@@ -59,7 +59,7 @@ const Concertinfo = ({ route }) => {
           <Text style={styles.overlay}> {concert.name}</Text>
         </View>
         <Text>Concert Info</Text>
-        <Text>{concert.date ? concert.date.toLocaleDateString() : 'Date not available'}</Text>
+        <Text>{concert.date ? new Date(concert.date).toLocaleDateString() : 'Date not available'}</Text>
       </ScrollView>
     </>
  );
