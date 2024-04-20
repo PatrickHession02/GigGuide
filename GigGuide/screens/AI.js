@@ -45,6 +45,7 @@ const AI = () => {
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <SafeAreaView style={{ flex: 1 }}>
+        <Text style={styles.greetingText}>AI recommendations for you...</Text>
         <FlatList
           contentContainerStyle={styles.scrollViewContainer}
           data={data}
