@@ -87,33 +87,7 @@ const HomeScreen = ({ uid }) => {
       }
    });
   }, [uid, promptAsync]);
-/*
-  useEffect(() => {
-    fetch('https://7bc9-80-233-72-63.ngrok-free.app/concerts')
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Fetched data:', data);
-        if (!data) {
-          console.error('Fetched data is undefined');
-          return;
-        }
-        const groupedData = data.reduce((acc, concert) => {
-          console.log('Current concert:', concert);
-          const artistIndex = acc.findIndex(artist => artist.name === concert.name); // Changed concert.artist to concert.name
-          if (artistIndex !== -1) {
-            acc[artistIndex].concerts.push(concert);
-          } else {
-            acc.push({ name: concert.name, concerts: [concert] }); // Changed concert.artist to concert.name
-          }
-          return acc;
-        }, []);
-        setConcertsData(groupedData);
-      })
-      .catch((error) => {
-        console.error('Error fetching concerts:', error);
-      });
-  }, []);
-*/
+
   const handleConcertPress = (concert) => {
     navigation.navigate('Concertinfo', { concert });
   };
