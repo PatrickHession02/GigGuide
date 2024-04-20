@@ -56,7 +56,7 @@ export const MainNavigator = ({uid}) => {
     })}
     tabBarOptions={{
       activeTintColor: '#fc0366',
-      inactiveTintColor: '#f27e44',
+      inactiveTintColor: '#fc0366',
     }}
   >
 
@@ -87,9 +87,6 @@ export const MainNavigator = ({uid}) => {
         component={Settings}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings" color={color} size={size} />
-          ),
         }}
       />
     </Tab.Navigator>
