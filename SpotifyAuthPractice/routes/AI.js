@@ -19,7 +19,7 @@ async function aiTest(req, userId) {
 
     // Get the top artists from the user data
     let currentArtists = userData.topArtists;
-    let searchPhrases = await createListOfArtists(12, currentArtists)// Corrected function name
+    let searchPhrases = await createListOfArtists(20, currentArtists)// Corrected function name
     console.log('generatedSearchPhrases: ' + searchPhrases.googleSearchPhrases)
 
     // Return the generated list of artists
