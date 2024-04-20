@@ -26,7 +26,7 @@ async function aiTest(req, userId) {
     console.log('generatedSearchPhrases: ' + searchPhrases.googleSearchPhrases)
 
     // Return the generated list of artists
-    return searchPhrases;
+    return searchPhrases.allConcerts;
 }
 
 router.get('/', async (req, res, next) => {
@@ -100,7 +100,10 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
             return [];
         }
     });
-
+    
+    // Log the allConcerts array
+    console.log(allConcerts);
+    
     return { generatedArray, allConcerts };
 }
 
