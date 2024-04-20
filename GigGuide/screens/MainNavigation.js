@@ -24,7 +24,19 @@ export const HomeStack = ({uid}) => (
     />
   </Stack.Navigator>
 );
-
+export const AiStack = () => (
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen
+      name="AiStackScreen"
+      component={AI}
+    />
+    <Stack.Screen
+      name="Concertinfo"
+      component={Concertinfo}
+      options={{ headerShown: false }}
+    />
+  </Stack.Navigator>
+);
 export const MainNavigator = ({uid}) => {
   const tabBarOptions = {
     style: {
@@ -66,11 +78,11 @@ export const MainNavigator = ({uid}) => {
 />
 
 <Tab.Screen
-      name='AI'
-      component={AI}
-      options={{
-        headerShown: false,
-      }}
+        name='AI'
+        component={AiStack} // Replace AI with AiStack
+        options={{
+          headerShown: false,
+        }}
       />
       
       <Tab.Screen
