@@ -11,7 +11,7 @@ const AI = () => {
     fetch('https://7bc9-80-233-72-63.ngrok-free.app/AI')
       .then(response => response.json())
       .then(data => {
-        console.log('Fetched data:', data);
+        console.log('Fetched AI data:', data);
         if (data && data.allConcerts) {
           setData(data.allConcerts);
         }
