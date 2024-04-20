@@ -7,7 +7,7 @@ import Profile from './Profile';
 import Concertinfo from './Concertinfo'; 
 import AI from './AI';
 import { Ionicons } from '@expo/vector-icons';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 const Tab = createBottomTabNavigator(); 
 const Stack = createStackNavigator();
 
@@ -47,18 +47,16 @@ export const MainNavigator = ({uid}) => {
       } else if (route.name === 'Settings') {
         iconName = focused ? 'settings' : 'settings-outline';
       } else if (route.name === 'AI') {
-        iconName = focused ? 'person' : 'person-outline';
+        iconName = focused ? 'robot-happy' : 'probot_happy-outline';
+        return <MaterialCommunityIcons name="robot" size={size} color={color} />;
       }
 
       return <Ionicons name={iconName} size={size} color={color} />;
     },
+    tabBarActiveTintColor: '#f55516',
+    tabBarInactiveTintColor: '#8d4fbd',
   })}
-  tabBarOptions={{
-    activeTintColor: '#f55516',
-    inactiveTintColor: '#8d4fbd',
-  }}
 >
-
 <Tab.Screen
   name="Home"
   children={props => <HomeStack {...props} uid={uid} />}
