@@ -47,7 +47,7 @@ export const MainNavigator = ({uid}) => {
       } else if (route.name === 'Settings') {
         iconName = focused ? 'settings' : 'settings-outline';
       } else if (route.name === 'AI') {
-        iconName = focused ? 'robot-happy' : 'probot_happy-outline';
+        iconName = focused ? 'robot-happy' : 'robot_happy-outline';
         return <MaterialCommunityIcons name="robot" size={size} color={color} />;
       }
 
