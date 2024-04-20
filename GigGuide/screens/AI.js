@@ -37,7 +37,9 @@ const AI = () => {
     }
     return null;
   };
-
+  const handleConcertPress = (concert) => {
+    navigation.navigate('Concertinfo', { concert });
+  };
   console.log('Concerts Data:', data);
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
