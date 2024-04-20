@@ -47,7 +47,9 @@ export const MainNavigator = ({uid}) => {
         } else if (route.name === 'Settings') {
           iconName = focused ? 'settings' : 'settings-outline';
         }
-  
+       else if (route.name === 'AI') {
+        iconName = focused ? 'person' : 'person-outline';
+      }
         // You can return any component that you like here!
         return <Ionicons name={iconName} size={size} color={color} />;
       },
@@ -63,9 +65,6 @@ export const MainNavigator = ({uid}) => {
   children={props => <HomeStack {...props} uid={uid} />}
   options={{
     headerShown: false,
-    tabBarIcon: ({ color, size }) => (
-      <Ionicons name="home" color={color} size={size} />
-    ),
   }}
 />
       <Tab.Screen
@@ -73,9 +72,6 @@ export const MainNavigator = ({uid}) => {
         component={Profile}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" color={color} size={size} />
-          ),
         }}
       />
 
@@ -84,9 +80,6 @@ export const MainNavigator = ({uid}) => {
       component={AI}
       options={{
         headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="person" color={color} size={size} />
-        ),
       }}
       />
        <Tab.Screen
