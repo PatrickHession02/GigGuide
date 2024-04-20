@@ -46,7 +46,8 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
             messages: [
                 { "role": "system", "content": "You are a helpful music enjoyer. Please respond in JSON format." },
                 { "role": "assistant", "content": "The following JSON array contains a list of existing musicians: " + currentArtistsJson },
-                { "role": "assistant", "content": "We are going to generate an array of additional musicians who have a similar style, genre, or era to the existing musicians." },
+                { "role": "assistant", "content": "We are going to generate an array of additional musicians who are different but have a similar style, genre, or era to the existing musicians." },
+                { "role": "assistant", "content": "To ensure diversity, we'll exclude artists already present in your 'topArtists' array." },
                 { "role": "user", "content": "Create a JSON array called 'additionalMusicians' containing " + noOfExtraArtists + " musicians. These musicians should be similar to the existing musicians in style, genre, or era, but they should not be already included in the 'topArtists' array." },
             ],
             response_format: { type: "json_object" },
@@ -55,8 +56,14 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
         console.log(aiArray); 
         let parsedContent = JSON.parse(aiArray.choices[0].message.content);
         generatedArray = parsedContent.additionalMusicians || [];
-
-        generatedArray = generatedArray.filter(artist => !currentArtistArray.map(a => a.toLowerCase()).includes(artist.toLowerCase()));
+        console.log("Current Artists Array:", currentArtistArray);
+        console.log("Generated Array (before filtering):", generatedArray);
+        
+        // Convert both arrays to lowercase for case-insensitive comparison
+        let currentArtistsLower = currentArtistArray.map(artist => artist.toLowerCase());
+        let filteredArray = generatedArray.filter(artist => !currentArtistsLower.includes(artist.toLowerCase()));
+        
+        console.log("Generated Array (after filtering):", filteredArray);
     } catch (err) {
         console.log('GPT err createSearchPhrases: ' + err)
     }
