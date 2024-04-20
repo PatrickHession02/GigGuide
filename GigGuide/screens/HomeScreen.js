@@ -255,11 +255,9 @@ const styles = StyleSheet.create({
   },
   spotifyLogo: {
     position: 'absolute',
-   // Adjust as needed
-      size: [30, 30],
+    width: 30, // Adjust as needed
+    height: 30, // Adjust as needed
     left: '50%', // Adjust as needed
-    
- // Half of the icon size (24 / 2 = 12)
   },
   },
 );
