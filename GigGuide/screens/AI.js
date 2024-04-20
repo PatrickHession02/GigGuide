@@ -8,29 +8,29 @@ const AI = () => {
   const [data, setData] = useState([]);
   const navigation = useNavigation();
   useEffect(() => {
-    fetch('https://7bc9-80-233-72-63.ngrok-free.app/AI')
+    fetch('https://4ee5-79-140-211-73.ngrok-free.app/AI')
       .then(response => response.json())
       .then(data => {
         console.log('Fetched AI data:', data);
-        if (data && data.allConcerts) {
-          setData(data.allConcerts);
+        if (data) {
+          setData(data);
         }
       })
       .catch(error => console.error(error));
   }, []);
-  
   const renderItem = ({ item: concert }) => {
-    if (concert && concert.concerts && concert.concerts.length > 0) {
-      const firstConcert = concert.concerts[0];
+    if (concert && concert.images && concert.images.length > 0) {
       return (
         <TouchableOpacity onPress={() => handleConcertPress(concert)}>
           <View style={styles.concertContainer}>
-            {firstConcert.images && firstConcert.images.length > 0 && (
-              <View style={styles.imageContainer}>
-                <Image style={styles.concertImage} source={{ uri: firstConcert.images[0].url }} />
-                <Text style={styles.concertName}>{firstConcert.name}</Text>
-              </View>
-            )}
+            <View style={styles.imageContainer}>
+              <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />
+              <Text style={styles.concertName}>{concert.name}</Text>
+              <Text style={styles.concertVenue}>{concert.venue}</Text>
+              <Text style={styles.concertDate}>{concert.date}</Text>
+              <Text style={styles.concertCity}>{concert.city}</Text>
+              <Text style={styles.concertCountry}>{concert.country}</Text>
+            </View>
           </View>
         </TouchableOpacity>
       );
