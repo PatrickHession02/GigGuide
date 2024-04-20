@@ -35,30 +35,29 @@ export const MainNavigator = ({uid}) => {
   };
 
   return (
-    <Tab.Navigator
-    screenOptions={({ route }) => ({
-      tabBarIcon: ({ focused, color, size }) => {
-        let iconName;
-  
-        if (route.name === 'Home') {
-          iconName = focused ? 'home' : 'home-outline';
-        } else if (route.name === 'Profile') {
-          iconName = focused ? 'person' : 'person-outline';
-        } else if (route.name === 'Settings') {
-          iconName = focused ? 'settings' : 'settings-outline';
-        }
-       else if (route.name === 'AI') {
+<Tab.Navigator
+  screenOptions={({ route }) => ({
+    tabBarIcon: ({ focused, color, size }) => {
+      let iconName;
+
+      if (route.name === 'Home') {
+        iconName = focused ? 'home' : 'home-outline';
+      } else if (route.name === 'Profile') {
+        iconName = focused ? 'person' : 'person-outline';
+      } else if (route.name === 'Settings') {
+        iconName = focused ? 'settings' : 'settings-outline';
+      } else if (route.name === 'AI') {
         iconName = focused ? 'person' : 'person-outline';
       }
-        // You can return any component that you like here!
-        return <Ionicons name={iconName} size={size} color={color} />;
-      },
-    })}
-    tabBarOptions={{
-      activeTintColor: '#fc0366',
-      inactiveTintColor: '#fc0366',
-    }}
-  >
+
+      return <Ionicons name={iconName} size={size} color={color} />;
+    },
+  })}
+  tabBarOptions={{
+    activeTintColor: '#fc0366',
+    inactiveTintColor: '#8d4fbd',
+  }}
+>
 
 <Tab.Screen
   name="Home"
