@@ -50,7 +50,7 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
                 { "role": "user", "content": "Create a JSON array called additionalMusicians containing " + noOfExtraArtists + "musicians that are similar to the existing musicians but not included in the existing list." },
             ],
             response_format: { type: "json_object" },
-            model: "gpt-3.5-turbo-1106"
+            model: "gpt-4.0-turbo"
         })
         console.log(aiArray); 
         let parsedContent = JSON.parse(aiArray.choices[0].message.content);
