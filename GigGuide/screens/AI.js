@@ -3,6 +3,7 @@ import { View, FlatList, Image, StyleSheet, Text, TouchableOpacity, SafeAreaView
 import { useNavigation } from '@react-navigation/native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { LinearGradient } from 'expo-linear-gradient';
+
 const AI = () => {
   const [data, setData] = useState([]);
   const navigation = useNavigation();
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
   },
   concertContainer: {
     width: 400, 
-    height: 300,// This sets the width to 300 pixels
+    height: 300,
     padding: 10,
     borderRadius: 20,
     backgroundColor: '#fff',
@@ -96,8 +97,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    borderWidth: 2, // This sets the width of the border
-    borderColor: '#f205e2', // This sets the color of the border
+    borderWidth: 2,
+    borderColor: '#f205e2',
   },
   concertName: {
     position: 'absolute',
@@ -109,17 +110,15 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 80,
-    fontWeight: 'bold', // Make the text bold
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Add a semi-transparent black background to the text
-    padding: 10, // Add some padding so the background doesn't hug the text too tightly
-    borderRadius: 5, // Add some border radius to make the background rounded
-
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 10,
+    borderRadius: 5,
   },
   concertImage: {
-    width: '100%', // make the image fill the width of the container
-    height: '100%', // adjust the height as needed
-    resizeMode: 'cover', // make the image cover the whole width while maintaining its aspect ratio
-    borderRadius: 10, // add this line to make the image corners rounded
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    borderRadius: 10,
   },
   greetingText: {
     fontSize: 32,
@@ -133,4 +132,6 @@ const styles = StyleSheet.create({
     textShadowRadius: 10,
     marginBottom: 20, 
   },
+});
+
 export default AI;
