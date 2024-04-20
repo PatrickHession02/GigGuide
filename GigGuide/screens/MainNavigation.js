@@ -64,6 +64,15 @@ export const MainNavigator = ({uid}) => {
     headerShown: false,
   }}
 />
+
+<Tab.Screen
+      name='AI'
+      component={AI}
+      options={{
+        headerShown: false,
+      }}
+      />
+      
       <Tab.Screen
         name="Profile"
         component={Profile}
@@ -72,13 +81,7 @@ export const MainNavigator = ({uid}) => {
         }}
       />
 
-      <Tab.Screen
-      name='AI'
-      component={AI}
-      options={{
-        headerShown: false,
-      }}
-      />
+ 
        <Tab.Screen
         name="Settings"
         component={Settings}
