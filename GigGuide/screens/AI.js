@@ -58,8 +58,8 @@ const AI = () => {
   };
 
   const handleConcertPress = (artist) => {
-    console.log('Passing the following data to Concertinfo:', artist.concerts);
-    navigation.navigate('Concertinfo', { concerts: artist.concerts });
+    console.log('Passing the following data to Concertinfo:', concerts);
+    navigation.navigate('Concertinfo', { concert });
   };
 
   console.log('Concerts Data:', data);
