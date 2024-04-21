@@ -36,7 +36,7 @@ const Concertinfo = ({ route }) => {
     },
  });
 
- const allImages = Array.isArray(concert.concerts) ? concert.concerts.flatMap(concert => concert.images) : [];
+ const allImages = concert && Array.isArray(concert.concerts) ? concert.concerts.flatMap(concert => concert.images) : [];
  // Filter out fallback images
  const nonFallbackImages = allImages.filter(image => !image.fallback);
  // Sort in descending order of quality

@@ -47,7 +47,7 @@ const HomeScreen = ({ uid }) => {
           const code = result.params.code;
           console.log("Authorization Code: ", code);
           console.log("UID2: ", uid);
-          const responseCallback = await fetch('https://4ee5-79-140-211-73.ngrok-free.app/callback', {
+          const responseCallback = await fetch('https://8cbc-79-140-211-73.ngrok-free.app/callback', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ const HomeScreen = ({ uid }) => {
           console.log('Received data from backend', dataCallback);
   
           // Then fetch to /concerts
-          const responseConcerts = await fetch('https://4ee5-79-140-211-73.ngrok-free.app/concerts');
+          const responseConcerts = await fetch('https://8cbc-79-140-211-73.ngrok-free.app/concerts');
           const dataConcerts = await responseConcerts.json();
           console.log('Fetched data:', dataConcerts);
           if (!dataConcerts) {
