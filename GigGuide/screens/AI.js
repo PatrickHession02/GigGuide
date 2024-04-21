@@ -30,12 +30,10 @@ const AI = () => {
       });
   }, []);
   
-  console.log('Data:', data);
-  const dataArray = data ? Object.keys(data).map(key => ({ // Check if data is not undefined
-    name: key,
-    concerts: data[key],
+  const dataArray = data ? data.map(artist => ({
+    name: artist.name,
+    concerts: artist.concerts,
   })) : [];
-  console.log('Data array:', dataArray);
   
   const renderItem = ({ item: artist }) => {
     console.log('Rendering item:', artist);

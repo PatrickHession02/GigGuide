@@ -88,8 +88,11 @@ const HomeScreen = ({ uid }) => {
    });
   }, [uid, promptAsync]);
 
-  const handleConcertPress = (concert) => {
-    navigation.navigate('Concertinfo', { concert });
+  const handleConcertPress = (artist) => {
+    if (artist && artist.concerts && artist.concerts.length > 0) {
+      const concert = artist.concerts[0];
+      navigation.navigate('Concertinfo', { concert });
+    }
   };
 
   const renderItem = ({ item: concert }) => {
