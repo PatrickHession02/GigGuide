@@ -2,18 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, Text, StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
-
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 class Profile extends React.Component {
   state = {
     search: '',
+    profilePicUrl: null,
   };
+
+  componentDidMount() {
+    FIREBASE_AUTH.onAuthStateChanged((user) => {
+      console.log(user); // Add this line
+      if (user) {
+        this.setState({ profilePicUrl: user.photoURL });
+      }
+    });
+  }
+
 
   updateSearch = (search) => {
     this.setState({ search });
   };
 
   render() {
-    const { search } = this.state;
+    const { search, profilePicUrl } = this.state;
 
     return (
       <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
@@ -30,7 +41,7 @@ class Profile extends React.Component {
           <View style={styles.profileContainer}>
             <View style={styles.profilePictureContainer}>
               <Image
-                source={require('../assets/ProfilePicExample.png')} 
+                source={profilePicUrl ? { uri: profilePicUrl } : require('../assets/ProfilePicExample.png')}
                 style={styles.profilePicture}
               />
             </View>

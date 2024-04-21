@@ -9,7 +9,7 @@ const AI = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetch('https://4ee5-79-140-211-73.ngrok-free.app/AI')
+    fetch('https://8cbc-79-140-211-73.ngrok-free.app/AI')
       .then(response => response.json())
       .then(data => {
         console.log('Fetched AI data:', data);
@@ -50,9 +50,8 @@ const AI = () => {
   };
 
   const handleConcertPress = (artist) => {
-    navigation.navigate('Concertinfo', { concerts: artist.concerts });
+    navigation.navigate('Concertinfo', { concert: artist });
   };
-
   console.log('Concerts Data:', data);
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>

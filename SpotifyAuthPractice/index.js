@@ -20,9 +20,6 @@ app.use(session({
     cookie: { secure: false } // Note: In production, set this to true and ensure your app uses HTTPS
   }));
   
-
-
-  
   function delayRequest() {
       return new Promise(resolve => setTimeout(resolve, 1000)); // Delay of 1 second
   }
