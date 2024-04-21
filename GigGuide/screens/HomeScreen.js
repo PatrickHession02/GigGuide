@@ -120,8 +120,6 @@ const HomeScreen = ({ uid }) => {
 </View>
 )}
       </SafeAreaView>
-
-
       {concertsData.length > 0 && <Text style={styles.greetingText}>{getGreeting()}</Text>}
       <FlatList
         contentContainerStyle={styles.scrollViewContainer}

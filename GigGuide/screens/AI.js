@@ -50,7 +50,8 @@ const AI = () => {
   };
 
   const handleConcertPress = (artist) => {
-    navigation.navigate('Concertinfo', { concert: artist.concerts });
+    const concert = artist.concerts[0];
+    navigation.navigate('Concertinfo', { concert });
   };
 
   console.log('Concerts Data:', data);
