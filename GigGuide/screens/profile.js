@@ -2,55 +2,51 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, Text, StyleSheet, View, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
-
+import { FIREBASE_AUTH } from '../FirebaseConfig';
 class Profile extends React.Component {
   state = {
     search: '',
+    profilePicUrl: null,
   };
+
+  componentDidMount() {
+    FIREBASE_AUTH.onAuthStateChanged((user) => {
+      console.log(user); // Add this line
+      if (user) {
+        this.setState({ profilePicUrl: user.photoURL });
+      }
+    });
+  }
+
 
   updateSearch = (search) => {
     this.setState({ search });
   };
 
   render() {
-    const { search } = this.state;
+    const { search, profilePicUrl } = this.state;
 
     return (
-      <LinearGradient colors={['#8E00FD', '#FF000F']} style={styles.gradient}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <SearchBar
-            placeholder="Type Here..."
-            onChangeText={this.updateSearch}
-            value={search}
-            containerStyle={styles.searchBarContainer}
-            inputContainerStyle={styles.searchBarInputContainer}
-          />
-          <Text style={styles.profileHeaderText}>Profile</Text>
-          <View style={styles.horizontalLine} />
-          <View style={styles.profileContainer}>
-            <View style={styles.profilePictureContainer}>
-              <Image
-                source={require('../assets/ProfilePicExample.png')} 
-                style={styles.profilePicture}
-              />
-            </View>
-            <View style={styles.profileTextContainer}>
-              <Text style={styles.usernameText}>Username</Text>
-              <Text style={styles.friendsText}>Friends</Text>
-              <Text style={styles.followedText}>Artists Followed</Text>
-            </View>
+      <LinearGradient>
+      <ScrollView>
+        <View>
+          <View style={styles.profileTextContainer}>
+            <Text style={styles.usernameText}>Username</Text>
+            <Text style={styles.friendsText}>Friends</Text>
+            <Text style={styles.followedText}>Artists Followed</Text>
           </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Concert Wishlist</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>Reviews</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.separatorLine} />
-        </ScrollView>
-      </LinearGradient>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Concert Wishlist</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Reviews</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.separatorLine} />
+      </ScrollView>
+    </LinearGradient>
     );
   }
 }
