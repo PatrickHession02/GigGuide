@@ -8,27 +8,30 @@ const AI = () => {
   const [data, setData] = useState([]);
   const navigation = useNavigation();
   useEffect(() => {
-    fetch('https://8cbc-79-140-211-73.ngrok-free.app/AI')
-      .then(response => response.json())
-      .then(data => {
-        console.log('Fetched AI data:', data);
-        if (data) {
-          const groupedData = data.reduce((acc, concert) => {
-            if (concert && concert.name) { // Check if concert and concert.name are not undefined
-              const artistIndex = acc.findIndex(artist => artist.name === concert.name);
-              if (artistIndex !== -1) {
-                acc[artistIndex].concerts.push(concert);
-              } else {
-                acc.push({ name: concert.name, concerts: [concert] });
-              }
-            }
-            return acc;
-          }, []);
-          console.log('Grouped data:', groupedData);
-          setData(groupedData);
-        }
-      });
-  }, []);
+    const responseConcerts = await fetch('https://8cbc-79-140-211-73.ngrok-free.app/AI')
+    const dataConcerts = await responseConcerts.json();
+    console.log('Fetched data:', dataConcerts);
+    if (!dataConcerts) {
+      console.error('Fetched data is undefined');
+      return;
+    }
+    const groupedData = dataConcerts.reduce((acc, concert) => {
+      console.log('Current concert:', concert);
+      const artistIndex = acc.findIndex(artist => artist.name === concert.name); // Changed concert.artist to concert.name
+      if (artistIndex !== -1) {
+        acc[artistIndex].concerts.push(concert);
+      } else {
+        acc.push({ name: concert.name, concerts: [concert] }); // Changed concert.artist to concert.name
+      }
+      return acc;
+    }, []);
+    setConcertsData(groupedData);
+  }
+} catch (error) {
+  console.error('Error fetching concerts:', error);
+}
+});
+}, []);
   
   const dataArray = data ? data.map(artist => ({
     name: artist.name,
