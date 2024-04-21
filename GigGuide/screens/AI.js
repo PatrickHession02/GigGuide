@@ -15,41 +15,50 @@ const AI = () => {
         console.log('Fetched AI data:', data);
         if (data) {
           const groupedData = data.reduce((acc, concert) => {
-            const artistName = concert.name;
-            if (!acc[artistName]) {
-              acc[artistName] = [];
+            if (concert) {
+              const artistName = concert.name;
+              if (!acc[artistName]) {
+                acc[artistName] = [];
+              }
+              acc[artistName].push(concert);
             }
-            acc[artistName].push(concert);
             return acc;
           }, {});
+          console.log('Grouped data:', groupedData);
           setData(groupedData);
         }
       });
   }, []);
 
+  console.log('Data:', data);
   const dataArray = Object.keys(data).map(key => ({
     name: key,
     concerts: data[key],
   }));
+  console.log('Data array:', dataArray);
 
   const renderItem = ({ item: artist }) => {
-    const concert = artist.concerts[0];
-    if (concert && concert.images && concert.images.length > 0) {
-      return (
-        <TouchableOpacity onPress={() => handleConcertPress(artist)}>
-          <View style={styles.concertContainer}>
-            <View style={styles.imageContainer}>
-              <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />
-              <Text style={styles.concertName}>{concert.name}</Text>
+    console.log('Rendering item:', artist);
+    if (artist && artist.concerts && artist.concerts.length > 0) {
+      const concert = artist.concerts[0];
+      if (concert && concert.images && concert.images.length > 0) {
+        return (
+          <TouchableOpacity onPress={() => handleConcertPress(artist)}>
+            <View style={styles.concertContainer}>
+              <View style={styles.imageContainer}>
+                <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />
+                <Text style={styles.concertName}>{concert.name}</Text>
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
-      );
+          </TouchableOpacity>
+        );
+      }
     }
     return null;
   };
 
   const handleConcertPress = (artist) => {
+    console.log('Passing the following data to Concertinfo:', artist.concerts);
     navigation.navigate('Concertinfo', { concerts: artist.concerts });
   };
 
