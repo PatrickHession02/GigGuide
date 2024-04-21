@@ -50,10 +50,8 @@ const AI = () => {
   };
 
   const handleConcertPress = (artist) => {
-    const concert = artist.concerts[0];
-    navigation.navigate('Concertinfo', { concert });
+    navigation.navigate('Concertinfo', { concert: artist });
   };
-
   console.log('Concerts Data:', data);
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
