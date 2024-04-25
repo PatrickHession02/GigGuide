@@ -1,14 +1,50 @@
-import BodyParser from "body-BodyParser";
-const router = express.Router();
-const json = BodyParser.json();
-const httpParser = BodyParser.urlencoded({ extended: false });
 
+const express = require('express');
+const bodyParser = require('body-parser');
+const { Expo } = require('expo-server-sdk'); // Import Expo SDK
 
-router.post('/pushnotification', json, async (req, res) => {
-  const token = String (req.body.token);
-await admin.messaging().sendToDevice(token, {
-  notification: {
-    title: 'Concerts',
-    body: 'New concerts are available!'
+const app = express();
+const expo = new Expo();
+
+app.use(bodyParser.json());
+
+// Endpoint to send notifications
+app.post('/send-notification', async (req, res) => {
+  try {
+    const { pushTokens, message } = req.body; // Extract push tokens and message from request body
+
+    if (!Expo.isExpoPushToken(pushTokens)) {
+      return res.status(400).send({ error: 'Invalid push tokens' });
+    }
+
+    const messages = [];
+    for (const pushToken of pushTokens) {
+      // Construct message for each recipient
+      messages.push({
+        to: pushToken,
+        sound: 'default',
+        body: message,
+      });
+    }
+
+    const chunks = expo.chunkPushNotifications(messages);
+
+    const sendPromises = [];
+    for (const chunk of chunks) {
+      sendPromises.push(expo.sendPushNotificationsAsync(chunk));
+    }
+
+    await Promise.all(sendPromises);
+
+    res.status(200).send({ success: true });
+  } catch (error) {
+    console.error('Error sending notification:', error);
+    res.status(500).send({ error: 'Internal server error' });
   }
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });

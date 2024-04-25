@@ -9,11 +9,14 @@ import MainNavigator from './screens/MainNavigation';
 import { firebase, auth } from './FirebaseConfig';
 import { signOut } from 'firebase/auth';
 import HomeScreen from './screens/HomeScreen';
+import { usePushNotifications } from './Notifications/Notifications'; // Import the hook
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { expoPushToken, notification, triggerNotification } = usePushNotifications(); // Use the hook
 
   useEffect(() => {
     const unsubscribe = FIREBASE_AUTH.onAuthStateChanged((user) => {
@@ -36,6 +39,14 @@ export default function App() {
     }
   };
 
+  // Function to trigger a notification
+  const handleSendNotification = () => {
+    if (expoPushToken) {
+      triggerNotification(); // Trigger the notification using the hook
+    } else {
+      console.error('Expo push token is not available.');
+    }
+  };
 
   if (loading) {
     return null; // Or return a loading spinner
@@ -55,4 +66,5 @@ export default function App() {
         )}
       </Stack.Navigator>
     </NavigationContainer>
-  );}
+  );
+}

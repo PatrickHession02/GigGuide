@@ -1,8 +1,3 @@
-import { initializeApp } from 'firebase/app';
-import {getDatabase, ref, set,get, child} from 'firebase/database';
-
-
-
 require('dotenv').config();
 const admin = require('firebase-admin');
 const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
@@ -15,13 +10,5 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-export const saveToken = async (uid, accessToken, refreshToken, expiresIn) => {
-    const docRef = db.collection('users').doc(uid);
-    await docRef.set({
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        expiresIn: expiresIn
-    });
-};
 
 module.exports = db;
