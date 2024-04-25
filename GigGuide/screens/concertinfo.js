@@ -10,7 +10,7 @@ const Concertinfo = ({ route }) => {
  const styles = StyleSheet.create({
     gradient: {
       position: 'absolute',
-      left: 0,
+      left: 0, 
       right: 0,
       top: 0,
       height: '100%',
@@ -36,7 +36,7 @@ const Concertinfo = ({ route }) => {
     },
  });
 
- const allImages = Array.isArray(concert.concerts) ? concert.concerts.flatMap(concert => concert.images) : [];
+ const allImages = concert && Array.isArray(concert.concerts) ? concert.concerts.flatMap(concert => concert.images) : [];
  // Filter out fallback images
  const nonFallbackImages = allImages.filter(image => !image.fallback);
  // Sort in descending order of quality

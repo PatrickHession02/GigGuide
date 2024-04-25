@@ -18,7 +18,7 @@ async function aiTest(req, userId) {
     const userData = userDoc.data();
 
     // Get the top artists from the user data
-    let currentArtists = userData.topArtists;
+    let currentArtists = userData.topArtists; //here is where i get the top artists
     let searchPhrases = await createListOfArtists(20, currentArtists)// Corrected function name
     console.log('generatedSearchPhrases: ' + searchPhrases.googleSearchPhrases)
 
@@ -58,10 +58,11 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
         generatedArray = parsedContent.additionalMusicians || [];
         console.log("Current Artists Array:", currentArtistArray);
         console.log("Generated Array (before filtering):", generatedArray);
-        
-        // Convert both arrays to lowercase for case-insensitive comparison
-        let currentArtistsLower = currentArtistArray.map(artist => artist.toLowerCase());
-        let filteredArray = generatedArray.filter(artist => !currentArtistsLower.includes(artist.toLowerCase()));
+        //Hozier only appearing twice because lord huron apppearing in my top artists and they are supporting Hozier
+        let filteredArray = generatedArray.filter(artist => {
+            let artistLower = artist.toLowerCase();
+            return !currentArtistArray.some(currentArtist => currentArtist.toLowerCase() === artistLower);
+        });
         
         console.log("Generated Array (after filtering):", filteredArray);
     } catch (err) {

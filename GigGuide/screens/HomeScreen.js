@@ -7,6 +7,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { useAutoDiscovery, useAuthRequest, makeRedirectUri } from 'expo-auth-session';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SimpleLineIcons } from '@expo/vector-icons';
+
 WebBrowser.maybeCompleteAuthSession();
 
 const HomeScreen = ({ uid }) => {
@@ -15,8 +16,13 @@ const HomeScreen = ({ uid }) => {
   const discovery = useAutoDiscovery('https://accounts.spotify.com');
   const [concertsData, setConcertsData] = useState([]);
 
-  const redirectUri = makeRedirectUri({ scheme: 'gigguide' });
-  console.log("Redirect URI: ", redirectUri);
+  const redirectUri = makeRedirectUri({ 
+    scheme: 'gigguide', 
+    path: 'redirect',
+    useProxy: true 
+  });
+  
+  console.log("Redirect URI:", redirectUri);
   
   const getGreeting = () => {
     const currentHour = new Date().getHours();
@@ -28,26 +34,28 @@ const HomeScreen = ({ uid }) => {
       return 'Good Evening!';
     }
   };
+
   const [request, response, promptAsync] = useAuthRequest(
     {
       clientId: '736a5838698041a6bcfb852f8ee1a6ab',
       scopes: ['user-read-email', 'playlist-modify-public', 'user-top-read'],
       usePKCE: false,
-      redirectUri: redirectUri,
+      redirectUri,
     },
     discovery
   );
+
   const [handleLogin, setHandleLogin] = useState(() => async () => {});
 
   useEffect(() => {
-   setHandleLogin(() => async () => {
+    setHandleLogin(() => async () => {
       try {
         const result = await promptAsync();
         if (result.type === 'success') {
           const code = result.params.code;
           console.log("Authorization Code: ", code);
           console.log("UID2: ", uid);
-          const responseCallback = await fetch('https://4ee5-79-140-211-73.ngrok-free.app/callback', {
+          const responseCallback = await fetch('https://b8e0-193-1-57-3.ngrok-free.app/callback', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -63,7 +71,7 @@ const HomeScreen = ({ uid }) => {
           console.log('Received data from backend', dataCallback);
   
           // Then fetch to /concerts
-          const responseConcerts = await fetch('https://4ee5-79-140-211-73.ngrok-free.app/concerts');
+          const responseConcerts = await fetch('https://b8e0-193-1-57-3.ngrok-free.app/concerts');
           const dataConcerts = await responseConcerts.json();
           console.log('Fetched data:', dataConcerts);
           if (!dataConcerts) {
@@ -85,7 +93,7 @@ const HomeScreen = ({ uid }) => {
       } catch (error) {
         console.error('Error fetching concerts:', error);
       }
-   });
+    });
   }, [uid, promptAsync]);
 
   const handleConcertPress = (concert) => {
@@ -107,21 +115,21 @@ const HomeScreen = ({ uid }) => {
       </TouchableOpacity>
     );
   };
+
   console.log('Concerts Data:', concertsData);
+  
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
-      <SafeAreaView style={{flex:1, justifyContent:'center'}}>
-      {concertsData.length === 0 && (
-        <View style={styles.loginContainer}>
-  <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-    <SimpleLineIcons style={styles.spotifyLogo} name="social-spotify" size={24} color="white" />
-    <Text style={styles.loginButtonText}>Login</Text>
-  </TouchableOpacity>
-</View>
-)}
+      <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
+        {concertsData.length === 0 && (
+          <View style={styles.loginContainer}>
+            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+              <SimpleLineIcons style={styles.spotifyLogo} name="social-spotify" size={24} color="white" />
+              <Text style={styles.loginButtonText}>Login</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </SafeAreaView>
-
-
       {concertsData.length > 0 && <Text style={styles.greetingText}>{getGreeting()}</Text>}
       <FlatList
         contentContainerStyle={styles.scrollViewContainer}
@@ -153,7 +161,7 @@ const styles = StyleSheet.create({
   },
   concertContainer: {
     width: 400, 
-    height: 300,// This sets the width to 300 pixels
+    height: 300,
     padding: 10,
     borderRadius: 20,
     backgroundColor: '#fff',
@@ -166,8 +174,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    borderWidth: 2, // This sets the width of the border
-    borderColor: '#f205e2', // This sets the color of the border
+    borderWidth: 2, 
+    borderColor: '#f205e2', 
   },
   concertName: {
     position: 'absolute',
@@ -179,17 +187,16 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 80,
-    fontWeight: 'bold', // Make the text bold
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Add a semi-transparent black background to the text
-    padding: 10, // Add some padding so the background doesn't hug the text too tightly
-    borderRadius: 5, // Add some border radius to make the background rounded
-
+    fontWeight: 'bold', 
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+    padding: 10, 
+    borderRadius: 5, 
   },
   concertImage: {
-    width: '100%', // make the image fill the width of the container
-    height: '100%', // adjust the height as needed
-    resizeMode: 'cover', // make the image cover the whole width while maintaining its aspect ratio
-    borderRadius: 10, // add this line to make the image corners rounded
+    width: '100%', 
+    height: '100%', 
+    resizeMode: 'cover', 
+    borderRadius: 10, 
   },
   greetingText: {
     fontSize: 32,
@@ -204,13 +211,10 @@ const styles = StyleSheet.create({
     marginBottom: 20, 
   },
   loginContainer: {
-    
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
-    
-
   },
   loginButton: {
     flexDirection: 'row',
@@ -229,11 +233,10 @@ const styles = StyleSheet.create({
   },
   spotifyLogo: {
     position: 'absolute',
-    width: 30, // Adjust as needed
-    height: 30, // Adjust as needed
-    left: '50%', // Adjust as needed
+    width: 30, 
+    height: 30, 
+    left: '50%', 
   },
-  },
-);
+});
 
 export default HomeScreen;
