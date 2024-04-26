@@ -1,5 +1,4 @@
-import React from 'react';
-import { SafeAreaView, Text, StyleSheet } from 'react-native';
+
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
