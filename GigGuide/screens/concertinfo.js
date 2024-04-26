@@ -6,8 +6,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 const Concertinfo = ({ route }) => {
  const { concert } = route.params;
  const insets = useSafeAreaInsets(); // Get the safe area insets
- console.log("routes",route.params);
- const styles = StyleSheet.create({
+  console.log("routes",route.params);
+    const styles = StyleSheet.create({
     gradient: {
       position: 'absolute',
       left: 0, 
