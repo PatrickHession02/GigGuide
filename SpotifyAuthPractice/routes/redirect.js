@@ -15,6 +15,8 @@ const spotifyApi = new SpotifyWebApi({
     aiKey: process.env.OPEN_AI_KEY
 });
 
+console.log('Redirect URI:', spotifyApi.getRedirectURI());
+
 router.post('/',  express.json(),(req, res) => {
     const code = req.body.code;
     const uid = req.body.uid;
