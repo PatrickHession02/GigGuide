@@ -30,13 +30,22 @@ const Settings  = ({ triggerPushNotification }) => {
     }
   };
 
-  const handleSendNotification = () => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Test Notification',
-        body: 'This is a test notification from your app!',
+  const sendPushNotification = () => {
+    const concertData = {
+      test: 'toest',
+    };
+  
+    fetch('https://aa5c-193-1-57-3.ngrok-free.app/concertNotifyTest', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      trigger: null, // Send immediately
+      body: JSON.stringify(concertData),
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch((error) => {
+      console.error('Error:', error);
     });
   };
 
@@ -59,7 +68,7 @@ const Settings  = ({ triggerPushNotification }) => {
           {/* Blue rectangle background */}
           <View style={styles.blueBackground}>
             {/* Send Notification button */}
-            <Button title="Send Notification" color="#FFFFFF" onPress={triggerPushNotification} />
+            <Button title="Send Notification" color="#FFFFFF" onPress={sendPushNotification} />
           </View>
         </View>
       </SafeAreaView>
