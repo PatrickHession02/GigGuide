@@ -4,7 +4,7 @@ const User = require('../models/User');
 const router = express.Router();
 
 // POST route to update concert name
-router.post('/update-concert', async (req, res) => {
+router.post('/', async (req, res) => {
     try {
         const { userId, concertName } = req.body;
 
