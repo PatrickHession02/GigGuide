@@ -1,12 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Expo } = require('expo-server-sdk');
-const admin = require('firebase-admin');
+const db = require('./fireStore');
 const router = express.Router();
 const app = express();
 const expo = new Expo();
 
-admin.initializeApp();
 router.use(bodyParser.json());
 
 router.post('/', async (req, res) => {
@@ -18,8 +17,11 @@ router.post('/', async (req, res) => {
     }
 
     // Save the token to Firestore
-    const userRef = admin.firestore().collection('User').doc(userId);
-    await userRef.update({ token: token.data });
+    const userRef = db.collection('User').doc(userId);
+    await userRef.set({ token: token.data }, { merge: true });
+    
+    // Log that the token was successfully sent to Firestore
+    console.log('Token successfully sent to Firestore');
 
     const messages = [{
       to: token.data,
@@ -37,5 +39,4 @@ router.post('/', async (req, res) => {
     res.status(500).send({ error: 'Internal server error' });
   }
 });
-
 module.exports = router;
