@@ -10,7 +10,7 @@ import { firebase, auth } from './FirebaseConfig';
 import { signOut } from 'firebase/auth';
 import HomeScreen from './screens/HomeScreen';
 import { usePushNotifications } from './Notifications/Notifications'; // Import the hook
-
+import Settings from './screens/Settings';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -71,7 +71,7 @@ export default function App() {
       console.error('Expo push token is not available.');
     }
   };
-
+<Settings triggerPushNotification={triggerPushNotification} />
   if (loading) {
     return null; // Or return a loading spinner
   }

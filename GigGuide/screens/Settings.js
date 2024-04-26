@@ -6,7 +6,7 @@ import { signOut } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../FirebaseConfig';
 import { Notifications } from 'expo';
 
-const Settings = () => {
+const Settings  = ({ triggerPushNotification }) => {
   const handleSpotifyConnect = () => {
     fetch('localhost:3050/login', {
       headers: {
@@ -57,7 +57,7 @@ const Settings = () => {
           {/* Blue rectangle background */}
           <View style={styles.blueBackground}>
             {/* Send Notification button */}
-            <Button title="Send Notification" color="#FFFFFF" onPress={handleSendNotification} />
+            <Button title="Send Notification" color="#FFFFFF" onPress={triggerPushNotification} />
           </View>
         </View>
       </SafeAreaView>
