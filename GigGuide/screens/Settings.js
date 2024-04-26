@@ -71,7 +71,10 @@ const styles = StyleSheet.create({
     fontSize: 32, // Set the font size
     fontWeight: 'bold', // Make the text bold
     color: '#FFFFFF', // Set the text color
-    marginBottom: 20, // Add some margin at the bottom
+    marginBottom: 70, // Add some margin at the bottom
+    paddingTop: 20, // Add padding at the top
+    paddingLeft: 20,  // Add some margin at the bottom
+
   },
   gradient: {
     flex: 1,
