@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
     }
 
     // Save the token to Firestore
-    const userRef = db.collection('User').doc(userId);
+    const userRef = db.collection('users').doc(userId);
     await userRef.set({ token: token.data }, { merge: true });
     
     // Log that the token was successfully sent to Firestore
