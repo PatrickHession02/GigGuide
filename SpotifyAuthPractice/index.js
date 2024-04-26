@@ -37,13 +37,13 @@ const callbackRouter = require('./routes/redirect');
 const concertRouter = require('./routes/concerts');
 const aiRouter = require('./routes/AI');
 const notificationsRouter = require('./routes/saveToken');
-const testRouter = require('./routes/notifyTest');
+const testRouter = require('./routes/concertNotifyTest');
 
 app.use('/redirect' ,callbackRouter);
 app.use('/concerts' ,concertRouter);
 app.use('/AI' ,aiRouter);
 app.use('/saveToken', notificationsRouter);
-app.use('/notifyTest',testRouter);
+app.use('/concertNotifyTest',testRouter);
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
