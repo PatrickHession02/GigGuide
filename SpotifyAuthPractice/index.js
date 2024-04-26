@@ -36,7 +36,7 @@ const spotifyApi = new SpotifyWebApi({
 const callbackRouter = require('./routes/callback');
 const concertRouter = require('./routes/concerts');
 const aiRouter = require('./routes/AI');
-const notificationsRouter = require('./routes/Notifications');
+const notificationsRouter = require('./routes/saveToken');
 app.use('/callback' ,callbackRouter);
 app.use('/concerts' ,concertRouter);
 app.use('/AI' ,aiRouter);

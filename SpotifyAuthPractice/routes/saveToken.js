@@ -9,10 +9,10 @@ const expo = new Expo();
 router.use(bodyParser.json());
 
 // Endpoint to send notifications
-router.post('/', async (req, res) => {
+router.post('/saveToken', async (req, res) => {
   try {
     const { pushTokens, message } = req.body; // Extract push tokens and message from request body
-
+    console.log('Push Tokens:', pushTokens);
     if (!Expo.isExpoPushToken(pushTokens)) {
       return res.status(400).send({ error: 'Invalid push tokens' });
     }
