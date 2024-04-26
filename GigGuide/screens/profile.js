@@ -24,7 +24,6 @@ const ProfileScreen = () => {
       setProfileImage(result.assets[0].uri);
     }
   };
-
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
