@@ -64,38 +64,8 @@ export default function App() {
     return unsubscribe;
   }, [expoPushToken]);
   // Function to trigger a notification
-  const triggerPushNotification = async () => {
-    if (expoPushToken) {
-      try {
-        const response = await fetch('https://aa5c-193-1-57-3.ngrok-free.app/saveToken', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            pushTokens: [expoPushToken],
-            message: 'Test message',
-          }),
-        });
-  
-        const data = await response.json();
-  
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-  
-        console.log('Notification triggered:', data);
-      } catch (error) {
-        console.error('Failed to trigger notification:', error);
-      }
-    } else {
-      console.error('Expo push token is not available.');
-    }
-  };
-<Settings triggerPushNotification={triggerPushNotification} />
-  if (loading) {
-    return null; // Or return a loading spinner
-  }
+
+
 
   return (
     <NavigationContainer>

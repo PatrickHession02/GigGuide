@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Button, StyleSheet } from 'react-native';
+import { ScrollView, View, Button, StyleSheet, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { signOut } from 'firebase/auth';
@@ -12,10 +12,10 @@ const Settings  = ({ triggerPushNotification }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      // Add any body data if needed
+
     })
     .then(response => {
-      // Handle response as needed
+
     })
     .catch(error => {
       console.error('Error connecting to Spotify:', error);
@@ -30,19 +30,30 @@ const Settings  = ({ triggerPushNotification }) => {
     }
   };
 
-  const handleSendNotification = () => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'Test Notification',
-        body: 'This is a test notification from your app!',
+  const sendPushNotification = () => {
+    const concertData = {
+      test: 'toest',
+    };
+  
+    fetch('https://aa5c-193-1-57-3.ngrok-free.app/concertNotifyTest', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-      trigger: null, // Send immediately
+      body: JSON.stringify(concertData),
+    })
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch((error) => {
+      console.error('Error:', error);
     });
   };
 
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <SafeAreaView contentContainerStyle={styles.container}>
+      <Text style={styles.settingsText}>Settings</Text> 
+      <View style={styles.lineStyle} />
         <View style={styles.buttonContainer}>
           {/* Green rounded rectangle background */}
           <View style={styles.greenBackground}>
@@ -57,7 +68,7 @@ const Settings  = ({ triggerPushNotification }) => {
           {/* Blue rectangle background */}
           <View style={styles.blueBackground}>
             {/* Send Notification button */}
-            <Button title="Send Notification" color="#FFFFFF" onPress={triggerPushNotification} />
+            <Button title="Send Notification" color="#FFFFFF" onPress={sendPushNotification} />
           </View>
         </View>
       </SafeAreaView>
@@ -66,6 +77,21 @@ const Settings  = ({ triggerPushNotification }) => {
 };
 
 const styles = StyleSheet.create({
+  settingsText: {
+    fontSize: 32, 
+    fontWeight: 'bold', 
+    color: '#FFFFFF', 
+    paddingTop: 20, 
+    paddingLeft: 20,  
+
+  },
+  lineStyle: {
+    borderWidth: 0.5,
+    borderColor: '#FFFFFF',
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 70,
+  },
   gradient: {
     flex: 1,
   },
