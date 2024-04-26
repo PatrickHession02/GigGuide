@@ -55,7 +55,7 @@ const HomeScreen = ({ uid }) => {
           const code = result.params.code;
           console.log("Authorization Code: ", code);
           console.log("UID2: ", uid);
-          const responseCallback = await fetch('https://aa5c-193-1-57-3.ngrok-free.app/callback', {
+          const responseCallback = await fetch('https://aa5c-193-1-57-3.ngrok-free.app/redirect', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

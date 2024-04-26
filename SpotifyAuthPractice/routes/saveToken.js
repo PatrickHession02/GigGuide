@@ -22,13 +22,13 @@ router.post('/', async (req, res) => {
     const messages = [{
       to: token.data,
       sound: 'default',
-      body: 'This is a test notification',
+      body: 'Welcome to GigGuide',
     }];
 
     const chunks = expo.chunkPushNotifications(messages);
     const sendPromises = chunks.map(chunk => expo.sendPushNotificationsAsync(chunk));
     await Promise.all(sendPromises);
-    
+
     res.status(200).send({ success: true });
   } catch (error) {
     console.error('Error saving token:', error);
