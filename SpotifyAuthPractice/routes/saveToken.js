@@ -1,4 +1,3 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const { Expo } = require('expo-server-sdk'); // Import Expo SDK
@@ -8,37 +7,31 @@ const expo = new Expo();
 
 router.use(bodyParser.json());
 
-// Endpoint to send notifications
+// Endpoint to save tokens
 router.post('/', async (req, res) => {
   try {
-    const { pushTokens, message } = req.body; // Extract push tokens and message from request body
-    console.log('Push Tokens:', pushTokens);
-    if (!Expo.isExpoPushToken(pushTokens)) {
-      return res.status(400).send({ error: 'Invalid push tokens' });
+    const { token, userId } = req.body; // Extract token and userId from request body
+    console.log('Token:', token, 'UserId:', userId);
+    if (!Expo.isExpoPushToken(token.data)) {
+      return res.status(400).send({ error: 'Invalid push token' });
     }
 
-    const messages = [];
-    for (const pushToken of pushTokens) {
-      // Construct message for each recipient
-      messages.push({
-        to: pushToken,
-        sound: 'default',
-        body: message,
-      });
-    }
+    // Save the token here
+    // You need to implement your own logic to save the token
+    // For example, you can save it to a database
+    const messages = [{
+      to: token.data,
+      sound: 'default',
+      body: 'This is a test notification',
+    }];
 
     const chunks = expo.chunkPushNotifications(messages);
-
-    const sendPromises = [];
-    for (const chunk of chunks) {
-      sendPromises.push(expo.sendPushNotificationsAsync(chunk));
-    }
-
+    const sendPromises = chunks.map(chunk => expo.sendPushNotificationsAsync(chunk));
     await Promise.all(sendPromises);
-
+    
     res.status(200).send({ success: true });
   } catch (error) {
-    console.error('Error sending notification:', error);
+    console.error('Error saving token:', error);
     res.status(500).send({ error: 'Internal server error' });
   }
 });
