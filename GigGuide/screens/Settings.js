@@ -12,10 +12,10 @@ const Settings  = ({ triggerPushNotification }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      // Add any body data if needed
+
     })
     .then(response => {
-      // Handle response as needed
+
     })
     .catch(error => {
       console.error('Error connecting to Spotify:', error);
@@ -43,6 +43,7 @@ const Settings  = ({ triggerPushNotification }) => {
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <SafeAreaView contentContainerStyle={styles.container}>
+      <Text style={styles.settingsText}>Settings</Text> 
         <View style={styles.buttonContainer}>
           {/* Green rounded rectangle background */}
           <View style={styles.greenBackground}>
@@ -66,6 +67,12 @@ const Settings  = ({ triggerPushNotification }) => {
 };
 
 const styles = StyleSheet.create({
+  settingsText: {
+    fontSize: 32, // Set the font size
+    fontWeight: 'bold', // Make the text bold
+    color: '#FFFFFF', // Set the text color
+    marginBottom: 20, // Add some margin at the bottom
+  },
   gradient: {
     flex: 1,
   },
