@@ -56,10 +56,29 @@ router.get('/', async (req, res) => {
         });
 
         console.log('Concert data:', allConcerts);
-        res.json(allConcerts);
+
+        const docRef = db.collection('users').doc(userId);
+        docRef.set({
+            concerts: allConcerts
+        }, { merge: true }).then(() => {
+            console.log('Concerts saved to Firebase');
+            // Log the document snapshot after the update
+            docRef.get().then(snapshot => {
+                console.log('Updated document snapshot:', snapshot.data());
+            });
+            // Send the response here
+            res.json({ message: 'Concerts saved to Firebase', concerts: allConcerts });
+        }).catch(err => {
+            console.error('Error saving concerts to Firebase:', err);
+            // Send the error response here
+            res.status(500).send('Error saving concerts to Firebase');
+        });
+    
+        // Remove this line
+        // res.json(allConcerts);
     } catch (error) {
         console.error('Error fetching concerts:', error);
     }
-});
+}); // This is the missing closing bracket
 
 module.exports = router;
