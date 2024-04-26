@@ -69,12 +69,11 @@ const Settings  = ({ triggerPushNotification }) => {
 
 const styles = StyleSheet.create({
   settingsText: {
-    fontSize: 32, // Set the font size
-    fontWeight: 'bold', // Make the text bold
-    color: '#FFFFFF', // Set the text color
-    // Add some margin at the bottom
-    paddingTop: 20, // Add padding at the top
-    paddingLeft: 20,  // Add some margin at the bottom
+    fontSize: 32, 
+    fontWeight: 'bold', 
+    color: '#FFFFFF', 
+    paddingTop: 20, 
+    paddingLeft: 20,  
 
   },
   lineStyle: {
