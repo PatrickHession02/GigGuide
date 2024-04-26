@@ -45,7 +45,7 @@ export default function App() {
       if (user) {
         setUser(user);
         // Send the token to your server
-        fetch('https://aa5c-193-1-57-3.ngrok-free.app/api/save-token', {
+        fetch('https://aa5c-193-1-57-3.ngrok-free.app/api/saveToken', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -9,7 +9,7 @@ const expo = new Expo();
 router.use(bodyParser.json());
 
 // Endpoint to send notifications
-router.post('/saveToken', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { pushTokens, message } = req.body; // Extract push tokens and message from request body
     console.log('Push Tokens:', pushTokens);
@@ -41,12 +41,6 @@ router.post('/saveToken', async (req, res) => {
     console.error('Error sending notification:', error);
     res.status(500).send({ error: 'Internal server error' });
   }
-});
-
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = router;
