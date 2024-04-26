@@ -6,7 +6,7 @@ const ProfileScreen = () => {
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <Text style={styles.text}>Profile Screen</Text>
+        <Text style={styles.text}>Profile</Text>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -23,8 +23,11 @@ const styles = StyleSheet.create({
     paddingLeft: 10, // Add some padding to the left
   },
   text: {
-    fontSize: 24,
+    fontSize: 30,
     color: '#fff',
+    paddingLeft: 30,
+    paddingTop: 20,
+    fontWeight: 'bold', 
   },
 });
 
