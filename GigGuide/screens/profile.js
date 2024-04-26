@@ -18,9 +18,9 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    justifyContent: 'flex-start', // Align items to the start of the main axis
-    alignItems: 'flex-start', // Align items to the start of the cross axis
-    paddingLeft: 10, // Add some padding to the left
+    justifyContent: 'flex-start', 
+    alignItems: 'flex-start',
+    paddingLeft: 10, 
   },
   text: {
     fontSize: 30,
