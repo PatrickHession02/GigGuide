@@ -1,24 +1,26 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { Expo } = require('expo-server-sdk'); // Import Expo SDK
+const { Expo } = require('expo-server-sdk');
+const admin = require('firebase-admin');
 const router = express.Router();
 const app = express();
 const expo = new Expo();
 
+admin.initializeApp();
 router.use(bodyParser.json());
 
-// Endpoint to save tokens
 router.post('/', async (req, res) => {
   try {
-    const { token, userId } = req.body; // Extract token and userId from request body
+    const { token, userId } = req.body;
     console.log('Token:', token, 'UserId:', userId);
     if (!Expo.isExpoPushToken(token.data)) {
       return res.status(400).send({ error: 'Invalid push token' });
     }
 
-    // Save the token here
-    // You need to implement your own logic to save the token
-    // For example, you can save it to a database
+    // Save the token to Firestore
+    const userRef = admin.firestore().collection('User').doc(userId);
+    await userRef.update({ token: token.data });
+
     const messages = [{
       to: token.data,
       sound: 'default',
