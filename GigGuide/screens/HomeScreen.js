@@ -74,17 +74,17 @@ const HomeScreen = ({ uid }) => {
           const responseConcerts = await fetch('https://aa5c-193-1-57-3.ngrok-free.app/concerts');
           const dataConcerts = await responseConcerts.json();
           console.log('Fetched data:', dataConcerts);
-          if (!dataConcerts) {
+          if (!dataConcerts || !dataConcerts.concerts) {
             console.error('Fetched data is undefined');
             return;
           }
-          const groupedData = dataConcerts.reduce((acc, concert) => {
+          const groupedData = dataConcerts.concerts.reduce((acc, concert) => {
             console.log('Current concert:', concert);
-            const artistIndex = acc.findIndex(artist => artist.name === concert.name); // Changed concert.artist to concert.name
+            const artistIndex = acc.findIndex(artist => artist.name === concert.name);
             if (artistIndex !== -1) {
               acc[artistIndex].concerts.push(concert);
             } else {
-              acc.push({ name: concert.name, concerts: [concert] }); // Changed concert.artist to concert.name
+              acc.push({ name: concert.name, concerts: [concert] });
             }
             return acc;
           }, []);
