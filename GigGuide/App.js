@@ -40,7 +40,7 @@ export default function App() {
   };
 
   // Function to trigger a notification
-  const handleSendNotification = () => {
+  const usePushNotifications = () => {
     if (expoPushToken) {
       triggerNotification(); // Trigger the notification using the hook
     } else {
