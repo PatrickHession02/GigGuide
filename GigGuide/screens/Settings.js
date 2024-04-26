@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Button, StyleSheet } from 'react-native';
+import { ScrollView, View, Button, StyleSheet, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { signOut } from 'firebase/auth';
