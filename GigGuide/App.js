@@ -14,6 +14,7 @@ import { usePushNotifications } from './Notifications/Notifications'; // Import 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const { expoPushToken, notification, triggerNotification } = usePushNotifications(); // Use the hook
@@ -38,9 +39,32 @@ export default function App() {
       console.error('Error signing out:', error.message);
     }
   };
-
+  useEffect(() => {
+    const unsubscribe = FIREBASE_AUTH.onAuthStateChanged((user) => {
+      console.log('user', user);
+      if (user) {
+        setUser(user);
+        // Send the token to your server
+        fetch('https://aa5c-193-1-57-3.ngrok-free.app/api/save-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            token: expoPushToken,
+            userId: user.uid,
+          }),
+        });
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    });
+  
+    return unsubscribe;
+  }, [expoPushToken]);
   // Function to trigger a notification
-  const usePushNotifications = () => {
+  const triggerPushNotification = () => {
     if (expoPushToken) {
       triggerNotification(); // Trigger the notification using the hook
     } else {

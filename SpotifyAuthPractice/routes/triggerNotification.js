@@ -1,17 +1,7 @@
-
-const express = require('express');
-const bodyParser = require('body-parser');
-const { Expo } = require('expo-server-sdk'); // Import Expo SDK
-const router = express.Router();
-const app = express();
-const expo = new Expo();
-
-router.use(bodyParser.json());
-
-// Endpoint to send notifications
-router.post('/', async (req, res) => {
+app.post('/trigger-notification', async (req, res) => {
   try {
-    const { pushTokens, message } = req.body; // Extract push tokens and message from request body
+    const message = 'This is your instant notification'; // Define your message here
+    const pushTokens = ['ExponentPushToken[xxxxxxxxxxxxxxxxxxxxxx]']; // Replace with your actual Expo push tokens
 
     if (!Expo.isExpoPushToken(pushTokens)) {
       return res.status(400).send({ error: 'Invalid push tokens' });
@@ -41,12 +31,6 @@ router.post('/', async (req, res) => {
     console.error('Error sending notification:', error);
     res.status(500).send({ error: 'Internal server error' });
   }
-});
-
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = router;

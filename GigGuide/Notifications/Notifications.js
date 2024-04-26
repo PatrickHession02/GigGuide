@@ -60,6 +60,7 @@ export const usePushNotifications = () => {
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
       setExpoPushToken(token);
+      console.log(token); // This will log the token to the console
     });
 
     notificationListener.current =
