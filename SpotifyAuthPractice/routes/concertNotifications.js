@@ -1,26 +1,25 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const { Expo } = require('expo-server-sdk');
+const db = require('./fireStore');
 
-admin.initializeApp();
-const expo = new Expo();
-
+const { sendNotificationOnNewConcert } = require('./concertNotifications');
 exports.sendNotificationOnNewConcert = functions.firestore
-  .document('concerts/{concertId}')
-  .onCreate(async (snap, context) => {
-    const concert = snap.data();
+  .document('User/{userId}')
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
 
-    // Fetch all tokens from your database
-    // This is just a placeholder, replace it with your actual code to fetch tokens
-    const tokens = await fetchTokens();
+    // Check if a new concert was added
+    if (before.concert.length < after.concert.length) {
+      const message = {
+        to: after.token,
+        sound: 'default',
+        body: `New concert added: ${after.concert[after.concert.length - 1]}`,
+      };
 
-    const messages = tokens.map(token => ({
-      to: token,
-      sound: 'default',
-      body: `New concert added: ${concert.name}`,
-    }));
-
-    const chunks = expo.chunkPushNotifications(messages);
-    const sendPromises = chunks.map(chunk => expo.sendPushNotificationsAsync(chunk));
-    await Promise.all(sendPromises);
+      const chunks = expo.chunkPushNotifications([message]);
+      const sendPromises = chunks.map(chunk => expo.sendPushNotificationsAsync(chunk));
+      await Promise.all(sendPromises);
+    }
   });
