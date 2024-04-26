@@ -44,6 +44,7 @@ const Settings  = ({ triggerPushNotification }) => {
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <SafeAreaView contentContainerStyle={styles.container}>
       <Text style={styles.settingsText}>Settings</Text> 
+      <View style={styles.lineStyle} />
         <View style={styles.buttonContainer}>
           {/* Green rounded rectangle background */}
           <View style={styles.greenBackground}>
@@ -71,10 +72,17 @@ const styles = StyleSheet.create({
     fontSize: 32, // Set the font size
     fontWeight: 'bold', // Make the text bold
     color: '#FFFFFF', // Set the text color
-    marginBottom: 70, // Add some margin at the bottom
+    // Add some margin at the bottom
     paddingTop: 20, // Add padding at the top
     paddingLeft: 20,  // Add some margin at the bottom
 
+  },
+  lineStyle: {
+    borderWidth: 0.5,
+    borderColor: '#FFFFFF',
+    width: '100%',
+    marginTop: 10,
+    marginBottom: 70,
   },
   gradient: {
     flex: 1,
