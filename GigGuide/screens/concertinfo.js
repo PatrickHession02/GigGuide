@@ -67,16 +67,23 @@ const Concertinfo = ({ route }) => {
     <>
       <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient} />
       <ScrollView contentContainerStyle={styles.container} style={styles.scrollView}>
-        <View>
-          {highestQualityImage && (
-          <Image
-          source={highestQualityImage ? { uri: highestQualityImage.url } : require('../assets/concert9.jpg')}
-          style={styles.image}
-          resizeMode="cover"
-        />
-          )}
-          <Text style={styles.overlay}> {concert.name}</Text>
-        </View>
+      <View>
+  {!highestQualityImage && (
+    <Image
+      source={require('../assets/concert9.jpg')}
+      style={styles.image}
+      resizeMode="cover"
+    />
+  )}
+  {highestQualityImage && (
+    <Image
+      source={{ uri: highestQualityImage.url }}
+      style={styles.image}
+      resizeMode="cover"
+    />
+  )}
+  <Text style={styles.overlay}> {concert.name}</Text>
+</View>
         <View style={styles.dateContainer}>
           {concert.concerts.map((concertItem, index) => {
             return (
