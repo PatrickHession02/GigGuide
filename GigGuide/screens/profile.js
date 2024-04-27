@@ -3,11 +3,6 @@ import React, { useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Modal, Button } from 'react-native';
-import { FIREBASE_AUTH } from '../FirebaseConfig';
-import '@react-native-firebase/storage';
-import firebase from 'firebase';
-
-
 
 const ProfileScreen = () => {
   const [profileImage, setProfileImage] = useState(null);
@@ -18,38 +13,47 @@ const ProfileScreen = () => {
       alert('Sorry, we need camera roll permissions to make this work!');
       return;
     }
-
+  
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
-
+  
     if (!result.cancelled) {
-      setProfileImage(result.assets[0].uri);
-      uploadImage(result.assets[0].uri); // Call the function to upload the image
-    }
-  };
-
-  const uploadImage = async (imageUri) => {
-    const user = firebase.auth().currentUser;
-    const storageRef = firebase.storage().ref(`profile_pictures/${user.uid}.png`);
-
-    try {
-      const response = await fetch(imageUri);
-      const blob = await response.blob();
-
-      // Upload the image to Firebase Storage
-      await storageRef.put(blob);
-
-      // Get the download URL
-      const downloadUrl = await storageRef.getDownloadURL();
-
-      // Update the user profile with the photo URL
-      await user.updateProfile({ photoURL: downloadUrl });
-    } catch (error) {
-      console.error('Error uploading image:', error);
+      // Upload the selected image to Firebase Storage
+      const file = result.assets[0];
+      const storageRef = storage.ref(`profilePictures/${userUID}.jpg`);
+      const task = storageRef.put(file.uri);
+  
+      // Wait for the image URL
+      task.on('state_changed',
+        (snapshot) => {
+          // Progress (if needed)
+        },
+        (error) => {
+          console.error('Error uploading image:', error);
+        },
+        async () => {
+          try {
+            const url = await storageRef.getDownloadURL();
+            console.log('Image URL:', url);
+  
+            // Update the user's profile with the image URL
+            const user = auth.currentUser;
+            await user.updateProfile({
+              photoURL: url,
+            });
+  
+            console.log('User profile updated successfully:', user);
+          } catch (error) {
+            console.error('Error updating user profile:', error);
+          }
+        }
+      );
+  
+      setProfileImage(file.uri);
     }
   };
   return (
