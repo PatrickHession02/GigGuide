@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import {MapView} from 'react-native-maps';
 const Concertinfo = ({ route }) => {
  const { concert } = route.params;
-
+ const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${venueName}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=${AIzaSyCi6Aw-OzHDgBckaFDY8HaBZl-ZkNaFdEA}`;
  const insets = useSafeAreaInsets(); // Get the safe area insets
 
     const styles = StyleSheet.create({
@@ -53,6 +53,10 @@ const Concertinfo = ({ route }) => {
     dateText: {
       color: 'black', // Make the text color black so it's visible on the white card
     },
+    map: {
+      width: '100%', // Set the width to 100% of the parent container
+      height: 200, // Set a fixed height
+    },
  });
 
  const allImages = concert && Array.isArray(concert.concerts) ? concert.concerts.flatMap(concert => concert.images) : [];
@@ -95,23 +99,24 @@ const Concertinfo = ({ route }) => {
         <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
       </TouchableOpacity>
       {concertItem.location && (
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: concertItem.location.latitude,
-            longitude: concertItem.location.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        >
-          <MapView.Marker
-            coordinate={{
-              latitude: concertItem.location.latitude,
-              longitude: concertItem.location.longitude,
-            }}
-            title={concertItem.location.name}
-          />
-        </MapView>
+        
+<MapView
+  style={styles.map}
+  initialRegion={{
+    latitude: latitude,
+    longitude: longitude,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  }}
+>
+  <MapView.Marker
+    coordinate={{
+      latitude: latitude,
+      longitude: longitude,
+    }}
+    title={concertItem.location ? concertItem.location.name : 'Default Location'}
+  />
+</MapView>
       )}
     </View>
   );
