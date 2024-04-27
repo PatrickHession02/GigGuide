@@ -39,8 +39,19 @@ const Concertinfo = ({ route }) => {
       flexDirection: 'row', // Add this to make the dates display side by side
       flexWrap: 'wrap', // Add this to wrap the dates to the next line if they overflow
     },
+    dateCard: {
+      backgroundColor: 'white', // Make the card background white
+      borderRadius: 10, // Add some border radius to make the card rounded
+      padding: 10, // Add some padding to the card
+      margin: 5, // Add some margin around the card
+      shadowColor: '#000', // Set the shadow color to black
+      shadowOffset: { width: 0, height: 1 }, // Set the shadow offset
+      shadowOpacity: 0.2, // Set the shadow opacity
+      shadowRadius: 1, // Set the shadow radius
+      elevation: 2, // Set the elevation to create a shadow on Android
+    },
     dateText: {
-      marginRight: 10, // Add some margin to the right of each date
+      color: 'black', // Make the text color black so it's visible on the white card
     },
  });
 
@@ -58,18 +69,18 @@ const Concertinfo = ({ route }) => {
       <ScrollView contentContainerStyle={styles.container} style={styles.scrollView}>
         <View>
           {highestQualityImage && (
-            <Image
-              source={{ uri: highestQualityImage.url }}
-              style={styles.image}
-              resizeMode="cover"
-            />
+          <Image
+          source={highestQualityImage ? { uri: highestQualityImage.url } : require('../assets/concert9.jpg')}
+          style={styles.image}
+          resizeMode="cover"
+        />
           )}
           <Text style={styles.overlay}> {concert.name}</Text>
         </View>
         <View style={styles.dateContainer}>
           {concert.concerts.map((concertItem, index) => {
             return (
-              <View key={index}>
+              <View style={styles.dateCard} key={index}>
                 <Text style={styles.dateText}>
                   {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
                 </Text>
