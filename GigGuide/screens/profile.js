@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Modal, Button } from 'react-native';
+
 const ProfileScreen = () => {
   const [profileImage, setProfileImage] = useState(null);
 
@@ -12,16 +13,47 @@ const ProfileScreen = () => {
       alert('Sorry, we need camera roll permissions to make this work!');
       return;
     }
-  
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
-  
-    if (!result.cancelled) {
+
+    if (!result.canceled) {
       setProfileImage(result.assets[0].uri);
+      // Call the function to send the image to the backend
+      sendImageToBackend(result.assets[0].uri);
+    }
+  };
+
+  const sendImageToBackend = async (imageUri) => {
+    try {
+      const formData = new FormData();
+      formData.append('profilePic', {
+        uri: imageUri,
+        type: 'image/jpeg', // Adjust the content type as needed
+        name: 'profile.jpg', // Provide a suitable filename
+      });
+
+      const response = await fetch('https://5b9f-79-140-211-73.ngrok-free.app/profilePic', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          // Add any necessary headers (e.g., authorization token)
+        },
+      });
+
+      if (response.ok) {
+        // Handle success (e.g., display a success message)
+        console.log('Image uploaded successfully!');
+      } else {
+        // Handle error (e.g., display an error message)
+        console.error('Error uploading image:', response.status);
+      }
+    } catch (error) {
+      console.error('Error sending image to backend:', error);
     }
   };
   return (
