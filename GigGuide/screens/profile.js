@@ -49,7 +49,7 @@ const ProfileScreen = () => {
               });
 
               console.log('User profile updated successfully:', user);
-              setProfileImage(url); // Set the state with the new URL
+              setProfileImage(url); 
             } catch (error) {
               console.error('Error updating user profile:', error);
             }
