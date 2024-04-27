@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, ScrollView, StyleSheet, Dimensions, Image, View ,TouchableOpacity,Linking} from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import {MapView} from 'react-native-maps';
 const Concertinfo = ({ route }) => {
  const { concert } = route.params;
 
@@ -85,18 +85,37 @@ const Concertinfo = ({ route }) => {
   <Text style={styles.overlay}> {concert.name}</Text>
 </View>
         <View style={styles.dateContainer}>
-          {concert.concerts.map((concertItem, index) => {
-            return (
-              <View style={styles.dateCard} key={index}>
-                <Text style={styles.dateText}>
-                  {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
-                </Text>
-                <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
-                <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
-               </TouchableOpacity>
-              </View>
-            );
-          })}
+        {concert.concerts.map((concertItem, index) => {
+  return (
+    <View style={styles.dateCard} key={index}>
+      <Text style={styles.dateText}>
+        {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
+      </Text>
+      <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
+        <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
+      </TouchableOpacity>
+      {concertItem.location && (
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: concertItem.location.latitude,
+            longitude: concertItem.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+          <MapView.Marker
+            coordinate={{
+              latitude: concertItem.location.latitude,
+              longitude: concertItem.location.longitude,
+            }}
+            title={concertItem.location.name}
+          />
+        </MapView>
+      )}
+    </View>
+  );
+})}
         </View>
       </ScrollView>
     </>
