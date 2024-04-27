@@ -22,6 +22,23 @@ const ProfileScreen = () => {
   
     if (!result.canceled) {
       setProfileImage(result.assets[0].uri);
+    
+      fetch('https://5b9f-79-140-211-73.ngrok-free.app/profilePic', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageUri: result.assets[0].uri,
+        }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
     }
   };
   return (
