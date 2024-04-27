@@ -4,7 +4,7 @@ import { getFirestore } from 'firebase/firestore';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage'; 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBnKgSGr_60IabY0XK-07vtBPGCJoZsC-c",
+  apiKey: "AIzaSyBnKgSGr_60IabY0XK-07vtBPGCJoZsC-c",    //need to add these to .env
   authDomain: "gigguide-b3d86.firebaseapp.com",
   projectId: "gigguide-b3d86",
   storageBucket: "gigguide-b3d86.appspot.com",
@@ -18,5 +18,5 @@ export const FIREBASE_AUTH = initializeAuth(FIREBASE_APP, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
 });
 
-
+export const storage = getStorage(FIREBASE_APP);
 export const FIRESTORE_DB = getFirestore(FIREBASE_APP);
