@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Modal, Button } from 'react-native';
-import { FIREBASE_AUTH, FIREBASE_STORAGE } from '../FirebaseConfig'; // Import the storage instance
-
 const ProfileScreen = () => {
   const [profileImage, setProfileImage] = useState(null);
 
@@ -23,45 +21,9 @@ const ProfileScreen = () => {
     });
   
     if (!result.canceled) {
-      const file = result.assets[0];
-      const userUID = FIREBASE_AUTH.currentUser.uid;
-      const storageRef = FIREBASE_STORAGE.ref(`profilePictures/${userUID}.jpg`);
-    
-      fetch(file.uri)
-        .then(response => response.blob())
-        .then(blob => {
-          const task = storageRef.put(blob);
-          // Wait for the image URL
-          task.on('state_changed',
-            (snapshot) => {
-              // Progress (if needed)
-            },
-            (error) => {
-              console.error('Error uploading image:', error);
-            },
-            async () => {
-              try {
-                const url = await storageRef.getDownloadURL();
-                console.log('Image URL:', url);
-  
-                // Update the user's profile with the image URL
-                const user = FIREBASE_AUTH.currentUser;
-                await user.updateProfile({
-                  photoURL: url,
-                });
-  
-                console.log('User profile updated successfully:', user);
-              } catch (error) {
-                console.error('Error updating user profile:', error);
-              }
-            }
-          );
-  
-          setProfileImage(file.uri);
-        });
+      setProfileImage(result.assets[0].uri);
     }
   };
-
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
