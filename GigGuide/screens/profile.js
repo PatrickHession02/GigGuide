@@ -3,6 +3,12 @@ import React, { useState } from 'react';
 import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Modal, Button } from 'react-native';
+import { FIREBASE_AUTH } from '../FirebaseConfig';
+import '@react-native-firebase/storage';
+import firebase from 'firebase';
+
+
+
 const ProfileScreen = () => {
   const [profileImage, setProfileImage] = useState(null);
 
@@ -22,7 +28,28 @@ const ProfileScreen = () => {
 
     if (!result.cancelled) {
       setProfileImage(result.assets[0].uri);
-      uploadImage(result.assets[0].uri);
+      uploadImage(result.assets[0].uri); // Call the function to upload the image
+    }
+  };
+
+  const uploadImage = async (imageUri) => {
+    const user = firebase.auth().currentUser;
+    const storageRef = firebase.storage().ref(`profile_pictures/${user.uid}.png`);
+
+    try {
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+
+      // Upload the image to Firebase Storage
+      await storageRef.put(blob);
+
+      // Get the download URL
+      const downloadUrl = await storageRef.getDownloadURL();
+
+      // Update the user profile with the photo URL
+      await user.updateProfile({ photoURL: downloadUrl });
+    } catch (error) {
+      console.error('Error uploading image:', error);
     }
   };
   return (
