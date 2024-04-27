@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, ScrollView, StyleSheet, Dimensions, Image, View } from 'react-native';
+import { Text, ScrollView, StyleSheet, Dimensions, Image, View ,TouchableOpacity,Linking} from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -91,6 +91,9 @@ const Concertinfo = ({ route }) => {
                 <Text style={styles.dateText}>
                   {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
                 </Text>
+                <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
+                <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
+               </TouchableOpacity>
               </View>
             );
           })}
