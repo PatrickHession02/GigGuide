@@ -5,7 +5,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import {MapView} from 'react-native-maps';
 const Concertinfo = ({ route }) => {
  const { concert } = route.params;
- const url = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${venueName}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=${AIzaSyCi6Aw-OzHDgBckaFDY8HaBZl-ZkNaFdEA}`;
  const insets = useSafeAreaInsets(); // Get the safe area insets
 
     const styles = StyleSheet.create({
@@ -90,6 +89,20 @@ const Concertinfo = ({ route }) => {
 </View>
         <View style={styles.dateContainer}>
         {concert.concerts.map((concertItem, index) => {
+ fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    venue: concertItem.location ? concertItem.location.name : 'Default Location',
+  }),
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch((error) => {
+  console.error('Error:', error);
+});
   return (
     <View style={styles.dateCard} key={index}>
       <Text style={styles.dateText}>
