@@ -20,7 +20,7 @@ const ProfileScreen = () => {
       quality: 1,
     });
   
-    if (!result.cancelled) {
+    if (!result.canceled) {
       setProfileImage(result.assets[0].uri);
     }
   };
