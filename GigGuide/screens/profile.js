@@ -12,16 +12,17 @@ const ProfileScreen = () => {
       alert('Sorry, we need camera roll permissions to make this work!');
       return;
     }
-  
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
-  
+
     if (!result.cancelled) {
       setProfileImage(result.assets[0].uri);
+      uploadImage(result.assets[0].uri);
     }
   };
   return (
