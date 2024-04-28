@@ -96,70 +96,68 @@ const Concertinfo = ({ route }) => {
  const highestQualityImage = nonFallbackImages[0];
  
  return (
-    <>
-      <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient} />
-      <ScrollView contentContainerStyle={{width: '100%'}} style={styles.scrollView}>
+  <>
+    <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient} />
+    <ScrollView contentContainerStyle={{width: '100%'}} style={styles.scrollView}>
       <View>
-  {!highestQualityImage && (
-    <Image
-      source={require('../assets/concert9.jpg')}
-      style={styles.image}
-      resizeMode="cover"
-    />
-  )}
-  {highestQualityImage && (
-    <Image
-      source={{ uri: highestQualityImage.url }}
-      style={styles.image}
-      resizeMode="cover"
-    />
-  )}
-  <Text style={styles.overlay}> {concert.name}</Text>
-</View>
-        <View style={styles.dateContainer}>
+        {!highestQualityImage && (
+          <Image
+            source={require('../assets/concert9.jpg')}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        )}
+        {highestQualityImage && (
+          <Image
+            source={{ uri: highestQualityImage.url }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        )}
+        <Text style={styles.overlay}> {concert.name}</Text>
+      </View>
+      <View style={styles.dateContainer}>
         {concert.concerts.map((concertItem, index) => {
-
-
-return (
-  <View key={index}>
-    <View style={styles.dateCard}>
-      <Text style={styles.dateText}>
-        {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
-      </Text>
-      <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
-        <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
-      </TouchableOpacity>
-    </View>
-    <View style={styles.mapCard}>
-    {loading ? (
-  <Text>Loading...</Text> 
-) : (
-  <MapView
-    style={styles.map}
-    initialRegion={{
-      latitude: location.latitude,
-      longitude: location.longitude,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    }}
-    scrollEnabled={false}
-  >
-    <Marker
-      coordinate={{
-        latitude: location.latitude,
-        longitude: location.longitude,
-      }}
-      title={location.name}
-    />
-  </MapView>
-)}
-    </View>
-  </View>
-);
-})}
-</View>
-</ScrollView>
-</>
+          return (
+            <View key={index}>
+              <View style={styles.dateCard}>
+                <Text style={styles.dateText}>
+                  {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
+                </Text>
+                <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
+                  <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        })}
+        <View style={styles.mapCard}>
+          {loading ? (
+            <Text>Loading...</Text> 
+          ) : (
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+              scrollEnabled={false}
+            >
+              <Marker
+                coordinate={{
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                }}
+                title={location.name}
+              />
+            </MapView>
+          )}
+        </View>
+      </View>
+    </ScrollView>
+  </>
 );
 };
 
