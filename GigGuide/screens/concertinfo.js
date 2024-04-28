@@ -5,9 +5,34 @@ import { LinearGradient } from 'expo-linear-gradient';
 import  MapView ,{ Marker } from 'react-native-maps';
 const Concertinfo = ({ route }) => {
   const [location, setLocation] = useState({ latitude: 0, longitude: 0, name: 'Default Location' });
+  const [loading, setLoading] = useState(true); 
  const { concert } = route.params;
  const insets = useSafeAreaInsets(); // Get the safe area insets
  console.log(concert.concerts[0].venue);
+ useEffect(() => {
+  fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      venue: concert.concerts[0].venue ? concert.concerts[0].venue : 'Default Location',
+    }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    setLocation({
+      latitude: data.latitude,
+      longitude: data.longitude,
+      name: data.name,
+    });
+    setLoading(false); // Set loading to false after location state is updated
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+}, []);
+
     const styles = StyleSheet.create({
     gradient: {
       position: 'absolute',
@@ -93,29 +118,7 @@ const Concertinfo = ({ route }) => {
 </View>
         <View style={styles.dateContainer}>
         {concert.concerts.map((concertItem, index) => {
- useEffect(() => {
-  fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      venue: concert.concerts[0].venue ? concert.concerts[0].venue : 'Default Location',
-    }),
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
-    setLocation({
-      latitude: data.latitude,
-      longitude: data.longitude,
-      name: data.name,
-    });
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
-}, []);
+
 
 return (
   <View key={index}>
@@ -128,23 +131,27 @@ return (
       </TouchableOpacity>
     </View>
     <View style={styles.mapCard}>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: location.latitude,
-          longitude: location.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      >
-        <Marker
-          coordinate={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-          }}
-          title={location.name}
-        />
-      </MapView>
+    {loading ? (
+  <Text>Loading...</Text> 
+) : (
+  <MapView
+    style={styles.map}
+    initialRegion={{
+      latitude: location.latitude,
+      longitude: location.longitude,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    }}
+  >
+    <Marker
+      coordinate={{
+        latitude: location.latitude,
+        longitude: location.longitude,
+      }}
+      title={location.name}
+    />
+  </MapView>
+)}
     </View>
   </View>
 );
