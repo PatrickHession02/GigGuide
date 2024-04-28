@@ -8,6 +8,8 @@ const Concertinfo = ({ route }) => {
   const [loading, setLoading] = useState(true); 
  const { concert } = route.params;
  const insets = useSafeAreaInsets(); // Get the safe area insets
+ const lineup = concert.concerts[0].lineup;
+
  console.log(concert.concerts[0].venue);
  useEffect(() => {
   fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
@@ -147,6 +149,10 @@ const Concertinfo = ({ route }) => {
     </View>
   );
 })}
+ {lineup.map((artist, index) => (
+          <Text key={index} style={styles.artistText}>{artist}</Text>
+        ))}
+        
      <View style={styles.ticketCard}>
   <TouchableOpacity onPress={() => Linking.openURL(concert.concerts[0].ticketLink)}>
     <View style={styles.ticketButton}>
