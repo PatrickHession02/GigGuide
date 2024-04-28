@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, ScrollView, StyleSheet, Dimensions, Image, View ,TouchableOpacity,Linking} from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import {MapView} from 'react-native-maps';
+import  MapView ,{ Marker } from 'react-native-maps';
 const Concertinfo = ({ route }) => {
   const [location, setLocation] = useState({ latitude: 0, longitude: 0, name: 'Default Location' });
  const { concert } = route.params;
@@ -113,17 +113,18 @@ const Concertinfo = ({ route }) => {
   });
 }, []);
 
-  return (
-    <View style={styles.dateCard} key={index}>
+return (
+  <View key={index}>
+    <View style={styles.dateCard}>
       <Text style={styles.dateText}>
         {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
       </Text>
       <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
         <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
       </TouchableOpacity>
-      {concertItem.location && (
-        
-<MapView
+    </View>
+    <View style={styles.dateCard}>
+      <MapView
         style={styles.map}
         initialRegion={{
           latitude: location.latitude,
@@ -132,7 +133,7 @@ const Concertinfo = ({ route }) => {
           longitudeDelta: 0.0421,
         }}
       >
-        <MapView.Marker
+        <Marker
           coordinate={{
             latitude: location.latitude,
             longitude: location.longitude,
@@ -140,14 +141,14 @@ const Concertinfo = ({ route }) => {
           title={location.name}
         />
       </MapView>
-      )}
     </View>
-  );
+  </View>
+);
 })}
-        </View>
-      </ScrollView>
-    </>
- );
+</View>
+</ScrollView>
+</>
+);
 };
 
 export default Concertinfo;
