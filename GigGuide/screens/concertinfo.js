@@ -4,9 +4,9 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { LinearGradient } from 'expo-linear-gradient';
 import {MapView} from 'react-native-maps';
 const Concertinfo = ({ route }) => {
- const { concert, location } = route.params;
+ const { concert } = route.params;
  const insets = useSafeAreaInsets(); // Get the safe area insets
-
+ console.log(concert.concerts[0].venue);
     const styles = StyleSheet.create({
     gradient: {
       position: 'absolute',
@@ -95,8 +95,7 @@ const Concertinfo = ({ route }) => {
     'Content-Type': 'application/json',
   },
   body: JSON.stringify({
-    venue: concertItem.location ? concertItem.location.name : 'Default Location',
-    location: location, 
+    venue: concert.concerts[0].venue ? concert.concerts[0].venue : 'Default Location',
   }),
 })
 .then(response => response.json())
