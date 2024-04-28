@@ -3,6 +3,8 @@ import { Text, ScrollView, StyleSheet, Dimensions, Image, View ,TouchableOpacity
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import  MapView ,{ Marker } from 'react-native-maps';
+import { FontAwesome5 } from '@expo/vector-icons';
+
 const Concertinfo = ({ route }) => {
   const [location, setLocation] = useState({ latitude: 0, longitude: 0, name: 'Default Location' });
   const [loading, setLoading] = useState(true); 
@@ -134,6 +136,32 @@ const Concertinfo = ({ route }) => {
       fontWeight: 'bold', // Make the text bold
       textAlign: 'center', // Center the text
     },
+    venueCard: {
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 10,
+     
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.2,
+      shadowRadius: 1,
+      elevation: 2,
+     marginBottom: 10,
+     marginLeft: 6,
+      width:'97%'
+    },
+    venueTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    venueText: {
+      color: '#000',
+      fontSize: 16,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginTop: 10,
+    },
  });
 
  const allImages = concert && Array.isArray(concert.concerts) ? concert.concerts.flatMap(concert => concert.images) : [];
@@ -191,12 +219,21 @@ const Concertinfo = ({ route }) => {
 </View>
 
 <View style={styles.ticketCard}>
-  <TouchableOpacity onPress={() => Linking.openURL(concert.concerts[0].ticketLink)}>
-    <View style={styles.ticketButton}>
-      <Text style={styles.ticketButtonText}>Purchase Tickets:</Text>
+      <TouchableOpacity onPress={() => Linking.openURL(concert.concerts[0].ticketLink)}>
+        <View style={styles.ticketButton}>
+          <Text style={styles.ticketButtonText}>Purchase Tickets:</Text>
+        </View>
+      </TouchableOpacity>
     </View>
-  </TouchableOpacity>
+
+    <View style={styles.venueCard}>
+  <Text style={styles.venueTitle}>Venue:</Text>
+  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+    <FontAwesome5 name="stadium" size={24} color="orange" />
+    <Text style={styles.venueText}>{concert.concerts[0].venue}</Text>
+  </View>
 </View>
+
 <View style={styles.mapCard}>
   {loading ? (
     <Text>Loading...</Text> 
