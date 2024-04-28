@@ -15,7 +15,7 @@ const HomeScreen = ({ uid }) => {
   const navigation = useNavigation();
   const discovery = useAutoDiscovery('https://accounts.spotify.com');
   const [concertsData, setConcertsData] = useState([]);
-
+  const [location, setLocation] = useState(null);
   const redirectUri = makeRedirectUri({ 
     scheme: 'gigguide', 
     path: 'redirect',
@@ -31,12 +31,17 @@ const HomeScreen = ({ uid }) => {
         console.error('Permission to access location was denied');
         return;
       }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(location);
+  
+      try {
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+        console.log("Location", location);
+      } catch (error) {
+        console.error("Error getting location", error);
+      }
     })();
   }, []);
-  
+
   const getGreeting = () => {
     const currentHour = new Date().getHours();
     if (currentHour < 12) {
@@ -110,7 +115,7 @@ const HomeScreen = ({ uid }) => {
   }, [uid, promptAsync]);
 
   const handleConcertPress = (concert) => {
-    navigation.navigate('Concertinfo', { concert });
+    navigation.navigate('Concertinfo', { concert, location });
   };
 
   const renderItem = ({ item: concert }) => {
