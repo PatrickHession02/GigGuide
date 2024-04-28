@@ -7,8 +7,8 @@ const Concertinfo = ({ route }) => {
   const [location, setLocation] = useState({ latitude: 0, longitude: 0, name: 'Default Location' });
   const [loading, setLoading] = useState(true); 
  const { concert } = route.params;
- const insets = useSafeAreaInsets(); // Get the safe area insets
- const lineup = concert.concerts[0].lineup;
+ const lineupSet = new Set(concert.concerts[0].lineup); //prevents duplicate artists
+ const lineup = Array.from(lineupSet);
 
  console.log(concert.concerts[0].venue);
  useEffect(() => {
