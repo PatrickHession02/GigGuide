@@ -161,19 +161,21 @@ const Concertinfo = ({ route }) => {
         <Text style={styles.overlay}> {concert.name}</Text>
       </View>
       <View style={styles.dateContainer}>
-      {concert.concerts.map((concertItem, index) => {
-  return (
-    <View key={index}>
-      <View style={styles.dateCard}>
-        <Text style={styles.dateText}>
-          {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
-        </Text>
+  {concert.concerts.map((concertItem, index) => {
+    return (
+      <View key={index}>
+        <View style={styles.dateCard}>
+          <Text style={styles.dateText}>
+            {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
+          </Text>
+        </View>
       </View>
-    </View>
-  );
-})}
-<View style={styles.lineupCard}>
-  <Text style={styles.lineupTitle}>Lineup:</Text>
+    );
+  })}
+  <View style={styles.lineupCard}>
+    <Text style={styles.lineupTitle}>Lineup:</Text>
+    <Text style={styles.lineupText}>{lineup.join(', ')}</Text>
+  </View>
   <FlatList
     data={lineup}
     renderItem={({ item, index }) => (
@@ -181,42 +183,41 @@ const Concertinfo = ({ route }) => {
     )}
     horizontal={true}
   />
-  </View>
+</View>
 
-     <View style={styles.ticketCard}>
+<View style={styles.ticketCard}>
   <TouchableOpacity onPress={() => Linking.openURL(concert.concerts[0].ticketLink)}>
     <View style={styles.ticketButton}>
       <Text style={styles.ticketButtonText}>Purchase Tickets:</Text>
     </View>
   </TouchableOpacity>
 </View>
-        <View style={styles.mapCard}>
-          {loading ? (
-            <Text>Loading...</Text> 
-          ) : (
-            <MapView
-              style={styles.map}
-              initialRegion={{
-                latitude: location.latitude,
-                longitude: location.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-              scrollEnabled={false}
-            >
-              <Marker
-                coordinate={{
-                  latitude: location.latitude,
-                  longitude: location.longitude,
-                }}
-                title={location.name}
-              />
-            </MapView>
-          )}
-        </View>
-      </View>
-    </ScrollView>
-  </>
+<View style={styles.mapCard}>
+  {loading ? (
+    <Text>Loading...</Text> 
+  ) : (
+    <MapView
+      style={styles.map}
+      initialRegion={{
+        latitude: location.latitude,
+        longitude: location.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      }}
+      scrollEnabled={false}
+    >
+      <Marker
+        coordinate={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+        }}
+        title={location.name}
+      />
+    </MapView>
+  )}
+</View>
+</ScrollView>
+</>
 );
 };
 
