@@ -3,7 +3,7 @@ import { Text, ScrollView, StyleSheet, Dimensions, Image, View ,TouchableOpacity
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import  MapView ,{ Marker } from 'react-native-maps';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Concertinfo = ({ route }) => {
   const [location, setLocation] = useState({ latitude: 0, longitude: 0, name: 'Default Location' });
@@ -226,14 +226,13 @@ const Concertinfo = ({ route }) => {
       </TouchableOpacity>
     </View>
 
-    <View style={styles.venueCard}>
-  <Text style={styles.venueTitle}>Venue:</Text>
-  <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-    <FontAwesome5 name="stadium" size={24} color="orange" />
+    <View style={{ ...styles.venueCard, flexDirection: 'row', alignItems: 'center',paddingLeft:30 }}>
+  <MaterialCommunityIcons name="stadium-variant" size={30} color="orange" />
+  <View style={{ alignItems: 'center' }}>
+    <Text style={styles.venueTitle}>Venue:</Text>
     <Text style={styles.venueText}>{concert.concerts[0].venue}</Text>
   </View>
 </View>
-
 <View style={styles.mapCard}>
   {loading ? (
     <Text>Loading...</Text> 
