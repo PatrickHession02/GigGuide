@@ -52,7 +52,7 @@ export default function App() {
           },
           body: JSON.stringify({
             token: expoPushToken,
-            userId: user.uid,
+            
           }),
         });
       } else {

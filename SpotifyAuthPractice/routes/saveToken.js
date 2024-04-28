@@ -11,7 +11,7 @@ router.post('/', async (req, res) => {
   try {
     const { token,} = req.body;
     const userId = req.session.userId; 
-    console.log('User ID:', userId);
+    console.log('TOKEN TEST User ID:', userId);
     console.log('Actual Token:', token); // Log the actual token
     console.log('Token Data:', token.data, 'UserId:', userId);
     if (!Expo.isExpoPushToken(token.data)) {
@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send({ success: true });
   } catch (error) {
-    console.error('Error saving token:', error);
+    console.error(error);
     res.status(500).send({ error: 'Internal server error' });
   }
 });
