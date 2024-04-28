@@ -228,7 +228,7 @@ const Concertinfo = ({ route }) => {
     </View>
 
     <View style={{ ...styles.venueCard, flexDirection: 'row', alignItems: 'center', paddingLeft:30 }}>
-  <MaterialCommunityIcons name="stadium-variant" size={30} color="orange" style={{ marginRight: 26 }} />
+  <MaterialCommunityIcons name="stadium-variant" size={30} color="#f55516" style={{ marginRight: 26 }} />
   <View style={{ flex: 1, alignItems: 'center', paddingRight: 80 }}>
     <Text style={styles.venueTitle}>Venue:</Text>
     <Text style={styles.venueText}>{concert.concerts[0].venue}</Text>
