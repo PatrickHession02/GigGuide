@@ -7,7 +7,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { useAutoDiscovery, useAuthRequest, makeRedirectUri } from 'expo-auth-session';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SimpleLineIcons } from '@expo/vector-icons';
-
+import * as Location from 'expo-location';
 WebBrowser.maybeCompleteAuthSession();
 
 const HomeScreen = ({ uid }) => {
@@ -23,6 +23,19 @@ const HomeScreen = ({ uid }) => {
   });
   
   console.log("Redirect URI:", redirectUri);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
   
   const getGreeting = () => {
     const currentHour = new Date().getHours();
