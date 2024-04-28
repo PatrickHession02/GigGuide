@@ -84,6 +84,22 @@ const Concertinfo = ({ route }) => {
     map: {
       width: '100%', // This is already set to 100%
       height: 200,
+      borderRadius: 20, // Add this line to make the map view rounded
+    },
+    ticketCard: {
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 30,
+      margin: 5,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.2,
+      shadowRadius: 1,
+      elevation: 2,
+      width: '100%',
+    },
+    ticketButtonText: {
+      color: 'blue',
     },
  });
 
@@ -117,20 +133,22 @@ const Concertinfo = ({ route }) => {
         <Text style={styles.overlay}> {concert.name}</Text>
       </View>
       <View style={styles.dateContainer}>
-        {concert.concerts.map((concertItem, index) => {
-          return (
-            <View key={index}>
-              <View style={styles.dateCard}>
-                <Text style={styles.dateText}>
-                  {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
-                </Text>
-                <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
-                  <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          );
-        })}
+      {concert.concerts.map((concertItem, index) => {
+  return (
+    <View key={index}>
+      <View style={styles.dateCard}>
+        <Text style={styles.dateText}>
+          {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
+        </Text>
+      </View>
+      <View style={styles.ticketCard}>
+        <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
+          <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+})}
         <View style={styles.mapCard}>
           {loading ? (
             <Text>Loading...</Text> 
