@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, ScrollView, StyleSheet, Dimensions, Image, View ,TouchableOpacity,Linking} from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import {MapView} from 'react-native-maps';
 const Concertinfo = ({ route }) => {
+  const [location, setLocation] = useState({ latitude: 0, longitude: 0, name: 'Default Location' });
  const { concert } = route.params;
  const insets = useSafeAreaInsets(); // Get the safe area insets
  console.log(concert.concerts[0].venue);
@@ -89,20 +90,29 @@ const Concertinfo = ({ route }) => {
 </View>
         <View style={styles.dateContainer}>
         {concert.concerts.map((concertItem, index) => {
- fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    venue: concert.concerts[0].venue ? concert.concerts[0].venue : 'Default Location',
-  }),
-})
-.then(response => response.json())
-.then(data => console.log(data))
-.catch((error) => {
-  console.error('Error:', error);
-});
+ useEffect(() => {
+  fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      venue: concert.concerts[0].venue ? concert.concerts[0].venue : 'Default Location',
+    }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    setLocation({
+      latitude: data.latitude,
+      longitude: data.longitude,
+      name: data.name,
+    });
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+}, []);
+
   return (
     <View style={styles.dateCard} key={index}>
       <Text style={styles.dateText}>
@@ -114,22 +124,22 @@ const Concertinfo = ({ route }) => {
       {concertItem.location && (
         
 <MapView
-  style={styles.map}
-  initialRegion={{
-    latitude: latitude,
-    longitude: longitude,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  }}
->
-  <MapView.Marker
-    coordinate={{
-      latitude: latitude,
-      longitude: longitude,
-    }}
-    title={concertItem.location ? concertItem.location.name : 'Default Location'}
-  />
-</MapView>
+        style={styles.map}
+        initialRegion={{
+          latitude: location.latitude,
+          longitude: location.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+      >
+        <MapView.Marker
+          coordinate={{
+            latitude: location.latitude,
+            longitude: location.longitude,
+          }}
+          title={location.name}
+        />
+      </MapView>
       )}
     </View>
   );
