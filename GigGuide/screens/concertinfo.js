@@ -140,15 +140,16 @@ const Concertinfo = ({ route }) => {
       backgroundColor: 'white',
       borderRadius: 10,
       padding: 10,
-     
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 1 },
       shadowOpacity: 0.2,
       shadowRadius: 1,
       elevation: 2,
-     marginBottom: 10,
-     marginLeft: 6,
-      width:'97%'
+      marginBottom: 10,
+      marginLeft: 6,
+      width:'97%',
+      flexDirection: 'row', // Add this line
+      alignItems: 'center', // Add this line
     },
     venueTitle: {
       fontSize: 20,
@@ -226,9 +227,9 @@ const Concertinfo = ({ route }) => {
       </TouchableOpacity>
     </View>
 
-    <View style={{ ...styles.venueCard, flexDirection: 'row', alignItems: 'center',paddingLeft:30 }}>
-  <MaterialCommunityIcons name="stadium-variant" size={30} color="orange" />
-  <View style={{ alignItems: 'center' }}>
+    <View style={{ ...styles.venueCard, flexDirection: 'row', alignItems: 'center', paddingLeft:30 }}>
+  <MaterialCommunityIcons name="stadium-variant" size={30} color="orange" style={{ marginRight: 26 }} />
+  <View style={{ flex: 1, alignItems: 'center', paddingRight: 80 }}>
     <Text style={styles.venueTitle}>Venue:</Text>
     <Text style={styles.venueText}>{concert.concerts[0].venue}</Text>
   </View>
