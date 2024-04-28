@@ -105,6 +105,7 @@ const Concertinfo = ({ route }) => {
   })
   .then(response => response.json())
   .then(data => {
+    console.log(data);
     setLocation({
       latitude: data.latitude,
       longitude: data.longitude,
