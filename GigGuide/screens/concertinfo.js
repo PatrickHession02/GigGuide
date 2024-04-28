@@ -14,7 +14,7 @@ const Concertinfo = ({ route }) => {
 
  console.log(concert.concerts[0].venue);
  useEffect(() => {
-  fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
+  fetch('https://1cc5-79-140-211-73.ngrok-free.app/places', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
