@@ -99,7 +99,7 @@ const Concertinfo = ({ route }) => {
       width: '98%',
     },
     ticketButtonText: {
-      color: 'blue',
+      color: '#8d4fbd',
       textAlign: 'center', // Center the text
       fontSize: 20, // Increase the size
       fontWeight: 'bold', // Make it bold
@@ -147,11 +147,13 @@ const Concertinfo = ({ route }) => {
     </View>
   );
 })}
-      <View style={styles.ticketCard}>
-        <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concert.concerts[0].ticketLink)}>
-          <Text style={styles.ticketButtonText}>Purchase Tickets:</Text>
-        </TouchableOpacity>
-      </View>
+     <View style={styles.ticketCard}>
+  <TouchableOpacity onPress={() => Linking.openURL(concert.concerts[0].ticketLink)}>
+    <View style={styles.ticketButton}>
+      <Text style={styles.ticketButtonText}>Purchase Tickets:</Text>
+    </View>
+  </TouchableOpacity>
+</View>
         <View style={styles.mapCard}>
           {loading ? (
             <Text>Loading...</Text> 
