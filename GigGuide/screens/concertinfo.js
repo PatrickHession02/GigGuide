@@ -129,6 +129,11 @@ const Concertinfo = ({ route }) => {
       marginTop: 10,
       width:'97%'
     },
+    lineupTitle: {
+      fontSize: 20, // Increase the font size
+      fontWeight: 'bold', // Make the text bold
+      textAlign: 'center', // Center the text
+    },
  });
 
  const allImages = concert && Array.isArray(concert.concerts) ? concert.concerts.flatMap(concert => concert.images) : [];
