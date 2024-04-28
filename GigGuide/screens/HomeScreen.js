@@ -7,7 +7,7 @@ import * as WebBrowser from 'expo-web-browser';
 import { useAutoDiscovery, useAuthRequest, makeRedirectUri } from 'expo-auth-session';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { SimpleLineIcons } from '@expo/vector-icons';
-
+import * as Location from 'expo-location';
 WebBrowser.maybeCompleteAuthSession();
 
 const HomeScreen = ({ uid }) => {
@@ -15,7 +15,7 @@ const HomeScreen = ({ uid }) => {
   const navigation = useNavigation();
   const discovery = useAutoDiscovery('https://accounts.spotify.com');
   const [concertsData, setConcertsData] = useState([]);
-
+  const [location, setLocation] = useState(null);
   const redirectUri = makeRedirectUri({ 
     scheme: 'gigguide', 
     path: 'redirect',
@@ -23,7 +23,25 @@ const HomeScreen = ({ uid }) => {
   });
   
   console.log("Redirect URI:", redirectUri);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.error('Permission to access location was denied');
+        return;
+      }
   
+      try {
+        let location = await Location.getCurrentPositionAsync({});
+        setLocation(location);
+        console.log("Location", location);
+      } catch (error) {
+        console.error("Error getting location", error);
+      }
+    })();
+  }, []);
+
   const getGreeting = () => {
     const currentHour = new Date().getHours();
     if (currentHour < 12) {
@@ -97,7 +115,7 @@ const HomeScreen = ({ uid }) => {
   }, [uid, promptAsync]);
 
   const handleConcertPress = (concert) => {
-    navigation.navigate('Concertinfo', { concert });
+    navigation.navigate('Concertinfo', { concert, location });
   };
 
   const renderItem = ({ item: concert }) => {

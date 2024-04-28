@@ -1,11 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, ScrollView, StyleSheet, Dimensions, Image, View ,TouchableOpacity,Linking} from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import {MapView} from 'react-native-maps';
+import  MapView ,{ Marker } from 'react-native-maps';
 const Concertinfo = ({ route }) => {
+  const [location, setLocation] = useState({ latitude: 0, longitude: 0, name: 'Default Location' });
+  const [loading, setLoading] = useState(true); 
  const { concert } = route.params;
  const insets = useSafeAreaInsets(); // Get the safe area insets
+ console.log(concert.concerts[0].venue);
+ useEffect(() => {
+  fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      venue: concert.concerts[0].venue ? concert.concerts[0].venue : 'Default Location',
+    }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    setLocation({
+      latitude: data.latitude,
+      longitude: data.longitude,
+      name: data.name,
+    });
+    setLoading(false); // Set loading to false after location state is updated
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+}, []);
 
     const styles = StyleSheet.create({
     gradient: {
@@ -52,9 +78,12 @@ const Concertinfo = ({ route }) => {
     dateText: {
       color: 'black', // Make the text color black so it's visible on the white card
     },
+    mapCard: {
+      width: '100%', // Add this line
+    },
     map: {
-      width: '100%', // Set the width to 100% of the parent container
-      height: 200, // Set a fixed height
+      width: '100%', // This is already set to 100%
+      height: 200,
     },
  });
 
@@ -67,77 +96,69 @@ const Concertinfo = ({ route }) => {
  const highestQualityImage = nonFallbackImages[0];
  
  return (
-    <>
-      <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient} />
-      <ScrollView contentContainerStyle={styles.container} style={styles.scrollView}>
+  <>
+    <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient} />
+    <ScrollView contentContainerStyle={{width: '100%'}} style={styles.scrollView}>
       <View>
-  {!highestQualityImage && (
-    <Image
-      source={require('../assets/concert9.jpg')}
-      style={styles.image}
-      resizeMode="cover"
-    />
-  )}
-  {highestQualityImage && (
-    <Image
-      source={{ uri: highestQualityImage.url }}
-      style={styles.image}
-      resizeMode="cover"
-    />
-  )}
-  <Text style={styles.overlay}> {concert.name}</Text>
-</View>
-        <View style={styles.dateContainer}>
+        {!highestQualityImage && (
+          <Image
+            source={require('../assets/concert9.jpg')}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        )}
+        {highestQualityImage && (
+          <Image
+            source={{ uri: highestQualityImage.url }}
+            style={styles.image}
+            resizeMode="cover"
+          />
+        )}
+        <Text style={styles.overlay}> {concert.name}</Text>
+      </View>
+      <View style={styles.dateContainer}>
         {concert.concerts.map((concertItem, index) => {
- fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify({
-    venue: concertItem.location ? concertItem.location.name : 'Default Location',
-  }),
-})
-.then(response => response.json())
-.then(data => console.log(data))
-.catch((error) => {
-  console.error('Error:', error);
-});
-  return (
-    <View style={styles.dateCard} key={index}>
-      <Text style={styles.dateText}>
-        {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
-      </Text>
-      <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
-        <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
-      </TouchableOpacity>
-      {concertItem.location && (
-        
-<MapView
-  style={styles.map}
-  initialRegion={{
-    latitude: latitude,
-    longitude: longitude,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  }}
->
-  <MapView.Marker
-    coordinate={{
-      latitude: latitude,
-      longitude: longitude,
-    }}
-    title={concertItem.location ? concertItem.location.name : 'Default Location'}
-  />
-</MapView>
-      )}
-    </View>
-  );
-})}
+          return (
+            <View key={index}>
+              <View style={styles.dateCard}>
+                <Text style={styles.dateText}>
+                  {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
+                </Text>
+                <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
+                  <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        })}
+        <View style={styles.mapCard}>
+          {loading ? (
+            <Text>Loading...</Text> 
+          ) : (
+            <MapView
+              style={styles.map}
+              initialRegion={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+              scrollEnabled={false}
+            >
+              <Marker
+                coordinate={{
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                }}
+                title={location.name}
+              />
+            </MapView>
+          )}
         </View>
-      </ScrollView>
-    </>
- );
+      </View>
+    </ScrollView>
+  </>
+);
 };
 
 export default Concertinfo;
