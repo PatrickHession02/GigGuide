@@ -53,9 +53,12 @@ const Concertinfo = ({ route }) => {
     dateText: {
       color: 'black', // Make the text color black so it's visible on the white card
     },
+    mapCard: {
+      width: '100%', // Add this line
+    },
     map: {
-      width: '100%', // Set the width to 100% of the parent container
-      height: 200, // Set a fixed height
+      width: '100%', // This is already set to 100%
+      height: 200,
     },
  });
 
@@ -70,7 +73,7 @@ const Concertinfo = ({ route }) => {
  return (
     <>
       <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient} />
-      <ScrollView contentContainerStyle={styles.container} style={styles.scrollView}>
+      <ScrollView contentContainerStyle={{width: '100%'}} style={styles.scrollView}>
       <View>
   {!highestQualityImage && (
     <Image
@@ -123,7 +126,7 @@ return (
         <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
       </TouchableOpacity>
     </View>
-    <View style={styles.dateCard}>
+    <View style={styles.mapCard}>
       <MapView
         style={styles.map}
         initialRegion={{
