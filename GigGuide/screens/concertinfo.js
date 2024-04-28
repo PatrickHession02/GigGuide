@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, ScrollView, StyleSheet, Dimensions, Image, View ,TouchableOpacity,Linking} from 'react-native';
+import { Text, ScrollView, StyleSheet, Dimensions, Image, View ,TouchableOpacity,Linking, FlatList} from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import  MapView ,{ Marker } from 'react-native-maps';
@@ -67,10 +67,11 @@ const Concertinfo = ({ route }) => {
       flexWrap: 'wrap', // Add this to wrap the dates to the next line if they overflow
     },
     dateCard: {
+      marginTop: 10,
       backgroundColor: 'white', // Make the card background white
       borderRadius: 10, // Add some border radius to make the card rounded
-      padding: 10, // Add some padding to the card
-      margin: 5, // Add some margin around the card
+      padding: 15, // Add some padding to the card
+      margin: 10, // Add some margin around the card
       shadowColor: '#000', // Set the shadow color to black
       shadowOffset: { width: 0, height: 1 }, // Set the shadow offset
       shadowOpacity: 0.2, // Set the shadow opacity
@@ -78,6 +79,7 @@ const Concertinfo = ({ route }) => {
       elevation: 2, // Set the elevation to create a shadow on Android
     },
     dateText: {
+    
       color: 'black', // Make the text color black so it's visible on the white card
     },
     mapCard: {
@@ -99,12 +101,33 @@ const Concertinfo = ({ route }) => {
       shadowRadius: 1,
       elevation: 2,
       width: '98%',
+      marginBottom: 10,
     },
     ticketButtonText: {
       color: '#8d4fbd',
       textAlign: 'center', // Center the text
       fontSize: 20, // Increase the size
       fontWeight: 'bold', // Make it bold
+    },
+    lineupText: {
+      color: '#000',
+      fontSize: 16,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginTop: 10,
+    },
+    lineupCard: {
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 10,
+      margin: 5,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.2,
+      shadowRadius: 1,
+      elevation: 2,
+      marginTop: 10,
+      width:'97%'
     },
  });
 
@@ -149,10 +172,17 @@ const Concertinfo = ({ route }) => {
     </View>
   );
 })}
- {lineup.map((artist, index) => (
-          <Text key={index} style={styles.artistText}>{artist}</Text>
-        ))}
-        
+<View style={styles.lineupCard}>
+  <Text style={styles.lineupTitle}>Lineup:</Text>
+  <FlatList
+    data={lineup}
+    renderItem={({ item, index }) => (
+      <Text key={index} style={styles.lineupText}>{item}</Text>
+    )}
+    horizontal={true}
+  />
+  </View>
+
      <View style={styles.ticketCard}>
   <TouchableOpacity onPress={() => Linking.openURL(concert.concerts[0].ticketLink)}>
     <View style={styles.ticketButton}>
