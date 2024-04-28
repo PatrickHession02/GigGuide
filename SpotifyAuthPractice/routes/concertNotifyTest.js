@@ -10,17 +10,17 @@ router.post('/', async (req, res) => {
     // Get a reference to the user's document
     const userRef = db.collection('users').doc(userId);
 
-    // Add the "Test" concert to the "concerts" array in the user's document
+    // Increment the "test" field in the user's document
     userRef.update({
-        concerts: admin.firestore.FieldValue.arrayUnion({ Test: 'Some value' }) // Replace 'Some value' with the value you want to store
+        test: admin.firestore.FieldValue.increment(1) // Increment the "test" field by 1
     })
     .then(() => {
-        console.log('Test concert added to user document');
-        res.json({ message: 'Test concert added to user document' });
+        console.log('Test field incremented in user document');
+        res.json({ message: 'Test field incremented in user document' });
     })
     .catch(err => {
-        console.error('Error adding Test concert to user document:', err);
-        res.status(500).send('Error adding Test concert to user document');
+        console.error('Error incrementing test field in user document:', err);
+        res.status(500).send('Error incrementing test field in user document');
     });
 });
 
