@@ -24,7 +24,6 @@ router.post('/',  express.json(),(req, res) => {
     console.log('Received UID:', uid);
 
     req.session.userId = uid;
-    // Pass the code to the /callback endpoint
     req.code = code;
 
     spotifyApi.authorizationCodeGrant(code).then(data => {

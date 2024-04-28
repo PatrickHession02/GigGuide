@@ -7,11 +7,13 @@ const app = express();
 const expo = new Expo();
 
 router.use(bodyParser.json());
-
 router.post('/', async (req, res) => {
   try {
-    const { token, userId } = req.body;
-    console.log('Token:', token, 'UserId:', userId);
+    const { token,} = req.body;
+    const userId = req.session.userId; 
+    console.log('User ID:', userId);
+    console.log('Actual Token:', token); // Log the actual token
+    console.log('Token Data:', token.data, 'UserId:', userId);
     if (!Expo.isExpoPushToken(token.data)) {
       return res.status(400).send({ error: 'Invalid push token' });
     }
