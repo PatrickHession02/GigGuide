@@ -39,12 +39,15 @@ const aiRouter = require('./routes/AI');
 const notificationsRouter = require('./routes/saveToken');
 const testRouter = require('./routes/concertNotifyTest');
 const profilePicRouter = require('./routes/profilePic');
+const placesRouter = require('./routes/places');
+
 app.use('/redirect' ,callbackRouter);
 app.use('/concerts' ,concertRouter);
 app.use('/AI' ,aiRouter);
 app.use('/saveToken', notificationsRouter);
 app.use('/concertNotifyTest',testRouter);
 app.use('/profilePic', profilePicRouter); 
+app.use('/places', placesRouter);
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

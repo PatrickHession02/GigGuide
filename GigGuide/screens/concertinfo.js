@@ -2,10 +2,9 @@ import React from 'react';
 import { Text, ScrollView, StyleSheet, Dimensions, Image, View ,TouchableOpacity,Linking} from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-
+import {MapView} from 'react-native-maps';
 const Concertinfo = ({ route }) => {
  const { concert } = route.params;
-
  const insets = useSafeAreaInsets(); // Get the safe area insets
 
     const styles = StyleSheet.create({
@@ -53,6 +52,10 @@ const Concertinfo = ({ route }) => {
     dateText: {
       color: 'black', // Make the text color black so it's visible on the white card
     },
+    map: {
+      width: '100%', // Set the width to 100% of the parent container
+      height: 200, // Set a fixed height
+    },
  });
 
  const allImages = concert && Array.isArray(concert.concerts) ? concert.concerts.flatMap(concert => concert.images) : [];
@@ -85,18 +88,52 @@ const Concertinfo = ({ route }) => {
   <Text style={styles.overlay}> {concert.name}</Text>
 </View>
         <View style={styles.dateContainer}>
-          {concert.concerts.map((concertItem, index) => {
-            return (
-              <View style={styles.dateCard} key={index}>
-                <Text style={styles.dateText}>
-                  {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
-                </Text>
-                <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
-                <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
-               </TouchableOpacity>
-              </View>
-            );
-          })}
+        {concert.concerts.map((concertItem, index) => {
+ fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    venue: concertItem.location ? concertItem.location.name : 'Default Location',
+  }),
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch((error) => {
+  console.error('Error:', error);
+});
+  return (
+    <View style={styles.dateCard} key={index}>
+      <Text style={styles.dateText}>
+        {concertItem.date ? new Date(concertItem.date).toLocaleDateString() : 'Date not available'}
+      </Text>
+      <TouchableOpacity style={styles.ticketButton} onPress={() => Linking.openURL(concertItem.ticketLink)}>
+        <Text style={styles.ticketButtonText}>Purchase Tickets</Text>
+      </TouchableOpacity>
+      {concertItem.location && (
+        
+<MapView
+  style={styles.map}
+  initialRegion={{
+    latitude: latitude,
+    longitude: longitude,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  }}
+>
+  <MapView.Marker
+    coordinate={{
+      latitude: latitude,
+      longitude: longitude,
+    }}
+    title={concertItem.location ? concertItem.location.name : 'Default Location'}
+  />
+</MapView>
+      )}
+    </View>
+  );
+})}
         </View>
       </ScrollView>
     </>
