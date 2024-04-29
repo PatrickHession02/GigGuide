@@ -35,7 +35,6 @@ router.post('/', (req, res, next) => {
                     data: { concert: change.doc.data() },
                 };
             
-                // Check that all your push tokens appear to be valid Expo push tokens
                 if (!Expo.isExpoPushToken(message.to)) {
                     console.error(`Push token ${message.to} is not a valid Expo push token`);
                     return;
@@ -54,8 +53,8 @@ router.post('/', (req, res, next) => {
                     }
                 })();
             }
-        }); // Closing bracket for forEach
-    }); // Closing bracket and parenthesis for onSnapshot
+        }); 
+    }); 
 });
 
 module.exports = router;
