@@ -44,16 +44,18 @@ const profilePicRouter = require('./routes/profilePic');
 const placesRouter = require('./routes/places');
 const realTimeListener = require('./routes/realTimeListener');
 const DemonstrationRouter = require('./routes/Demonstration');
-
+const topartists = require('./routes/topartists');
 app.use('/redirect' ,callbackRouter);
 app.use('/concerts' ,concertRouter);
 app.use('/AI' ,aiRouter);
+app.use('/topartists', topartists);
 app.use('/saveToken', notificationsRouter);
 app.use('/concertNotifyTest',testRouter);
 app.use('/profilePic', profilePicRouter); 
 app.use('/places', placesRouter);
 app.use('/realTimeListener', realTimeListener);
-app.use('/Demonstration', DemonstrationRouter)
+app.use('/Demonstration', DemonstrationRouter);
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

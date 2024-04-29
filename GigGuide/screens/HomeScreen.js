@@ -89,7 +89,8 @@ const HomeScreen = ({ uid }) => {
   
           const dataCallback = await responseCallback.json();
           console.log('Received data from backend', dataCallback);
-  
+          const topArtists = dataCallback.topArtists;
+          console.log('Top artists:', topArtists);
           // Then fetch to /concerts
           const responseConcerts = await fetch('https://acba-79-140-211-73.ngrok-free.app/concerts');
           const dataConcerts = await responseConcerts.json();

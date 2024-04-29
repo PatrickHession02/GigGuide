@@ -1,12 +1,29 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import React, { useState } from 'react';
-import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, Text, StyleSheet, Image, TouchableOpacity, View,FlatList } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Modal, Button } from 'react-native';
 
 const ProfileScreen = () => {
   const [profileImage, setProfileImage] = useState(null);
+  const [topArtists, setTopArtists] = useState([]);
 
+  useEffect(() => {
+    fetch('https://acba-79-140-211-73.ngrok-free.app/topartists')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      setTopArtists(data);
+      console.log('Top artists:', data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }, []);
   const selectImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -33,8 +50,8 @@ const ProfileScreen = () => {
       const formData = new FormData();
       formData.append('profilePic', {
         uri: imageUri,
-        type: 'image/jpeg', // Adjust the content type as needed
-        name: 'profile.jpg', // Provide a suitable filename
+        type: 'image/jpeg', 
+        name: 'profile.jpg',
       });
 
       const response = await fetch('https://5b9f-79-140-211-73.ngrok-free.app/profilePic', {
@@ -55,8 +72,7 @@ const ProfileScreen = () => {
     } catch (error) {
       console.error('Error sending image to backend:', error);
     }
-  };
-  return (
+  }; return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <Text style={styles.text}>Profile</Text>
@@ -69,19 +85,62 @@ const ProfileScreen = () => {
             )}
           </TouchableOpacity>
         </View>
+        <Text style={styles.topArtistsText}>Your Top Artists</Text>
+        <View style={styles.horizontalLine} />
+        <FlatList
+          data={topArtists}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.listItemContainer}>
+              <Text style={styles.artistText}>{item}</Text>
+            </View>
+          )}
+          contentContainerStyle={styles.listContainer}
+        />
       </SafeAreaView>
     </LinearGradient>
   );
 };
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  horizontalLine: {
+    borderBottomColor: '#fff',
+    borderBottomWidth: 1,
+    width: '90%',
+    alignSelf: 'center',
+    marginVertical: 10,
+  },
   safeArea: {
     flex: 1,
     alignItems: 'center', // Center items along the cross axis
-    paddingLeft: 10,
+  },
+  listContainer: {
+    padding: 10,
+    marginTop: 5, // Add a top margin to lower the list
+    width: '100%', // Add this line
+  },
+  topArtistsText: {
+    fontSize: 24,
+    color: '#fff',
+    paddingLeft: 15,
+    paddingTop: 90,
+    fontWeight: 'bold',
+  },
+
+  listItemContainer: {
+    backgroundColor: '#fff',
+    padding: 30,
+    marginVertical: 5,
+    borderRadius: 5,
+    
+  },
+  artistText: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   text: {
     fontSize: 30,
@@ -90,9 +149,12 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     fontWeight: 'bold',
   },
+ 
   imageView: {
     flex: 1,
     justifyContent: 'center', // Center items along the main axis
+    marginTop: 90, // Add a top margin to lower the profile picture
+    marginBottom: 50, // Add a bottom margin to lower the profile picture
   },
   imageButton: {
     width: 150,
@@ -101,6 +163,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff2',
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 20, // Add this line
   },
   profileImage: {
     width: 150,
