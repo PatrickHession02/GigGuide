@@ -77,12 +77,10 @@ router.get('/', async (req, res) => {
             // Send the error response here
             res.status(500).send('Error saving concerts to Firebase');
         });
-    
-        // Remove this line
-        // res.json(allConcerts);
+
     } catch (error) {
         console.error('Error fetching concerts:', error);
     }
-}); // This is the missing closing bracket
+});
 
 module.exports = router;

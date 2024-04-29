@@ -99,6 +99,8 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
                     city: city,
                     country: country,
                     images: images,
+                    lineup: lineup, 
+                    ticketLink: ticketLink, 
                 };
             });
         } else {
