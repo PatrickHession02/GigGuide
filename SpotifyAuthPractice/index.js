@@ -19,7 +19,7 @@ app.use(session({
     secret: sessionSecret,
     resave: true,
     saveUninitialized: true,
-    cookie: { secure: false } // Note: In production, set this to true and ensure your app uses HTTPS
+    cookie: { secure: false } 
 }));
 
 function delayRequest() {

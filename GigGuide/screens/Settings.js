@@ -23,7 +23,7 @@ const sendNotification = async () => {
     return;
   }
 
-  await fetch('https://adab-79-140-211-73.ngrok-free.app/Demonstration', {
+  await fetch('https://acba-79-140-211-73.ngrok-free.app/Demonstration', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
