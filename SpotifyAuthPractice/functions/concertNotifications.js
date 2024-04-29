@@ -1,6 +1,6 @@
-onst admin = require('firebase-admin');
+const admin = require('firebase-admin');
 const { Expo } = require('expo-server-sdk');
-
+const functions = require('firebase-functions');
 admin.initializeApp();
 const db = admin.firestore();
 const expo = new Expo();

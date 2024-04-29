@@ -10,18 +10,19 @@ router.post('/', async (req, res) => {
     // Get a reference to the user's document
     const userRef = db.collection('users').doc(userId);
 
-    // Increment the "test" field in the user's document
+    // Add "test" to the "concerts" array in the user's document
     userRef.update({
-        test: admin.firestore.FieldValue.increment(1) // Increment the "test" field by 1
+        concerts: admin.firestore.FieldValue.arrayUnion('test') // Add "test" to the "concerts" array
     })
     .then(() => {
-        console.log('Test field incremented in user document');
-        res.json({ message: 'Test field incremented in user document' });
+        console.log('Test added to concerts in user document');
+        res.json({ message: 'Test added to concerts in user document' });
     })
     .catch(err => {
-        console.error('Error incrementing test field in user document:', err);
-        res.status(500).send('Error incrementing test field in user document');
+        console.error('Error adding test to concerts in user document:', err);
+        res.status(500).send('Error adding test to concerts in user document');
     });
 });
+
 
 module.exports = router;
