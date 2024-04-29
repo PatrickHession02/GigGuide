@@ -14,7 +14,7 @@ const Concertinfo = ({ route }) => {
 
  console.log(concert.concerts[0].venue);
  useEffect(() => {
-  fetch('https://5b9f-79-140-211-73.ngrok-free.app/places', {
+  fetch('https://adab-79-140-211-73.ngrok-free.app/places', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ const Concertinfo = ({ route }) => {
       longitude: data.longitude,
       name: data.name,
     });
-    setLoading(false); // Set loading to false after location state is updated
+    setLoading(false); // Setting loading to false here after location state is updated
   })
   .catch((error) => {
     console.error('Error:', error);

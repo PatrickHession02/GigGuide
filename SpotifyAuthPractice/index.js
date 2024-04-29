@@ -12,17 +12,20 @@ const http = rateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 }
 const OpenAI = require("openai")
 const openai = new OpenAI(process.env.OPENAI_API_KEY)
 const session = require('express-session');
-
+const db = require('./routes/fireStore');
+const { Expo } = require('expo-server-sdk');
+let expo = new Expo();
 app.use(session({
     secret: sessionSecret,
     resave: true,
     saveUninitialized: true,
     cookie: { secure: false } // Note: In production, set this to true and ensure your app uses HTTPS
-  }));
-  
-  function delayRequest() {
-      return new Promise(resolve => setTimeout(resolve, 1000)); // Delay of 1 second
-  }
+}));
+
+function delayRequest() {
+    return new Promise(resolve => setTimeout(resolve, 1000)); // Delay of 1 second
+}
+
 // Initialize the Spotify API with credentials from environment variables.
 const spotifyApi = new SpotifyWebApi({
     clientId: process.env.CLIENT_ID,
@@ -32,7 +35,6 @@ const spotifyApi = new SpotifyWebApi({
     aiKey: process.env.OPEN_AI_KEY
 });
 
-
 const callbackRouter = require('./routes/redirect');
 const concertRouter = require('./routes/concerts');
 const aiRouter = require('./routes/AI');
@@ -40,6 +42,8 @@ const notificationsRouter = require('./routes/saveToken');
 const testRouter = require('./routes/concertNotifyTest');
 const profilePicRouter = require('./routes/profilePic');
 const placesRouter = require('./routes/places');
+const realTimeListener = require('./routes/realTimeListener');
+const DemonstrationRouter = require('./routes/Demonstration');
 
 app.use('/redirect' ,callbackRouter);
 app.use('/concerts' ,concertRouter);
@@ -48,6 +52,8 @@ app.use('/saveToken', notificationsRouter);
 app.use('/concertNotifyTest',testRouter);
 app.use('/profilePic', profilePicRouter); 
 app.use('/places', placesRouter);
+app.use('/realTimeListener', realTimeListener);
+app.use('/Demonstration', DemonstrationRouter)
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

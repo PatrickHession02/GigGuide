@@ -7,26 +7,30 @@ const app = express();
 const expo = new Expo();
 
 router.use(bodyParser.json());
-
 router.post('/', async (req, res) => {
   try {
-    const { token, userId } = req.body;
-    console.log('Token:', token, 'UserId:', userId);
+    const { token,userId} = req.body;
+
+    if (!userId) {
+      return res.status(400).send({ error: 'User ID is undefined' });
+    }
+    console.log('TOKEN TEST User ID:', userId);
+    console.log('Actual Token:', token); // Log the actual token
+    console.log('Token Data:', token.data, 'UserId:', userId);
     if (!Expo.isExpoPushToken(token.data)) {
       return res.status(400).send({ error: 'Invalid push token' });
     }
 
-    // Save the token to Firestore
     const userRef = db.collection('users').doc(userId);
     await userRef.set({ token: token.data }, { merge: true });
-    
+    req.session.token = token.data;
     // Log that the token was successfully sent to Firestore
     console.log('Token successfully sent to Firestore');
-
+    console.log('Token:', token.data);
     const messages = [{
       to: token.data,
       sound: 'default',
-      body: 'Welcome to GigGuide',
+      body: 'New Gig Added',
     }];
 
     const chunks = expo.chunkPushNotifications(messages);
@@ -35,7 +39,7 @@ router.post('/', async (req, res) => {
 
     res.status(200).send({ success: true });
   } catch (error) {
-    console.error('Error saving token:', error);
+    console.error(error);
     res.status(500).send({ error: 'Internal server error' });
   }
 });

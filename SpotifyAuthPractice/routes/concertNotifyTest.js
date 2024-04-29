@@ -1,29 +1,26 @@
 const express = require('express');
 const router = express.Router();
+const db = require('./fireStore');
+const admin = require('firebase-admin'); // Import Firebase Admin SDK
 
-// POST route to update concert name
 router.post('/', async (req, res) => {
-    try {
-        const { userId, concertName } = req.body;
+    const userId = req.session.userId;
+    console.log("Notification TEST" ,userId);
 
-        // Find the user by userId
-        const user = await users.findById(userId);
+    const userRef = db.collection('users').doc(userId);
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Update the concert name field
-        user.concert.name = concertName;
-
-        // Save the updated user
-        await user.save();
-
-        res.status(200).json({ message: 'Concert name updated successfully' });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error' });
-    }
+    userRef.update({
+        concerts: admin.firestore.FieldValue.arrayUnion('test') // Add "test" to the "concerts" array
+    })
+    .then(() => {
+        console.log('Test added to concerts in user document');
+        res.json({ message: 'Test added to concerts in user document' });
+    })
+    .catch(err => {
+        console.error('Error adding test to concerts in user document:', err);
+        res.status(500).send('Error adding test to concerts in user document');
+    });
 });
+
 
 module.exports = router;
