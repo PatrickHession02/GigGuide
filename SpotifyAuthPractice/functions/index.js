@@ -6,7 +6,8 @@
  *
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
-
+const { Expo } = require('expo-server-sdk');
+const expo = new Expo();
 const {onRequest} = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
 

@@ -45,14 +45,14 @@ export default function App() {
       if (user) {
         setUser(user);
         // Send the token to your server
-        fetch('https://1cc5-79-140-211-73.ngrok-free.app/saveToken', {
+        fetch('https://adab-79-140-211-73.ngrok-free.app/saveToken', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             token: expoPushToken,
-            
+            userId: user.uid,
           }),
         });
       } else {

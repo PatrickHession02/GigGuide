@@ -35,7 +35,7 @@ const Settings  = ({ triggerPushNotification }) => {
       test: 'toest',
     };
   
-    fetch('https://1cc5-79-140-211-73.ngrok-free.app/concertNotifyTest', {
+    fetch('https://adab-79-140-211-73.ngrok-free.app/concertNotifyTest', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

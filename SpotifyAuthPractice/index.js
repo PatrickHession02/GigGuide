@@ -12,7 +12,7 @@ const http = rateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 }
 const OpenAI = require("openai")
 const openai = new OpenAI(process.env.OPENAI_API_KEY)
 const session = require('express-session');
-
+require('dotenv').config();
 app.use(session({
     secret: sessionSecret,
     resave: true,

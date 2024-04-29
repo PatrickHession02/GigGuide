@@ -9,8 +9,11 @@ const expo = new Expo();
 router.use(bodyParser.json());
 router.post('/', async (req, res) => {
   try {
-    const { token,} = req.body;
-    const userId = req.session.userId; 
+    const { token,userId} = req.body;
+
+    if (!userId) {
+      return res.status(400).send({ error: 'User ID is undefined' });
+    }
     console.log('TOKEN TEST User ID:', userId);
     console.log('Actual Token:', token); // Log the actual token
     console.log('Token Data:', token.data, 'UserId:', userId);
