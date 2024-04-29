@@ -7,10 +7,8 @@ router.post('/', async (req, res) => {
     const userId = req.session.userId;
     console.log("Notification TEST" ,userId);
 
-    // Get a reference to the user's document
     const userRef = db.collection('users').doc(userId);
 
-    // Add "test" to the "concerts" array in the user's document
     userRef.update({
         concerts: admin.firestore.FieldValue.arrayUnion('test') // Add "test" to the "concerts" array
     })

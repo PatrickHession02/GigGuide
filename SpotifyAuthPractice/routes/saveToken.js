@@ -21,17 +21,16 @@ router.post('/', async (req, res) => {
       return res.status(400).send({ error: 'Invalid push token' });
     }
 
-    // Save the token to Firestore
     const userRef = db.collection('users').doc(userId);
     await userRef.set({ token: token.data }, { merge: true });
-    
+    req.session.token = token.data;
     // Log that the token was successfully sent to Firestore
     console.log('Token successfully sent to Firestore');
-
+    console.log('Token:', token.data);
     const messages = [{
       to: token.data,
       sound: 'default',
-      body: 'Welcome to GigGuide',
+      body: 'New Gig Added',
     }];
 
     const chunks = expo.chunkPushNotifications(messages);
