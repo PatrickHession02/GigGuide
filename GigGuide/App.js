@@ -45,7 +45,7 @@ export default function App() {
       if (user) {
         setUser(user);
         // Send the token to your server
-        fetch('https://adab-79-140-211-73.ngrok-free.app/saveToken', {
+        fetch('https://adab-79-140-211-73.ngrok-free.app/realTimeListener', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
