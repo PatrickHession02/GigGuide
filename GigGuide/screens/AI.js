@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, FlatList, Image, StyleSheet, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, FlatList, Image, StyleSheet, Text, TouchableOpacity, SafeAreaView,ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const AI = () => {
   const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
-
   useEffect(() => {
     fetch('https://acba-79-140-211-73.ngrok-free.app/AI')
       .then(response => response.json())
@@ -23,6 +23,7 @@ const AI = () => {
             return acc;
           }, {});
           setData(groupedData);
+          setIsLoading(false); // Setting isLoading to false after data is fetched and processed
         }
       });
   }, []);
@@ -56,13 +57,21 @@ const AI = () => {
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <SafeAreaView style={{ flex: 1 }}>
-        <Text style={styles.greetingText}>AI recommendations for you...</Text>
-        <FlatList
-          contentContainerStyle={styles.scrollViewContainer}
-          data={dataArray}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
+        {isLoading ? (
+         <ActivityIndicator size="large" color="#ffffff" />
+        ) : (
+          <>
+            {dataArray.length > 0 && (
+              <Text style={styles.greetingText}>AI recommendations for you...</Text>
+            )}
+            <FlatList
+              contentContainerStyle={styles.scrollViewContainer}
+              data={dataArray}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </>
+        )}
       </SafeAreaView>
     </LinearGradient>
   );

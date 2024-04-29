@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View, Text, Image, FlatList, Button } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View, Text, Image, FlatList, Button, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SearchBar } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +13,7 @@ WebBrowser.maybeCompleteAuthSession();
 const HomeScreen = ({ uid }) => {
   const [search, setSearch] = useState('');
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
   const discovery = useAutoDiscovery('https://accounts.spotify.com');
   const [concertsData, setConcertsData] = useState([]);
   const [location, setLocation] = useState(null);
@@ -67,6 +68,7 @@ const HomeScreen = ({ uid }) => {
 
   useEffect(() => {
     setHandleLogin(() => async () => {
+      setIsLoading(true);
       try {
         const result = await promptAsync();
         if (result.type === 'success') {
@@ -111,6 +113,7 @@ const HomeScreen = ({ uid }) => {
       } catch (error) {
         console.error('Error fetching concerts:', error);
       }
+      setIsLoading(false);
     });
   }, [uid, promptAsync]);
 
@@ -139,15 +142,18 @@ const HomeScreen = ({ uid }) => {
   return (
     <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
       <SafeAreaView style={{ flex: 1, justifyContent: 'center' }}>
-        {concertsData.length === 0 && (
-          <View style={styles.loginContainer}>
-            <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <SimpleLineIcons style={styles.spotifyLogo} name="social-spotify" size={24} color="white" />
-              <Text style={styles.loginButtonText}>Login</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </SafeAreaView>
+  {concertsData.length === 0 && (
+    <View style={styles.loginContainer}>
+    <View style={styles.buttonContainer}>
+      <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+        <SimpleLineIcons style={styles.spotifyLogo} name="social-spotify" size={24} color="white" />
+        <Text style={styles.loginButtonText}>Login</Text>
+      </TouchableOpacity>
+      {isLoading && <ActivityIndicator size="large" color="#fff" style={{ marginTop: 10 }} />}
+    </View>
+  </View>
+  )}
+</SafeAreaView>
       {concertsData.length > 0 && <Text style={styles.greetingText}>{getGreeting()}</Text>}
       <FlatList
         contentContainerStyle={styles.scrollViewContainer}
