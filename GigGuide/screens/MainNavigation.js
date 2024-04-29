@@ -86,13 +86,12 @@ export const MainNavigator = ({uid}) => {
       />
       
       <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          headerShown: false,
-        }}
-      />
-
+    name="Profile"
+     children={props => <Profile {...props} />}
+    options={{
+    headerShown: false,
+  }}
+/>
  
        <Tab.Screen
         name="Settings"
