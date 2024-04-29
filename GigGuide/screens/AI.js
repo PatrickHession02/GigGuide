@@ -9,7 +9,7 @@ const AI = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetch('https://1cc5-79-140-211-73.ngrok-free.app/AI')
+    fetch('https://acba-79-140-211-73.ngrok-free.app/AI')
       .then(response => response.json())
       .then(data => {
         console.log('Fetched AI data:', data);

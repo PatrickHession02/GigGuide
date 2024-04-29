@@ -5,6 +5,7 @@ const rateLimit = require('axios-rate-limit');
 const http = rateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 });
 const OpenAI = require("openai")
 const db = require('./fireStore');
+const cron = require('node-cron');
 
 router.get('/', async (req, res) => {
     console.log('Accessed /concerts endpoint');
@@ -82,5 +83,12 @@ router.get('/', async (req, res) => {
         console.error('Error fetching concerts:', error);
     }
 });
+
+cron.schedule('0 * * * *', async () => {
+    const usersSnapshot = await db.collection('users').get();
+    usersSnapshot.forEach(doc => {
+        fetchConcerts(doc.id);
+    });
+}); //here I use cron in order to call the fetchConcerts function every hour
 
 module.exports = router;
