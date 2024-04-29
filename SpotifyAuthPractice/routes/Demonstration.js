@@ -18,6 +18,7 @@ router.post('/', async (req, res) => {
         to: token,
         sound: 'default',
         body: 'New Gig Added',
+        data: {imageUrl: 'https://img.freepik.com/free-vector/red-live-neon-sign-vector_53876-61394.jpg?size=338&ext=jpg&ga=GA1.1.553209589.1714262400&semt=sph'},
       }];
 
     const chunks = expo.chunkPushNotifications(messages);

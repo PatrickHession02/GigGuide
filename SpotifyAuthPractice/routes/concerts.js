@@ -5,6 +5,7 @@ const rateLimit = require('axios-rate-limit');
 const http = rateLimit(axios.create(), { maxRequests: 5, perMilliseconds: 1000 });
 const OpenAI = require("openai")
 const db = require('./fireStore');
+const cron = require('node-cron');
 
 router.get('/', async (req, res) => {
     console.log('Accessed /concerts endpoint');
@@ -77,12 +78,17 @@ router.get('/', async (req, res) => {
             // Send the error response here
             res.status(500).send('Error saving concerts to Firebase');
         });
-    
-        // Remove this line
-        // res.json(allConcerts);
+
     } catch (error) {
         console.error('Error fetching concerts:', error);
     }
-}); // This is the missing closing bracket
+});
+
+cron.schedule('0 * * * *', async () => {
+    const usersSnapshot = await db.collection('users').get();
+    usersSnapshot.forEach(doc => {
+        fetchConcerts(doc.id);
+    });
+}); //here I use cron in order to call the fetchConcerts function every hour
 
 module.exports = router;

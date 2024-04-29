@@ -19,6 +19,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.patrickh13.GigGuide"
     },
+    "notification":{
+      "icon":"./assets//GetImage-Photoroom.png-Photoroom.png"
+   },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

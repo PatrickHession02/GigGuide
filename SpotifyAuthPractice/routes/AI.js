@@ -92,6 +92,8 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
                 const city = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].city.name : 'Unknown City';
                 const country = event._embedded && event._embedded.venues && event._embedded.venues[0] ? event._embedded.venues[0].country.name : 'Unknown Country';
                 const images = event.images ? event.images : [];
+                const lineup = event._embedded && event._embedded.attractions ? event._embedded.attractions.map(attraction => attraction.name) : []; // Extract the lineup
+                const ticketLink = event.url; // Extract the ticket purchase link
                 return {
                     name: event.name,
                     date: event.dates.start.localDate,
@@ -99,6 +101,8 @@ async function createListOfArtists(noOfExtraArtists, currentArtistArray) {
                     city: city,
                     country: country,
                     images: images,
+                    lineup: lineup, 
+                    ticketLink: ticketLink, 
                 };
             });
         } else {
