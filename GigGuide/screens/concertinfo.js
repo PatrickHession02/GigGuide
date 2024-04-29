@@ -30,7 +30,7 @@ const Concertinfo = ({ route }) => {
       longitude: data.longitude,
       name: data.name,
     });
-    setLoading(false); // Set loading to false after location state is updated
+    setLoading(false); // Setting loading to false here after location state is updated
   })
   .catch((error) => {
     console.error('Error:', error);
