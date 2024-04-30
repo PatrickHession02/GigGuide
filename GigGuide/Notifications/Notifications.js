@@ -24,7 +24,8 @@ export const usePushNotifications = () => {
 
   async function registerForPushNotificationsAsync() {
     let token;
-    if (Device.isDevice) { //doesnt work on simulated devices
+    if (Device.isDevice) {
+      //doesnt work on simulated devices
       const { status: existingStatus } =
         await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
@@ -75,7 +76,7 @@ export const usePushNotifications = () => {
 
     return () => {
       Notifications.removeNotificationSubscription(
-        notificationListener.current
+        notificationListener.current,
       );
 
       Notifications.removeNotificationSubscription(responseListener.current);

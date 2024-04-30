@@ -1,11 +1,40 @@
-const express = require('express');
-
+const express = require("express");
+const multer = require("multer");
+const { Storage } = require("@google-cloud/storage");
+//This route is to uplaod users profile pic to firebase storage
 const router = express.Router();
 
-// Route to handle image upload
-router.post('/', (req, res) => {
+const storage = new Storage({
+  projectId: "my-project-id",
+  keyFilename: "path-to-my-service-account-key-file",
+});
 
-    res.json({ message: 'Image uploaded successfully' });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+});
+
+router.post("/", upload.single("file"), async (req, res) => {
+  if (!req.file) {
+    res.status(400).send("No file uploaded.");
+    return;
+  }
+  const blob = storage.bucket("gigguide-b3d86.appspot.com").file(req.file.originalname);
+  const blobStream = blob.createWriteStream();
+  blobStream.on("error", (err) => {
+    res.status(500).send(err);
+  });
+
+  blobStream.on("finish", () => {
+    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+    res
+      .status(200)
+      .send({ message: "Image uploaded successfully", url: publicUrl });
+  });
+
+  blobStream.end(req.file.buffer);
 });
 
 module.exports = router;

@@ -1,18 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { View, FlatList, Image, StyleSheet, Text, TouchableOpacity, SafeAreaView,ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+  ActivityIndicator,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import { LinearGradient } from "expo-linear-gradient";
 
 const AI = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
   useEffect(() => {
-    fetch('https://acba-79-140-211-73.ngrok-free.app/AI')
-      .then(response => response.json())
-      .then(data => {
-        console.log('Fetched AI data:', data);
+    fetch("https://acba-79-140-211-73.ngrok-free.app/AI")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched AI data:", data);
         if (data) {
           const groupedData = data.reduce((acc, concert) => {
             const artistName = concert.name;
@@ -28,7 +37,7 @@ const AI = () => {
       });
   }, []);
 
-  const dataArray = Object.keys(data).map(key => ({
+  const dataArray = Object.keys(data).map((key) => ({
     name: key,
     concerts: data[key],
   }));
@@ -40,7 +49,10 @@ const AI = () => {
         <TouchableOpacity onPress={() => handleConcertPress(artist)}>
           <View style={styles.concertContainer}>
             <View style={styles.imageContainer}>
-              <Image style={styles.concertImage} source={{ uri: concert.images[0].url }} />
+              <Image
+                style={styles.concertImage}
+                source={{ uri: concert.images[0].url }}
+              />
               <Text style={styles.concertName}>{concert.name}</Text>
             </View>
           </View>
@@ -51,18 +63,20 @@ const AI = () => {
   };
 
   const handleConcertPress = (artist) => {
-    navigation.navigate('Concertinfo', { concert: artist });
+    navigation.navigate("Concertinfo", { concert: artist });
   };
-  console.log('Concerts Data:', data);
+  console.log("Concerts Data:", data);
   return (
-    <LinearGradient colors={['#fc4908', '#fc0366']} style={styles.gradient}>
+    <LinearGradient colors={["#fc4908", "#fc0366"]} style={styles.gradient}>
       <SafeAreaView style={{ flex: 1 }}>
         {isLoading ? (
-         <ActivityIndicator size="large" color="#ffffff" />
+          <ActivityIndicator size="large" color="#ffffff" />
         ) : (
           <>
             {dataArray.length > 0 && (
-              <Text style={styles.greetingText}>AI recommendations for you...</Text>
+              <Text style={styles.greetingText}>
+                AI recommendations for you...
+              </Text>
             )}
             <FlatList
               contentContainerStyle={styles.scrollViewContainer}
@@ -83,25 +97,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   searchBarContainer: {
-    backgroundColor: 'transparent',
-    borderBottomColor: 'transparent',
-    borderTopColor: 'transparent',
+    backgroundColor: "transparent",
+    borderBottomColor: "transparent",
+    borderTopColor: "transparent",
     paddingHorizontal: 16,
     marginBottom: 10,
   },
   searchBarInputContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   scrollViewContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 16,
   },
   concertContainer: {
-    width: 400, 
+    width: 400,
     height: 300,
     padding: 10,
     borderRadius: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     marginBottom: 20,
     shadowColor: "#000",
     shadowOffset: {
@@ -112,39 +126,39 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
     borderWidth: 2,
-    borderColor: '#f205e2',
+    borderColor: "#f205e2",
   },
   concertName: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 10,
     left: 10,
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
-    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    fontWeight: "bold",
+    textShadowColor: "rgba(0, 0, 0, 0.75)",
     textShadowOffset: { width: 2, height: 1 },
     textShadowRadius: 80,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     padding: 10,
     borderRadius: 5,
   },
   concertImage: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
     borderRadius: 10,
   },
   greetingText: {
     fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fff',
-    alignSelf: 'flex-start',
+    fontWeight: "bold",
+    color: "#fff",
+    alignSelf: "flex-start",
     marginLeft: 16,
     marginTop: 1,
-    textShadowColor: '#000',
+    textShadowColor: "#000",
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
-    marginBottom: 20, 
+    marginBottom: 20,
   },
 });
 

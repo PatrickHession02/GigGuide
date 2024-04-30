@@ -1,14 +1,14 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const db = require('./fireStore');
+const db = require("./fireStore");
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const userId = req.session.userId;
-    const doc = await db.collection('users').doc(userId).get();
+    const doc = await db.collection("users").doc(userId).get();
 
     if (!doc.exists) {
-      res.status(404).send('No such user!');
+      res.status(404).send("No such user!");
       return;
     }
 
@@ -21,5 +21,6 @@ router.get('/', async (req, res) => {
     res.status(500).send(error);
   }
 });
+//Top artist code to send to profile screen
 
 module.exports = router;
