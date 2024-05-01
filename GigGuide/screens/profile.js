@@ -17,7 +17,7 @@ const ProfileScreen = () => {
   const [topArtists, setTopArtists] = useState([]);
 
   useEffect(() => {
-    fetch("https://acba-79-140-211-73.ngrok-free.app/topartists")
+    fetch("http://34.195.218.213:3050/topartists")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -63,7 +63,7 @@ const ProfileScreen = () => {
       });
 
       const response = await fetch(
-        "https://5b9f-79-140-211-73.ngrok-free.app/profilePic",
+        "http://34.195.218.213/profilePic",
         {
           method: "POST",
           body: formData,

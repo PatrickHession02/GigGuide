@@ -18,7 +18,7 @@ const AI = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigation = useNavigation();
   useEffect(() => {
-    fetch("https://acba-79-140-211-73.ngrok-free.app/AI")
+    fetch("http://34.195.218.213:3050/AI")
       .then((response) => response.json())
       .then((data) => {
         console.log("Fetched AI data:", data);
