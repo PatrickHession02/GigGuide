@@ -5,10 +5,10 @@ const { Storage } = require("@google-cloud/storage");
 const router = express.Router();
 
 const storage = new Storage({
-  projectId: "my-project-id",
-  keyFilename: "path-to-my-service-account-key-file",
+  projectId: "gigguide-b3d86",
+  keyFilename: "/home/ubuntu/gigguide-b3d86-firebase-adminsdk-jsod7-569998f899.json",
 });
-
+const bucket = storage.bucket("gigguide-b3d86.appspot.com");
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {

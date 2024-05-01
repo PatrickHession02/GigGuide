@@ -6,7 +6,6 @@ import {
   Text,
   Image,
   FlatList,
-  Button,
   ActivityIndicator,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -89,7 +88,7 @@ const HomeScreen = ({ uid }) => {
           console.log("Authorization Code: ", code);
           console.log("UID2: ", uid);
           const responseCallback = await fetch(
-            "https://acba-79-140-211-73.ngrok-free.app/redirect",
+            "http://34.195.218.213:3050/redirect",
             {
               method: "POST",
               headers: {
@@ -109,7 +108,7 @@ const HomeScreen = ({ uid }) => {
           console.log("Top artists:", topArtists);
           // Then fetch to /concerts
           const responseConcerts = await fetch(
-            "https://acba-79-140-211-73.ngrok-free.app/concerts",
+            "http://34.195.218.213:3050/concerts",
           );
           const dataConcerts = await responseConcerts.json();
           console.log("Fetched data:", dataConcerts);

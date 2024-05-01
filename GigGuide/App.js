@@ -11,13 +11,16 @@ import { signOut } from "firebase/auth";
 import HomeScreen from "./screens/HomeScreen";
 import { usePushNotifications } from "./Notifications/Notifications"; // Import the hook
 import Settings from "./screens/Settings";
+import {LogBox} from "react-native";
+LogBox.ignoreAllLogs();
+
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const { expoPushToken, notification, triggerNotification } =
-    usePushNotifications(); // Use the hook
+    usePushNotifications(); 
 
   useEffect(() => {
     const unsubscribe = FIREBASE_AUTH.onAuthStateChanged((user) => {

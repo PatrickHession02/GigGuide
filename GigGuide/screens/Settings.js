@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View, Button, StyleSheet, Text } from "react-native";
+import {  View, Button, StyleSheet, Text } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { signOut } from "firebase/auth";
@@ -23,7 +23,7 @@ const Settings = ({ triggerPushNotification }) => {
       return;
     }
 
-    await fetch("https://acba-79-140-211-73.ngrok-free.app/Demonstration", {
+    await fetch("http://34.195.218.213:3050/Demonstration", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -16,11 +16,12 @@ export const HomeStack = ({ uid }) => (
     <Stack.Screen
       name="HomeStackScreen"
       children={(props) => <HomeScreen {...props} uid={uid} />}
+      oprions={{title: 'HomeScreen'}}
     />
     <Stack.Screen
       name="Concertinfo"
       component={Concertinfo}
-      options={{ headerShown: false }}
+      options={{  headerShown: false , title: 'Concertinfo' }}
     />
   </Stack.Navigator>
 );
